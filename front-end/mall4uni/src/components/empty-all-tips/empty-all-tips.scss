@@ -1,0 +1,45 @@
+.component-empty-all-tips {
+  /* 列表为空 */
+  .empty {
+    text-align: cneter;
+    padding-top: 100rpx;
+  }
+  .empty-icon {
+    display: block;
+    width: 80rpx;
+    height: 80rpx;
+    margin: 0 auto;
+    margin-bottom: 20rpx;
+  }
+  .empty-icon > image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .empty-text {
+    font-size: 28rpx;
+    text-align: center;
+    color: #999;
+    line-height: 2em;
+  }
+
+  /* 加载完成 */
+  .load-all {
+    margin-top: 40rpx;
+    line-height: 2em;
+    font-size: 28rpx;
+    color: #aaa;
+    text-align: center;
+  }
+  .m0{
+    margin-top: 0;
+    padding-bottom: 20rpx;
+  }
+}

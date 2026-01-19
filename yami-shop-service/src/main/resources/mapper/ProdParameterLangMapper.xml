@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yami.shop.dao.ProdParameterLangMapper">
+
+  <resultMap id="prodParameterLangMap" type="com.yami.shop.bean.model.ProdParameterLang">
+    <id column="prod_parameter_id" property="prodParameterId" />
+    <result column="lang" property="lang"/>
+    <result column="parameter_key" property="parameterKey"/>
+    <result column="parameter_value" property="parameterValue"/>
+  </resultMap>
+  <insert id="insertBatch">
+    insert into tz_prod_parameter_lang (prod_parameter_id,`lang`,parameter_key,parameter_value)
+    values
+    <foreach collection="prodParameterLangList" item="prodParameterLang" separator=",">
+      (#{prodParameterLang.prodParameterId},#{prodParameterLang.lang},#{prodParameterLang.parameterKey},#{prodParameterLang.parameterValue})
+    </foreach>
+  </insert>
+  <delete id="deleteBatch">
+    delete from tz_prod_parameter_lang where prod_parameter_id in
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+</mapper>

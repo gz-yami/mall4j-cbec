@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.LangMapper">
+
+    <sql id="list_where">
+        <if test="langDTO.name != null and langDTO.name != ''">
+            AND name LIKE CONCAT('%', #{langDTO.name}, '%')
+        </if>
+        <if test="langDTO.language != null and langDTO.language != ''">
+            AND language LIKE CONCAT('%', #{langDTO.language}, '%')
+        </if>
+        <if test="langDTO.hide != null">
+            AND hide = #{langDTO.hide}
+        </if>
+    </sql>
+
+    <select id="pageLang" resultType="com.yami.shop.bean.vo.LangVO">
+        SELECT
+            *
+        FROM
+            tz_lang
+        <where>
+            <include refid="list_where"/>
+        </where>
+        ORDER BY
+            lang ASC
+    </select>
+
+    <select id="listLang" resultType="com.yami.shop.bean.vo.LangVO">
+        SELECT
+            *
+        FROM
+            tz_lang
+        <where>
+            <include refid="list_where"/>
+        </where>
+        ORDER BY
+            master DESC,
+            lang ASC
+    </select>
+
+</mapper>

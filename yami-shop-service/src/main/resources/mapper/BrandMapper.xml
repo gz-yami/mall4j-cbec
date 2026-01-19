@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.BrandMapper">
+  <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.Brand">
+    <id column="brand_id" jdbcType="BIGINT" property="brandId" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="seq" jdbcType="INTEGER" property="seq" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="is_top" jdbcType="VARCHAR" property="isTop" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="first_letter" jdbcType="VARCHAR" property="firstLetter" />
+  </resultMap>
+  <resultMap id="brandAndLangBOMap" type="com.yami.shop.bean.bo.BrandBO" extends="BaseResultMap">
+      <collection property="brandLangList" ofType="com.yami.shop.bean.bo.BrandLangBO">
+          <id column="lang" property="lang"/>
+          <result column="name" property="name"/>
+      </collection>
+  </resultMap>
+
+    <resultMap id="esBrand" type="com.yami.shop.bean.vo.search.BrandSearchVO">
+        <id property="brandId" column="brand_id"/>
+        <id property="brandName" column="brand_name"/>
+        <id property="brandImg" column="brand_img"/>
+        <collection property="brandLangList" ofType="com.yami.shop.bean.bo.BrandLangBO">
+            <id property="lang" column="lang"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+  <insert id="insertBatchByBrandShopList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="brandId">
+    insert into tz_brand (`img_url`,`status`,`shop_id`,`first_letter`,`seq`,`is_top`) values
+    <foreach collection="brandList" item="brand" separator=",">
+      (#{brand.imgUrl},#{brand.status},#{brand.shopId},#{brand.firstLetter},#{brand.seq},#{brand.isTop})
+    </foreach>
+  </insert>
+
+    <select id="getByBrandId" resultType="com.yami.shop.bean.model.Brand">
+        SELECT b.brand_id,b.img_url,b.first_letter,b.seq,b.is_top,b.status
+        FROM tz_brand b
+        WHERE b.brand_id = #{brandId}
+    </select>
+
+    <resultMap id="listMap" type="com.yami.shop.bean.model.Brand">
+        <id column="brand_id" jdbcType="BIGINT" property="brandId" />
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+        <result column="seq" jdbcType="INTEGER" property="seq" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="is_top" jdbcType="VARCHAR" property="isTop" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="first_letter" jdbcType="VARCHAR" property="firstLetter" />
+        <collection property="categoryIds" ofType="long">
+            <result column="category_id"/>
+        </collection>
+        <collection property="categories" ofType="com.yami.shop.bean.vo.CategoryVO">
+            <result column="category_id" property="categoryId"/>
+        </collection>
+    </resultMap>
+
+    <select id="list" resultMap="listMap">
+        SELECT
+            tb.*,
+            tcb.category_id
+        FROM
+            (
+                <!-- 先分页后补充关联的分类数据 -->
+                SELECT
+                    b.*
+                FROM
+                    tz_brand b
+                    <if test="brand.categoryIds != null and brand.categoryIds.size() > 0">
+                        LEFT JOIN tz_category_brand cb ON b.brand_id = cb.brand_id
+                    </if>
+                <where>
+                    <if test="brand.status != null">
+                        AND b.status = #{brand.status}
+                    </if>
+                    <if test="brand.isTop != null">
+                        AND b.is_top = #{brand.isTop}
+                    </if>
+                    <if test="brand.shopId != null">
+                        AND b.shop_id = #{brand.shopId}
+                    </if>
+                    <if test="brand.firstLetter != null and brand.firstLetter != ''">
+                        AND b.first_letter = #{brand.firstLetter}
+                    </if>
+                    <if test="brand.name != null and brand.name != ''">
+                        AND b.brand_id in (select distinct brand_id from tz_brand_lang where `name` like concat('%',#{brand.name},'%'))
+                    </if>
+                    <if test="brand.categoryIds != null and brand.categoryIds.size() > 0">
+                        AND cb.category_id IN
+                        <foreach collection="brand.categoryIds" item="categoryId" open="(" separator="," close=")">
+                            #{categoryId}
+                        </foreach>
+                    </if>
+                </where>
+                GROUP BY
+                    b.brand_id
+                ORDER BY
+                    seq DESC,
+                    update_time DESC
+                LIMIT
+                    #{page.begin}, #{page.size}
+            ) tb
+            LEFT JOIN tz_category_brand tcb ON tb.brand_id = tcb.brand_id
+    </select>
+
+    <select id="listTotal" resultType="java.lang.Long">
+        SELECT
+            COUNT(DISTINCT(b.brand_id))
+        FROM
+            tz_brand b
+            <if test="brand.categoryIds != null and brand.categoryIds.size() > 0">
+                LEFT JOIN tz_category_brand cb ON cb.brand_id = b.brand_id
+            </if>
+        <where>
+            <if test="brand.name != null">
+                b.brand_id IN (select distinct brand_id from tz_brand_lang where name like concat('%',#{brand.name},'%'))
+            </if>
+            <if test="brand.status != null">
+                AND b.status = #{brand.status}
+            </if>
+            <if test="brand.status == null">
+                AND b.status BETWEEN 0 AND 1
+            </if>
+            <if test="brand.isTop != null">
+                AND b.is_top = #{brand.isTop}
+            </if>
+            <if test="brand.shopId != null">
+                AND b.shop_id = #{brand.shopId}
+            </if>
+            <if test="brand.categoryIds != null and brand.categoryIds.size() > 0">
+                AND cb.category_id IN
+                    <foreach collection="brand.categoryIds" item="categoryId" open="(" separator="," close=")">
+                        #{categoryId}
+                    </foreach>
+            </if>
+        </where>
+    </select>
+
+  <select id="getUseNum" resultType="int">
+      SELECT COUNT(*) FROM tz_prod WHERE brand_id = #{brandId} AND status != -1
+  </select>
+
+  <update id="updateBrandStatus">
+    UPDATE tz_brand SET `status` = #{brand.status} WHERE `brand_id` = #{brand.brandId};
+  </update>
+  <update id="updateShopIdAndStatusByShopId">
+    UPDATE tz_brand SET shop_id = #{newShopId}, status = #{status} WHERE shop_id = #{oldShopId}
+  </update>
+
+  <select id="listByCategoryIdAndName" resultType="com.yami.shop.bean.model.Brand">
+      SELECT b.brand_id,b.img_url
+      FROM tz_brand b
+      <if test="name != null and name != ''">
+          JOIN tz_brand_lang bl ON b.brand_id = bl.brand_id and b.status = 1
+      </if>
+      JOIN tz_category_brand AS cb ON b.brand_id = cb.brand_id and b.status = 1
+      AND cb.category_id = #{categoryId}
+      <where>
+          <if test="name != null and name != ''">
+              bl.name LIKE CONCAT('%', #{name}, '%')
+          </if>
+      </where>
+  </select>
+
+  <select id="listByParams" resultType="com.yami.shop.bean.model.Brand">
+      SELECT b.brand_id,b.img_url,b.first_letter,b.seq,b.is_top,b.status
+      FROM tz_brand b
+      <if test="brand.name != null and brand.name != ''">
+          JOIN tz_brand_lang bl ON b.brand_id = bl.brand_id
+      </if>
+      <if test="brand.categoryIds != null and brand.categoryIds.size() > 0">
+          LEFT JOIN tz_category_brand cb ON b.brand_id = cb.brand_id
+      </if>
+      <where>
+          <if test="brand.shopId != null and brand.shopId != ''">
+              AND b.shop_id = #{brand.shopId}
+          </if>
+          <if test="brand.name != null and brand.name != ''">
+              AND bl.name LIKE concat('%', #{brand.name}, '%')
+          </if>
+          <if test="brand.status != null and brand.status != ''">
+              AND b.status = #{brand.status}
+          </if>
+          <if test="brand.categoryIds != null and brand.categoryIds.size() > 0">
+              AND cb.category_id IN
+                <foreach collection="brand.categoryIds" item="brand.categoryIds" open="(" separator="," close=")">
+                    #{brand.categoryIds}
+                </foreach>
+          </if>
+      </where>
+  </select>
+
+  <select id="listAndLangBO" resultMap="brandAndLangBOMap">
+      SELECT b.brand_id,b.img_url,bl.lang,bl.name
+      FROM tz_brand b
+      LEFT JOIN tz_brand_lang bl ON b.brand_id = bl.brand_id
+      WHERE b.brand_id IN
+      <foreach collection="brandIds" item="brandId" open="(" close=")" separator=",">
+          #{brandId}
+      </foreach>
+  </select>
+  <select id="pageSigningByShopIdAndBrandNameAndCategoryId" resultType="com.yami.shop.bean.model.Brand">
+      SELECT DISTINCT b.brand_id, b.first_letter, b.img_url
+      FROM tz_brand b
+      <if test="brandName != null and brandName != ''">
+          JOIN tz_brand_lang bl ON bl.brand_id = b.brand_id
+      </if>
+      LEFT JOIN tz_brand_shop bs ON b.brand_id = bs.brand_id AND bs.status = 1
+      LEFT JOIN tz_category_brand cb ON cb.brand_id = b.brand_id
+      WHERE
+        b.status = 1
+        AND bs.shop_id = #{shopId}
+        <if test="categoryId != null">
+            AND cb.category_id = #{categoryId}
+        </if>
+        <if test="brandName != null and brandName != ''">
+          AND bl.name LIKE CONCAT('%', #{brandName}, '%')
+        </if>
+      ORDER BY
+        b.first_letter,  b.seq
+  </select>
+    <select id="listByBrandIds" resultType="com.yami.shop.bean.model.Brand">
+        SELECT b.brand_id,b.img_url,b.first_letter,b.seq,b.is_top,b.status
+        FROM tz_brand b
+        WHERE b.brand_id IN
+        <foreach collection="brandIds" item="brandId" open="(" close=")" separator=",">
+            #{brandId}
+        </foreach>
+    </select>
+
+    <select id="listEsBrandByBrandIds" resultMap="esBrand">
+        SELECT
+            b.brand_id,
+            b.img_url brand_img,
+            bl.name brand_name,
+            bl.lang,
+            bl.name
+        FROM
+            tz_brand b
+            LEFT JOIN tz_brand_lang bl ON b.brand_id = bl.brand_id
+        WHERE
+            b.brand_id IN
+                <foreach collection="brandIds" item="brandId" open="(" separator="," close=")">
+                    #{brandId}
+                </foreach>
+    </select>
+</mapper>

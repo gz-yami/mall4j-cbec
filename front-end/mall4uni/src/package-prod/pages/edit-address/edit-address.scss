@@ -1,0 +1,363 @@
+/* pages/edit-address/edit-address.wxss */
+
+.page-edit-address {
+  background: #F5F5F5;
+  padding-top: 24rpx;
+  box-sizing: border-box;
+  min-height: 100vh;
+  font-family: 'PingFang SC-Regular, PingFang SC';
+
+  ::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    color: transparent !important;
+  } 
+
+  .map {
+    height: 100%
+  }
+
+  .edit-addr-box {
+    padding: 0 24rpx 32rpx;
+    background-color: #fff;
+    overflow: hidden;
+    border-radius: 14rpx;
+  }
+
+  .edit-addr-box .addr-item {
+    margin-top: 32rpx;
+  }
+
+  .edit-addr-box .addr-item .label {
+    width: 152rpx;
+    font-size: 28rpx;
+    color: #333333;
+  }
+
+  .edit-addr-box .addr-item .input-box {
+    flex: 1;
+  }
+
+  .edit-addr-box .addr-item .input-box .input-con {
+    padding: 32rpx 0 16rpx;
+    border-bottom: 1rpx solid #E1E1E1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+
+  .edit-addr-box .addr-item .input-box .input-con .addr-clear-btn {
+    position: absolute;
+    right: 0;
+    width:32rpx;
+    height:32rpx
+  }
+
+  .edit-addr-box .addr-item .input-box .addr-error {
+    border-bottom: 1rpx solid #F81A1A;
+  }
+
+  .edit-addr-box .addr-item .input-box .error-text {
+    color: #F81A1A;
+    font-size: 24rpx;
+    margin-top: 12rpx;
+  }
+
+  .edit-addr-box .addr-item .input-box .input-con .inp-palcehoder {
+    font-size: 28rpx;
+    color: #999999;
+  }
+
+  .edit-addr-box .addr-item .input-box .input-con input {
+    flex: 1;
+    color: #333333;
+    font-size: 28rpx;
+  }
+
+  .edit-addr-box .addr-item .input-con .icon-right {
+    width: 24rpx;
+    height: 24rpx;
+    margin-right: -6rpx;
+    line-height: 24rpx;
+  }
+
+  .edit-addr-box .addr-item .input-con .area-box {
+    width: 90%;
+    font-size: 28rpx;
+    color: #333333;
+  }
+
+  .edit-addr-box .addr-item .input-con textarea {
+    flex: 1;
+    height: 100%;
+    font-size: 28rpx;
+    color: #333333;
+  }
+
+  .edit-addr-box .addr-item .input-con .location-btn {
+    display: flex;
+    max-width: 130px;
+  }
+
+  .edit-addr-box .addr-item .input-con .location-btn .addr-icon-loc {
+    width: 32rpx;
+    height: 32rpx;
+    margin-right: 6rpx;
+  }
+
+  .edit-addr-box .addr-item .input-con .location-btn .loc-name {
+    color: #F81A1A;
+    font-size: 28rpx;
+    line-height: 32rpx;
+    font-family: 'PingFang SC-Regular';
+  }
+
+  .edit-addr-box .addr-item-def {
+    display: flex;
+    margin-top: 32rpx;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* 默认地址按钮 */
+  .edit-addr-box .addr-item-def .label-def {
+    font-size: 28rpx;
+    color: #333333;
+  }
+
+  .edit-addr-box .addr-item-def .def-switch {
+    margin-right: -24rpx;
+  }
+
+  .btn-box {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12rpx 24rpx;
+    position: fixed;
+    bottom: 16rpx;
+    left: 0;
+    /*兼容 IOS<11.2*/
+    bottom: calc(16rpx + var(--mall4j-safe-area-inset-bottom));
+    /*兼容 IOS>11.2*/
+  }
+
+  .btn-box .save-btn {
+    height: 75rpx;
+    line-height: 75rpx;
+    text-align: center;
+    background-color: #F81A1A;
+    color: #fff;
+    border-radius: 60rpx;
+    font-size: 32rpx;
+    font-weight: bold;
+    font-family: PingFang SC-Bold, PingFang SC;
+  }
+
+
+  .btn-box text {
+    font-size: 30rpx;
+  }
+
+  .btn-box .clear.btn,
+  .keep.btn {
+    width: 60%;
+    height: 80rpx;
+    line-height: 80rpx;
+    margin: auto;
+    text-align: center;
+    border: 1rpx solid #F81A1A;
+    border-radius: 50rpx;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-box .keep {
+    color: #fff;
+    background-color: #F81A1A;
+  }
+
+  .btn-box .clear.btn {
+    margin-top: 40rpx;
+    color: #F81A1A;
+  }
+
+  image {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 选择地址弹窗 */
+  .popup {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 750rpx;
+    margin: auto;
+    z-index: 210;
+  }
+
+  .popup.show {
+    top: 0;
+  }
+
+  .popup .popup-mask {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+  }
+
+  .popup .popup-con {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    transform: translateY(100%);
+    transition: all .3s;
+    background: #fff;
+    border-radius: 20rpx 20rpx 0 0;
+    height: 80%;
+  }
+
+  .popup.show .popup-con {
+    transform: translateY(0);
+  }
+
+  .popup .popup-con .pop-tit {
+    position: relative;
+    padding-top: 32rpx;
+  }
+
+  .popup .popup-con .pop-tit .tit {
+    height: 50rpx;
+    text-align: center;
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #333333;
+    line-height: 50rpx;
+    font-family: PingFang SC-Bold, PingFang SC;
+  }
+
+  .popup .popup-con .pop-tit .close {
+    width: 44rpx;
+    height: 44rpx;
+    position: absolute;
+    right: 32rpx;
+    top: 35rpx;
+  }
+
+  .popup .popup-con .addr-list-box {
+    display: flex;
+    height: calc(100% - 32rpx - 50rpx - 60rpx);
+    flex-direction: column;
+    margin-top: 60rpx;
+    font-size: 28rpx;
+    font-family: PingFang SC-Regular, PingFang SC;
+  }
+
+  /* 公用 */
+  .addr-list-box .title {
+    color: #333333;
+    font-weight: bold;
+    font-family: PingFang SC-Bold, PingFang SC;
+  }
+
+  .addr-list-box .color3 {
+    color: #333333;
+  }
+
+  .addr-list-box .color9 {
+    color: #999999;
+  }
+
+  /* 步骤条 */
+  .addr-list-box .step-box {
+    display: flex;
+    border-bottom: 1rpx solid #E1E1E1;
+    position: relative;
+  }
+
+  .addr-list-box .step-box .step {
+    color: #333333;
+    margin-right: 60rpx;
+    white-space: nowrap;
+  }
+
+  .addr-list-box .step-box .step:first-child {
+    margin-left: 32rpx;
+    padding-bottom: 16rpx;
+  }
+
+  .addr-list-box .step-box .step:last-child {
+    margin-right: 0;
+  }
+
+  .addr-list-box .step-box .step-act {
+    color: #F81A1A;
+    position: relative;
+  }
+
+  .addr-list-box .step-box .step-act::after {
+    display: block;
+    content: ' ';
+    width: 56rpx;
+    height: 4rpx;
+    position: absolute;
+    bottom: -2rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom: 4rpx solid #F81A1A;
+    z-index: 2;
+  }
+
+  /* 步骤条end */
+  .popup .popup-con .scroll-box {
+    max-height: calc(100% - 80rpx);
+    overflow-y: auto;
+  }
+
+  /* 热门城市 */
+  .addr-list-box .hot-city-box {
+    padding: 32rpx 24rpx;
+  }
+
+  .hot-city-box .city-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 16rpx;
+  }
+
+  .hot-city-box .city-list .city-item {
+    padding: 16rpx 38rpx;
+    color: #5B5B5B;
+    background-color: #F5F5F5;
+    margin: 8rpx;
+  }
+
+  /* 热门城市end */
+  /* 区域列表 */
+  .addr-list-box .area-box {
+    padding: 0 32rpx;
+  }
+
+  .area-box .area-list {
+    margin-top: 30rpx;
+  }
+
+  .area-box .area-list .area-item {
+    margin-bottom: 32rpx;
+    line-height: 40rpx;
+  }
+
+  .area-box .area-list .area-item .letter {
+    display: inline-block;
+    width: 44rpx;
+  }
+
+  .area-box .area-list .area-item .sel-color {
+    color: #F81A1A;
+  }
+
+  /* 选择地址弹窗end */
+
+}

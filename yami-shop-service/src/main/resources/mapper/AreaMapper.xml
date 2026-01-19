@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.AreaMapper">
+    <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.Area">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="area_id" jdbcType="BIGINT" property="areaId"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="area_name_en" jdbcType="VARCHAR" property="areaNameEn"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="level" jdbcType="INTEGER" property="level"/>
+    </resultMap>
+
+    <resultMap id="AreaListMap" type="com.yami.shop.bean.dto.AreaDto">
+        <id column="pid" property="areaId"/>
+        <result column="pname"  property="areaNameEn"/>
+        <result column="ppid"  property="parentId"/>
+        <result column="plevel"  property="level"/>
+        <collection property="areas" ofType="com.yami.shop.bean.dto.AreaDto">
+            <id column="cid" property="areaId"/>
+            <result column="cname"  property="areaNameEn"/>
+            <result column="cpid"  property="parentId"/>
+            <result column="clevel"  property="level"/>
+            <collection property="areas" ofType="com.yami.shop.bean.dto.AreaDto">
+                <id column="area_id"  property="areaId"/>
+                <result column="area_name" property="areaName"/>
+                <result column="area_name_en"  property="areaNameEn"/>
+                <result column="parent_id"  property="parentId"/>
+                <result column="level"  property="level"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getAreaListInfo" resultMap="AreaListMap">
+        SELECT * FROM
+            (SELECT p.area_id pid,p.area_name_en pname,p.parent_id ppid,p.level plevel, c.area_id cid,c.area_name_en cname,c.parent_id cpid,c.level clevel
+            FROM tz_area p
+            JOIN tz_area c  ON p.level=1 AND c.parent_id=p.area_id
+            ) tal
+            left JOIN tz_area a ON tal.cid=a.parent_id
+        UNION ALL
+        (
+            SELECT area_id pid, area_name_en pname,parent_id ppid,null plevel,null cid,null cname,null cpid,null clevel,
+                   null area_id,null area_name,null area_name_en,null area_name_pinyin,null parent_id,null level
+            FROM
+                tz_area
+            WHERE
+                LEVEL = 1
+              AND area_id NOT IN ( SELECT parent_id FROM tz_area WHERE LEVEL = 2 ))
+    </select>
+
+    <select id="listByPid" resultMap="BaseResultMap">
+        SELECT * FROM `tz_area` ta
+        <where>
+            <if test="level != null">
+                ta.`level` = #{level}
+            </if>
+            <if test="pid != null">
+                AND ta.`parent_id` = #{pid}
+            </if>
+        </where>
+    </select>
+    <select id="listAreaOfEnable" resultMap="AreaListMap">
+        SELECT * FROM
+            (
+                SELECT
+                    p.area_id pid, p.parent_id ppid, p.level plevel,
+                    c.area_id cid, c.parent_id cpid, c.level clevel,
+                    <!-- 简体中文显示中文名，其余都显示英文名 -->
+                    <if test="lang == 0">
+                        p.area_name pname, c.area_name cname
+                    </if>
+                    <if test="lang != 0">
+                        p.area_name_en pname, c.area_name_en cname
+                    </if>
+                FROM
+                    `tz_area` p
+                    JOIN `tz_area` c ON p.level = 1 AND c.parent_id = p.area_id
+            ) tal
+                JOIN `tz_area` a  ON tal.cid = a.parent_id
+    </select>
+    <select id="getAllAreaList" resultType="com.yami.shop.bean.dto.AreaDto">
+        SELECT * FROM tz_area
+    </select>
+
+</mapper>

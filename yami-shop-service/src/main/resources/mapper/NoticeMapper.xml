@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yami.shop.dao.NoticeMapper">
+
+    <resultMap id="noticeMap" type="com.yami.shop.bean.model.Notice">
+        <id property="id" column="id"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="status" column="status"/>
+        <result property="isTop" column="is_top"/>
+        <result property="publishTime" column="publish_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result column="types" property="types"/>
+        <result property="multiShopIds" column="multi_shop_ids"/>
+        <result property="userIds" column="user_ids"/>
+        <result property="immediatelySend" column="immediately_send"/>
+        <result property="sendTime" column="send_time" />
+        <result property="visibleUserType" column="visible_user_type"/>
+    </resultMap>
+
+    <resultMap id="noticeAndTagIdsMap" type="com.yami.shop.bean.model.Notice" extends="noticeMap">
+        <collection property="userTagIds" javaType="java.util.List" ofType="long">
+            <result column="userTagIds"/>
+        </collection>
+    </resultMap>
+    <sql id="noticeParam">
+        n.id,n.shop_id,n.title,n.content, n.send_time, n.publish_time,n.types, n.status, n.multi_shop_ids,n.user_ids,
+        n.send_time,n.visible_user_type, n.immediately_send,n.is_top
+    </sql>
+    <select id="pageNotice" resultType="com.yami.shop.bean.app.dto.NoticeDto">
+      SELECT n.id,n.shop_id,n.title, IFNULL(n.send_time, n.publish_time) as publishTime, n.types, n.status, n.is_top
+      FROM tz_notice n
+        <!-- 用户端(查询包括指定用户可见) -->
+        <if test='notice.accountId != "0" and notice.accountId != null'>
+            <if test="notice.type == 2">
+                LEFT JOIN tz_notice_tag nt ON n.`id` = nt.`notice_id`
+                LEFT JOIN `tz_user_tag_user` ut ON ut.`user_tag_id` = nt.`user_tag_id`
+            </if>
+        </if>
+      WHERE shop_id = #{notice.shopId}
+        <if test="notice.status != null">
+            and  n.`status` = #{notice.status}
+        </if>
+        <!-- 平台端查询 -->
+        <if test=' notice.accountId == "0" '>
+            <if test="notice.type != null  ">
+               and  FIND_IN_SET (#{notice.type}, `types`)
+            </if>
+        </if>
+        <!-- 非平台端查询 -->
+        <if test='notice.accountId != "0"'>
+        <if test="notice.type != null">
+            and  (n.immediately_send = 1 or (n.immediately_send = 0 and n.send_time &lt;= #{notice.sendTime} ))
+            and FIND_IN_SET(#{notice.type}, n.types)
+            <!-- 用户端(查询包括指定用户可见) -->
+            <if test="notice.accountId != null and notice.type == 2">
+                -- 所有用户可见
+                AND (visible_user_type = 0
+                -- 标签可见
+                or (visible_user_type = 1 and ut.`user_id` = #{notice.accountId})
+                -- 指定用户可见
+                or (visible_user_type = 2 and FIND_IN_SET(#{notice.accountId}, n.`user_ids`)))
+            </if>
+
+            <if test="notice.accountId == null ">
+                and  n.visible_user_type = 0
+            </if>
+        </if>
+        </if>
+        <if test="notice.title != null">
+            and n.title like CONCAT('%',#{notice.title},'%')
+        </if>
+        <if test="notice.beginTime != null and notice.endTime != null">
+            and date(n.publish_time) between #{notice.beginTime} and #{notice.endTime}
+        </if>
+        <if test="notice.isTop != null">
+            and n.is_top  = #{notice.isTop}
+        </if>
+      ORDER BY n.is_top DESC, n.`publish_time` DESC
+    </select>
+    <delete id="removeByIdAndShopId">
+      delete from tz_notice where shop_id = #{shopId} and id = #{id}
+    </delete>
+    <select id="listPage" resultType="com.yami.shop.bean.model.Notice">
+        SELECT n.id,n.shop_id,n.title,IFNULL(n.send_time, n.publish_time) as publishTime
+        FROM tz_notice n
+        WHERE n.`status` = 1 and n.shop_id = 1
+        <if test="notice.type != null ">
+            and (n.immediately_send = 1 or (n.immediately_send = 0 and n.send_time &lt;= #{notice.sendTime} ))
+           and FIND_IN_SET (#{notice.type}, n.`types`)
+        </if>
+        <!-- 商家端(查询包括指定商家可见) -->
+        <if test="notice.accountId != null and notice.type == 1">
+            and  ( FIND_IN_SET (#{notice.accountId}, n.`multi_shop_ids`) or n.`multi_shop_ids` is null )
+        </if>
+
+        <if test="notice.title != null">
+            and n.title like CONCAT('%',#{notice.title},'%')
+        </if>
+        <if test="notice.beginTime != null and notice.endTime != null">
+            and date(n.publish_time) between #{notice.beginTime} and #{notice.endTime}
+        </if>
+        ORDER BY n.is_top DESC, n.`publish_time` DESC
+    </select>
+
+    <select id="getNoticeById" resultMap="noticeAndTagIdsMap">
+        SELECT n.id,n.shop_id,n.title,n.content, IFNULL(n.send_time, n.publish_time) AS publish_time,
+               n.types, n.status,n.user_ids, n.multi_shop_ids,n.send_time,n.visible_user_type, n.immediately_send,
+                n.is_top,nt.`user_tag_id` as userTagIds
+        FROM tz_notice n
+        LEFT JOIN `tz_notice_tag` nt ON nt.`notice_id` = n.`id`
+        WHERE n.`id` = #{id}
+    </select>
+
+    <select id="getListByParam" resultType="com.yami.shop.bean.model.Notice">
+        SELECT n.id,n.shop_id,n.title,n.publish_time, n.visible_user_type, n.multi_shop_ids,n.user_ids, n.immediately_send, n.send_time
+        FROM tz_notice n
+        WHERE n.`status` = #{notice.status} and n.shop_id = #{notice.shopId}
+        <if test="notice.type != null ">
+            and FIND_IN_SET (#{notice.type}, `types`)
+        </if>
+        <!-- 商家端(查询包括指定商家可见) -->
+        <if test="notice.accountId != null and notice.type == 1">
+            and  ( FIND_IN_SET (#{notice.accountId}, n.`multi_shop_ids`) or n.`multi_shop_ids` is null )
+        </if>
+
+        <if test="notice.title != null">
+            and n.title like CONCAT('%',#{notice.title},'%')
+        </if>
+        <if test="notice.beginTime != null and notice.endTime != null">
+            and date(n.publish_time) between #{notice.beginTime} and #{notice.endTime}
+        </if>
+        ORDER BY n.is_top DESC, n.`publish_time` DESC
+    </select>
+
+    <update id="updateByNoticeId">
+        update tz_notice set shop_id = #{notice.shopId},title = #{notice.title},publish_time=#{notice.publishTime},
+        user_ids = #{notice.userIds},visible_user_type = #{notice.visibleUserType}, multi_shop_ids = #{notice.multiShopIds}, immediately_send = #{notice.immediatelySend},
+        send_time = #{notice.sendTime},content = #{notice.content},update_time = #{notice.updateTime},is_top = #{notice.isTop},
+        types = #{notice.types},status = #{notice.status}
+        where id = #{notice.id}
+    </update>
+
+</mapper>

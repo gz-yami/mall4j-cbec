@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.BasketMapper">
+    <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.Basket">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="basket_id" jdbcType="BIGINT" property="basketId"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="prod_id" jdbcType="BIGINT" property="prodId"/>
+        <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="basket_count" jdbcType="INTEGER" property="basketCount"/>
+        <result column="basket_date" jdbcType="TIMESTAMP" property="basketDate"/>
+        <result column="discount_id" jdbcType="BIGINT" property="discountId"/>
+        <result column="distribution_card_no" jdbcType="VARCHAR" property="distributionCardNo"/>
+    </resultMap>
+
+    <select id="getShopCartItems" resultType="com.yami.shop.bean.app.dto.ShopCartItemDto">
+        SELECT tb.*,tb.basket_count as prod_count
+        ,tb.basket_count as prod_count,
+<!--               IFNULL(ts.pic,tp.pic)AS pic,-->
+               IF(uc.id,TRUE,FALSE) AS is_collection,
+               tsd.shop_name
+        FROM tz_basket tb
+        LEFT JOIN tz_shop_detail tsd ON tb.shop_id = tsd.shop_id
+        LEFT JOIN tz_user_collection uc ON uc.prod_id = tb.prod_id AND tb.user_id = uc.user_id
+        LEFT JOIN tz_prod tp ON tb.prod_id = tp.prod_id
+        WHERE tsd.shop_status = 1 AND tb.user_id = #{userId} and tp.pre_sell_status != 1
+        ORDER BY tb.`basket_id` DESC
+  </select>
+
+    <select id="getUserShopCartItems" resultType="com.yami.shop.bean.app.dto.ShopCartItemDto">
+        SELECT tb.*,tb.basket_count as prod_count,tsd.shop_name
+        FROM tz_basket tb
+        LEFT JOIN tz_shop_detail tsd ON tb.shop_id = tsd.shop_id
+        WHERE tsd.shop_status = 1 AND tb.is_checked = 1 AND tb.user_id = #{userId}
+        ORDER BY tb.`basket_id` DESC
+  </select>
+
+
+    <delete id="deleteShopCartItemsByBasketIds">
+        delete from tz_basket where user_id = #{userId} and
+        (
+            basket_id in
+            <foreach collection="basketIds" item="basketId" open="(" separator="," close=")">
+                #{basketId}
+            </foreach>
+            or parent_basket_id in
+            <foreach collection="basketIds" item="basketId" open="(" separator="," close=")">
+                #{basketId}
+            </foreach>
+        )
+    </delete>
+
+    <delete id="deleteAllShopCartItems">
+    delete from tz_basket where user_id = #{userId}
+  </delete>
+
+    <select id="getShopCartExpiryItems" resultType="com.yami.shop.bean.app.dto.ShopCartItemDto">
+        SELECT
+            tb.*,tb.basket_count AS prod_count,tsd.shop_name,tp.pic,tp.price,tp.ori_price,tp.brief,ts.properties,
+            ifnull(pl.prod_name, tp.prod_name) as prod_name,
+            ifnull(sl.sku_name, ts.sku_name) as sku_name
+        FROM tz_basket tb
+        LEFT JOIN tz_shop_detail tsd ON tb.shop_id = tsd.shop_id
+        LEFT JOIN tz_prod tp ON tb.prod_id = tp.prod_id
+        LEFT JOIN tz_prod_lang pl ON pl.prod_id = tp.prod_id AND pl.lang = #{lang}
+        LEFT JOIN tz_sku ts ON tb.sku_id = ts.sku_id
+        LEFT JOIN tz_sku_lang sl ON ts.sku_id = sl.sku_id AND sl.lang = #{lang}
+        WHERE (tp.status != 1 or ts.is_delete = 1 OR ts.status !=1 or (tp.pre_sell_status = 1 and tp.status = 1 and tb.combo_id = 0)) AND tb.user_id = #{userId} and tp.status > -1 and ts.status >-1
+  </select>
+    <delete id="cleanExpiryProdList">
+        DELETE FROM tz_basket
+        WHERE basket_id IN(
+        SELECT basket_id FROM (
+        SELECT tb.basket_id basket_id
+        FROM tz_basket tb
+        LEFT JOIN tz_shop_detail tsd ON tb.shop_id = tsd.shop_id
+        LEFT JOIN tz_prod tp ON tb.prod_id = tp.prod_id
+        LEFT JOIN tz_sku ts ON tb.sku_id = ts.sku_id
+        WHERE (tp.status !=1 OR ts.is_delete = 1 OR ts.status !=1 or ((tp.pre_sell_status = 1 and tp.status = 1 and tb.combo_id = 0))) AND tb.user_id = #{userId}) AS temp)
+  </delete>
+
+
+    <update id="updateDiscountItemId">
+        <foreach collection="shopCartParams" item="shopCartParam" separator=";">
+            UPDATE tz_basket SET discount_id = #{shopCartParam.discountId} where basket_id = #{shopCartParam.basketId}  and user_id = #{userId}
+        </foreach>
+    </update>
+    <select id="listUserIdByProdId" resultType="java.lang.String">
+      select user_id from tz_basket where prod_id = #{prodId}
+    </select>
+    <select id="listUserIdByProdIds" resultType="java.lang.String">
+        select user_id from tz_basket
+        where prod_id in
+        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+            #{prodId}
+        </foreach>
+    </select>
+    <select id="removeByComboIdAndSkuIds" resultType="java.lang.String">
+        SELECT DISTINCT user_id FROM `tz_basket` WHERE combo_id = #{comboId}
+        <if test="skuIds != null and skuIds.size() > 0">
+        AND sku_id IN
+            <foreach collection="skuIds" item="skuId" separator="," open="(" close=")">
+                #{skuId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getShopCartProdNum" resultType="java.lang.Integer">
+<!--        SELECT SUM(IFNULL(IF(tb.combo_id = 0, tb.basket_count, tb.combo_count*tcp.least_num), 0)) num -->
+        SELECT
+            COUNT(*) num
+        FROM tz_basket tb
+           LEFT JOIN tz_shop_detail tsd ON tb.shop_id = tsd.shop_id
+           LEFT JOIN tz_prod tp ON tb.prod_id = tp.prod_id
+           LEFT JOIN tz_sku ts ON tb.sku_id = ts.sku_id
+        WHERE tb.user_id = #{userId} AND tsd.shop_status = 1 AND tp.status = 1 AND ts.status =1 and (tp.pre_sell_status != 1 or (tp.pre_sell_status = 1 and tb.combo_id > 0))
+
+    </select>
+
+    <update id="checkShopCartItems">
+        <foreach collection="checkShopCartItems" separator=";" item="item">
+            update tz_basket set is_checked = #{item.isChecked} where basket_id = #{item.basketId} and user_id = #{userId}
+        </foreach>
+    </update>
+</mapper>

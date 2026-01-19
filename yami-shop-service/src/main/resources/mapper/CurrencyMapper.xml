@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yami.shop.dao.CurrencyMapper">
+
+  <resultMap id="currencyMap" type="com.yami.shop.bean.model.Currency">
+    <id column="id" property="id" />
+    <result column="currency_name" property="currencyName"/>
+    <result column="currency_code" property="currencyCode"/>
+    <result column="symbol" property="symbol"/>
+    <result column="exchange_rate" property="exchangeRate"/>
+    <result column="status" property="status"/>
+    <result column="default_currency" property="defaultCurrency"/>
+  </resultMap>
+
+  <resultMap id="currencyDetailMap" type="com.yami.shop.bean.vo.CurrencyVO">
+    <id column="id" property="id" />
+    <result column="currency_name" property="currencyName"/>
+    <result column="currency_code" property="currencyCode"/>
+    <result column="symbol" property="symbol"/>
+    <result column="exchange_rate" property="exchangeRate"/>
+    <result column="status" property="status"/>
+    <result column="default_currency" property="defaultCurrency"/>
+    <collection property="currencyLangs" ofType="com.yami.shop.bean.vo.CurrencyLangVO">
+      <result property="id" column="cl_id"/>
+      <result property="currencyName" column="cl_currency_name"/>
+      <result property="langId" column="cl_lang_id"/>
+    </collection>
+  </resultMap>
+  <select id="listEnableCurrency" resultMap="currencyDetailMap">
+    SELECT cl.currency_name as cl_currency_name,cl.lang_id as cl_lang_id,cl.id as cl_id,c.*
+    FROM
+      tz_currency c
+    LEFT JOIN tz_currency_lang cl ON c.id = cl.id
+  </select>
+
+  <select id="getCurrencyById" resultMap="currencyDetailMap">
+    SELECT cl.currency_name as cl_currency_name,cl.lang_id as cl_lang_id,cl.id as cl_id,c.*
+    FROM
+      tz_currency c
+    LEFT JOIN tz_currency_lang cl ON c.id = cl.id
+    where c.id = #{id}
+  </select>
+
+  <select id="pageCurrency" resultType="com.yami.shop.bean.vo.CurrencyVO">
+    SELECT cl.currency_name,c.*
+    FROM
+      tz_currency c
+    LEFT JOIN tz_currency_lang cl ON c.id = cl.id and lang_id = #{currencyDTO.defaultLangId}
+    <where>
+      <if test="currencyDTO.currencyName != null and currencyDTO.currencyName != ''">
+        cl.currency_name LIKE CONCAT('%',#{currencyDTO.currencyName},'%')
+      </if>
+      <if test="currencyDTO.currencyCode != null and currencyDTO.currencyCode != ''">
+        and c.currency_code LIKE CONCAT('%',#{currencyDTO.currencyCode},'%')
+      </if>
+      <if test="currencyDTO.status != null">
+        and c.status LIKE CONCAT('%',#{currencyDTO.status},'%')
+      </if>
+    </where>
+    order by default_currency desc,c.id desc
+  </select>
+</mapper>

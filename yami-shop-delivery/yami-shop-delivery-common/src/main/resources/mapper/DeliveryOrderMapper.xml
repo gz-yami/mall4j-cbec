@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yami.shop.delivery.common.dao.DeliveryOrderMapper">
+
+  <resultMap id="orderDeliveryMap" type="com.yami.shop.delivery.common.model.DeliveryOrder">
+    <id column="order_delivery_id" property="orderDeliveryId" />
+    <result column="order_number" property="orderNumber"/>
+    <result column="dvy_id" property="dvyId"/>
+    <result column="receiver_mobile" property="receiverMobile"/>
+    <result column="dvy_flow_id" property="dvyFlowId"/>
+    <result column="status" property="status"/>
+    <result column="product_nums" property="productNums"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
+    <result column="delete_time" property="deleteTime"/>
+    <result column="delivery_type" property="deliveryType"/>
+  </resultMap>
+
+
+  <resultMap id="deliveryInfoSimpleMap" type="com.yami.shop.bean.vo.DeliveryOrderSimpleVO">
+    <id column="order_delivery_id" jdbcType="BIGINT" property="orderDeliveryId" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+    <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
+    <result column="receiver_mobile" property="receiverMobile"/>
+    <result column="postal_code" property="postalCode"/>
+    <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>
+    <result column="dvy_name" jdbcType="VARCHAR" property="dvyName"/>
+    <result column="delivery_type" property="deliveryType"/>
+  </resultMap>
+
+  <resultMap id="deliveryInfoMap" type="com.yami.shop.delivery.common.model.DeliveryOrder">
+    <id column="order_delivery_id" jdbcType="BIGINT" property="orderDeliveryId" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+    <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
+    <result column="receiver_mobile" property="receiverMobile"/>
+    <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>
+    <result column="dvy_name" jdbcType="VARCHAR" property="dvyName"/>
+    <result column="status" jdbcType="INTEGER" property="status"/>
+    <result column="order_type" jdbcType="INTEGER" property="orderType"/>
+    <result column="product_nums" jdbcType="INTEGER" property="productNums"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
+    <result column="delivery_type" property="deliveryType"/>
+    <collection property="orderItems" ofType="com.yami.shop.delivery.common.param.OrderItemParam">
+      <id column="ei_id" property="orderItemId"/>
+      <result column="prod_name" jdbcType="VARCHAR" property="prodName"/>
+      <result column="prod_count" jdbcType="INTEGER" property="prodCount"/>
+      <result column="pic" jdbcType="VARCHAR" property="pic"/>
+      <result column="properties" jdbcType="VARCHAR" property="properties"/>
+      <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+      <result column="price" jdbcType="DECIMAL" property="price"/>
+      <result column="activity_id" property="activityId"/>
+      <result column="activity_type" property="activityType"/>
+      <result column="pre_sell_status" property="preSellStatus"/>
+      <result column="pre_sell_time" property="preSaleTime"/>
+    </collection>
+  </resultMap>
+
+  <select id="getAndDeliveryItemInfo" resultMap="deliveryInfoMap">
+    SELECT ei.`prod_name`,ei.order_item_id as ei_id,ei.`sku_id`,ei.pic, ei.properties, ei.price,ei.activity_id,ei.activity_type,ei.pre_sell_time,
+           de.order_delivery_id, de.order_number, de.dvy_id, de.dvy_flow_id, de.receiver_mobile, de.status, de.product_nums, de.create_time, de.update_time, de.delivery_type, de.delete_time, dei.*, o.order_type as order_type, ei.properties
+    FROM `tz_delivery_order` de
+    join `tz_order` o on o.order_number = de.order_number
+    LEFT JOIN `tz_delivery_order_item` dei ON dei.`order_delivery_id` = de.`order_delivery_id`
+    LEFT JOIN `tz_order_item` ei ON ei.`order_item_id` = dei.`order_item_id`
+    WHERE de.status =1
+        <if test="orderDeliveryId != null">
+          and de.order_delivery_id =#{orderDeliveryId}
+        </if>
+        <if test="orderNumber != null and orderNumber != '' != null">
+          and de.order_number =#{orderNumber}
+        </if>
+  </select>
+
+  <select id="listDetailDelivery" resultMap="deliveryInfoMap">
+    SELECT
+      de.*,
+      oi.pic,
+      oi.prod_name,
+      doi.prod_count
+    FROM
+      `tz_delivery_order` de
+
+        LEFT JOIN `tz_delivery_order_item` doi ON doi.order_delivery_id = de.order_delivery_id
+        LEFT JOIN `tz_order_item` oi ON oi.order_item_id = doi.order_item_id
+    WHERE
+      de.order_number = #{orderNumber}
+      AND de.STATUS =1
+    ORDER BY de.`order_delivery_id`
+  </select>
+
+  <select id="listUnpushDelivery" resultMap="deliveryInfoSimpleMap">
+    SELECT o.`order_id`,ua.post_code,de.receiver_mobile,de.`dvy_flow_id`,de.`dvy_id` FROM tz_order o
+    LEFT JOIN tz_user_addr_order ua ON o.`addr_order_id` = ua.`addr_order_id`
+    LEFT JOIN tz_delivery_order de ON o.`order_number` = de.`order_number`
+    WHERE de.`delivery_type` = 1 AND o.`status` IN (3,5) AND o.push_delivery_status = 0
+  </select>
+</mapper>

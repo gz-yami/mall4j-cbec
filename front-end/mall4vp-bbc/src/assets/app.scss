@@ -1,0 +1,9 @@
+// 兼容旧版浏览器不超出最大宽度换行问题
+.el-message{
+  width: auto !important;
+}
+
+// 图片裁剪显示
+img{
+  object-fit: cover !important;
+}

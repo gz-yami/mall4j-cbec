@@ -1,0 +1,76 @@
+{
+  "name": "mall4v-pro",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "dev": "vite",
+    "dev:test": "vite --mode testing",
+    "build": "vite build",
+    "build:test": "vite build --mode testing",
+    "lint": "eslint --ext .js,.vue src",
+    "lint:fix": "eslint --fix --ext .js,.vue src",
+    "preview": "vite preview",
+    "prepare": "husky install",
+    "lint:staged": "lint-staged"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "2.3.1",
+    "axios": "1.7.2",
+    "big.js": "6.2.1",
+    "compressorjs": "1.2.1",
+    "crypto-js": "4.2.0",
+    "dompurify": "3.1.5",
+    "echarts": "5.5.1",
+    "element-plus": "2.7.6",
+    "element-resize-detector": "1.2.4",
+    "lodash": "4.17.21",
+    "moment": "2.30.1",
+    "pinia": "2.1.7",
+    "qs": "6.12.1",
+    "vue": "3.4.30",
+    "vue-cookies": "1.8.4",
+    "vue-draggable-next": "2.2.1",
+    "vue-i18n": "9.13.1",
+    "vue-router": "4.4.0",
+    "vue-slicksort": "2.0.5",
+    "wukongimjssdk": "1.2.10"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "5.4.1",
+    "@vitejs/plugin-vue": "5.0.5",
+    "esbuild": "0.21.5",
+    "eslint": "8.57.0",
+    "eslint-config-standard": "17.1.0",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-n": "16.6.2",
+    "eslint-plugin-promise": "6.2.0",
+    "eslint-plugin-vue": "9.26.0",
+    "eslint-plugin-vue-scoped-css": "2.8.1",
+    "husky": "9.0.11",
+    "lint-staged": "15.2.7",
+    "rollup": "4.18.0",
+    "rollup-plugin-esbuild": "6.1.1",
+    "sass": "1.77.6",
+    "sortablejs": "1.15.2",
+    "terser": "5.31.1",
+    "unplugin-auto-import": "0.17.6",
+    "unplugin-vue-components": "0.27.2",
+    "unplugin-vue-define-options": "1.4.5",
+    "vite": "5.3.2",
+    "vite-plugin-compression": "0.5.1",
+    "vite-plugin-eslint": "1.8.1",
+    "vite-plugin-svg-icons": "2.0.1",
+    "vue-eslint-parser": "9.4.3"
+  },
+  "lint-staged": {
+    "*.{js,vue}": [
+      "eslint --fix"
+    ]
+  },
+  "engines": {
+    "node": ">=18.12.0",
+    "pnpm": ">=7"
+  }
+}

@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.SkuMapper">
+  <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.Sku">
+    <!--
+    WARNING - @mbg.generated
+    -->
+    <id column="sku_id" jdbcType="BIGINT" property="skuId" />
+    <result column="prod_id" jdbcType="BIGINT" property="prodId" />
+    <result column="properties" jdbcType="VARCHAR" property="properties" />
+    <result column="ori_price" jdbcType="DECIMAL" property="oriPrice" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="rec_time" jdbcType="TIMESTAMP" property="recTime" />
+    <result column="party_code" jdbcType="VARCHAR" property="partyCode" />
+    <result column="model_id" jdbcType="VARCHAR" property="modelId" />
+    <result column="pic" jdbcType="VARCHAR" property="pic" />
+    <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+    <result column="weight" property="weight"/>
+    <result column="volume" property="volume"/>
+    <result column="stock_warning" javaType="INTEGER" property="stockWarning"/>
+    <result column="stocks" jdbcType="INTEGER" property="stocks" />
+  </resultMap>
+    <resultMap id="skuDetailMap" type="com.yami.shop.bean.model.Sku">
+        <id column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="prod_id" jdbcType="BIGINT" property="prodId" />
+        <result column="properties" jdbcType="VARCHAR" property="properties" />
+        <result column="ori_price" jdbcType="DECIMAL" property="oriPrice" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="sku_score" jdbcType="DECIMAL" property="skuScore" />
+        <result column="stocks" jdbcType="INTEGER" property="stocks" />
+        <result column="prod_name" jdbcType="VARCHAR" property="prodName"/>
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="rec_time" jdbcType="TIMESTAMP" property="recTime" />
+        <result column="party_code" jdbcType="VARCHAR" property="partyCode" />
+        <result column="weight" jdbcType="VARCHAR" property="weight" />
+        <result column="volume" jdbcType="VARCHAR" property="volume" />
+        <result column="model_id" jdbcType="VARCHAR" property="modelId" />
+        <result column="pic" jdbcType="VARCHAR" property="pic" />
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+        <result column="stock_warning" javaType="INTEGER" property="stockWarning"/>
+    </resultMap>
+    <resultMap id="skuAndLangMap" type="com.yami.shop.bean.model.Sku" extends="BaseResultMap">
+        <result column="stocks" property="stocks"/>
+        <result column="mold" property="mold"/>
+        <collection property="skuLangList" ofType="com.yami.shop.bean.model.SkuLang">
+            <id column="lang" property="lang"/>
+            <result column="properties" property="properties"/>
+            <result column="sku_name" property="skuName"/>
+            <result column="prod_name" property="prodName"/>
+        </collection>
+    </resultMap>
+    <resultMap id="skuAndComboMap" type="com.yami.shop.bean.model.Sku" extends="BaseResultMap">
+        <result column="stocks" property="stocks"/>
+        <result column="mold" property="mold"/>
+    </resultMap>
+
+    <resultMap id="skuWithLang" type="com.yami.shop.bean.app.vo.SkuVO">
+        <id column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="prod_id" jdbcType="BIGINT" property="prodId" />
+        <result column="properties" jdbcType="VARCHAR" property="properties" />
+        <result column="ori_price" jdbcType="DECIMAL" property="oriPrice" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="party_code" jdbcType="VARCHAR" property="partyCode" />
+        <result column="pic" jdbcType="VARCHAR" property="pic" />
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
+        <collection property="skuLangVOList" ofType="com.yami.shop.bean.vo.SkuLangVO">
+            <id column="lang" property="lang"/>
+            <result column="properties_lang" property="properties"/>
+            <result column="sku_name_lang" property="skuName"/>
+            <result column="prod_name" property="prodName"/>
+        </collection>
+    </resultMap>
+
+    <insert id="insertBatchReturnId" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="skuId" >
+        INSERT INTO `tz_sku` (
+        `prod_id`,`properties`,`ori_price`,`price`,
+        `update_time`,`rec_time`,`party_code`,`model_id`, `pic`,
+        `sku_name`,`prod_name`,`version`,`weight`,`volume`, `status`,
+        `is_delete`, `sku_score`,`stock_warning`,`stocks`
+        )
+        VALUES
+        <foreach collection="skuList" item="sku" index="index" separator=",">
+            (
+            #{sku.prodId},#{sku.properties},#{sku.oriPrice},#{sku.price},
+            NOW(),NOW(),#{sku.partyCode},#{sku.modelId}, #{sku.pic},
+            #{sku.skuName},#{sku.prodName},0,#{sku.weight},#{sku.volume}, #{sku.status},0, #{sku.skuScore},#{sku.stockWarning},#{sku.stocks}
+            )
+        </foreach>
+    </insert>
+
+    <select id="listByProdId" resultMap="skuDetailMap">
+        select s.*
+        from tz_sku s
+        where prod_id = #{prodId} and is_delete = 0
+    </select>
+
+    <update id="deleteByProdId">
+       update tz_sku set is_delete = 1 where prod_id = #{prodId}
+    </update>
+    <select id="getSkuBySkuId" resultType="com.yami.shop.bean.model.Sku">
+        SELECT sk.*
+        FROM tz_sku sk
+        WHERE sk.`sku_id` = #{skuId}
+    </select>
+    <select id="getSkuBySkuIds" resultType="com.yami.shop.bean.model.Sku">
+        SELECT sk.sku_id,sk.status
+        FROM tz_sku sk
+        WHERE sk.`sku_id` in
+        <foreach collection="skuIds" item="skuId" separator="," open="(" close=")">
+            #{skuId}
+        </foreach>
+    </select>
+    <select id="pageSku" resultType="com.yami.shop.bean.model.Sku">
+        select
+            p.prod_name,p.prod_id, ifnull(s.pic, p.pic) as pic,s.sku_id, s.price, p.status as prod_status,
+            if(s.is_delete = 1, -1, s.status) as status, s.party_code, p.mold, p.delivery_mode, p.prod_type
+        from
+            tz_sku s
+            left join tz_prod p on p.prod_id = s.prod_id and s.is_delete = 0
+        <where>
+            and p.status != -1 and p.mold != 2
+            <if test="product.prodKey != null and product.prodKey != ''">
+                <if test="product.prodKeyType == 1">
+                    and p.prod_id in (select prod_id from tz_prod_lang where prod_name like CONCAT("%",#{product.prodKey},"%"))
+                </if>
+                <if test="product.prodKeyType == 2">
+                    and s.party_code = #{product.prodKey}
+                </if>
+            </if>
+            <if test="product.prodId != null">
+                and p.prod_id = #{product.prodId}
+            </if>
+            <if test="product.shopId != null">
+                and p.shop_id = #{product.shopId}
+            </if>
+            <if test="product.prodType != null">
+                and p.prod_type = #{product.prodType}
+            </if>
+            <if test="product.brandId != null">
+                and p.brand_id = #{product.brandId}
+            </if>
+            <if test="product.prodName != null and product.prodName != ''">
+                and p.prod_id  in (select prod_id from tz_prod_lang where prod_name like CONCAT("%",#{product.prodName},"%"))
+            </if>
+            <if test="product.categoryId != null">
+                and p.category_id = #{product.categoryId}
+            </if>
+            <if test="product.isStockWarning != null ">
+<!--                and ss.stocks <![CDATA[ <= ]]> ifnull(s.stock_warning,0)-->
+                AND s.stock_warning_status = #{product.isStockWarning}
+            </if>
+        </where>
+        order
+            by s.sku_id asc
+    </select>
+    <update id="updateSkuById">
+        update `tz_sku`
+        <set>
+            <if test="sku.prodId != null">
+                prod_id = #{sku.prodId},
+            </if>
+            <if test="sku.properties != null">
+                properties = #{sku.properties},
+            </if>
+            <if test="sku.oriPrice != null">
+                ori_price = #{sku.oriPrice},
+            </if>
+            <if test="sku.price != null">
+                price = #{sku.price},
+            </if>
+            <if test="sku.skuScore != null">
+                sku_score = #{sku.skuScore},
+            </if>
+            <if test="sku.prodName != null">
+                prod_name = #{sku.prodName},
+            </if>
+            <if test="sku.status != null">
+                status = #{sku.status},
+            </if>
+            <if test="sku.updateTime != null">
+                update_time = #{sku.updateTime},
+            </if>
+            <if test="sku.recTime != null">
+                rec_time = #{sku.recTime},
+            </if>
+            <if test="sku.partyCode != null">
+                party_code = #{sku.partyCode},
+            </if>
+            <if test="sku.weight != null">
+                weight = #{sku.weight},
+            </if>
+            <if test="sku.volume != null">
+                volume = #{sku.volume},
+            </if>
+            <if test="sku.modelId != null">
+                model_id = #{sku.modelId},
+            </if>
+            <if test="sku.isDelete != null">
+                is_delete = #{sku.isDelete},
+            </if>
+            <if test="sku.skuName != null">
+                sku_name = #{sku.skuName},
+            </if>
+            <if test="sku.stockWarning !=null">
+                stock_warning = #{sku.stockWarning},
+            </if>
+            <if test="sku.stocks != null">
+                stocks = #{sku.stocks},
+            </if>
+            pic = #{sku.pic},
+        </set>
+        where sku_id = #{sku.skuId}
+    </update>
+    <select id="listSkuPartyCodeByProdIds" resultType="java.lang.String">
+        SELECT DISTINCT party_code FROM `tz_sku`
+        <where>
+            prod_id IN
+            <foreach collection="prodIds" item="prodId" separator="," open="(" close=")">
+                #{prodId}
+            </foreach>
+            AND is_delete = 0 AND party_code IS NOT NULL
+            <if test="disProdId != null">
+                AND prod_id != #{disProdId}
+            </if>
+        </where>
+    </select>
+    <select id="listSkuByProdIds" resultMap="BaseResultMap">
+        SELECT sku_id, prod_id FROM `tz_sku`
+        <where>
+            prod_id IN
+            <foreach collection="prodIds" item="prodId" separator="," open="(" close=")">
+                #{prodId}
+            </foreach>
+            AND is_delete = 0
+        </where>
+    </select>
+    <select id="getSkuByPartyCode" resultType="com.yami.shop.bean.model.Sku">
+        SELECT
+            s.sku_id, s.party_code, p.prod_id, p.shop_id, p.pic
+        FROM
+            `tz_sku` s
+            JOIN `tz_prod` p ON s.prod_id = p.prod_id
+        WHERE
+            p.shop_id = #{shopId}
+            AND s.party_code = #{partyCode}
+            AND p.status != -1
+            <if test="notProdType != null">
+                AND p.prod_type != #{notProdType}
+            </if>
+    </select>
+    <select id="listExportSku" resultType="com.yami.shop.bean.model.Sku">
+        select p.prod_id,s.sku_id, s.price, s.party_code, IFNULL(pl.prod_name, dpl.prod_name) prod_name
+        from tz_prod p
+        join tz_sku s on p.prod_id = s.prod_id and s.is_delete = 0 and p.status != -1
+        LEFT JOIN tz_prod_lang pl ON p.prod_id = pl.prod_id AND pl.lang = #{product.useLang}
+        LEFT JOIN tz_prod_lang dpl ON p.prod_id = dpl.prod_id AND dpl.lang = #{product.defaultLang}
+        <where>
+            <choose>
+                <when test="product.skuIds != null and product.skuIds.size() > 0">
+                    and s.sku_id in
+                    <foreach collection="product.skuIds" item="skuId" open="(" close=")" separator=",">
+                        #{skuId}
+                    </foreach>
+                </when>
+                <otherwise>
+                    <if test="product.prodKey != null and product.prodKey != ''">
+                        <if test="product.prodKeyType == 1">
+                            and IFNULL(pl.prod_name, dpl.prod_name) like CONCAT('%',#{product.prodKey},'%')
+                        </if>
+                        <if test="product.prodKeyType == 2">
+                            and s.party_code = #{product.partyCode}
+                        </if>
+                    </if>
+                    <if test="product.shopId != null">
+                        and p.shop_id = #{product.shopId}
+                    </if>
+                    <if test="product.prodType != null">
+                        and p.prod_type = #{product.prodType}
+                    </if>
+                    <if test="product.categoryId != null">
+                        and p.category_id = #{product.categoryId}
+                    </if>
+                    <if test="product.brandId != null">
+                        and p.brand_id = #{product.brandId}
+                    </if>
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <select id="getProdDetailSkuInfo" resultType="com.yami.shop.bean.model.Sku">
+        SELECT s.`sku_id`,s.`prod_id`,s.`price`,s.`ori_price`,IFNULL(s.pic, p.`pic`) AS pic
+        FROM tz_sku s
+        LEFT JOIN tz_prod p ON p.`prod_id` = s.`prod_id`
+        WHERE s.prod_id = #{prodId} AND s.status = 1 AND s.is_delete = 0
+    </select>
+
+  <select id="listSkuBySkuIds" resultMap="BaseResultMap">
+      SELECT s.sku_id,s.prod_id,s.price,s.is_delete,s.stocks
+      FROM `tz_sku` s
+      WHERE s.sku_id IN
+      <foreach collection="skuIds" item="skuId" separator="," open="(" close=")">
+          #{skuId}
+      </foreach>
+  </select>
+
+  <select id="listSkuAndLangByProdIds" resultMap="skuAndLangMap">
+      SELECT s.sku_id,s.prod_id,s.ori_price,s.price,s.party_code,s.weight,s.volume,s.stocks,ifnull(s.stock_warning,0) as stock_warning,sl.*,p.mold
+      FROM `tz_sku` s
+      LEFT JOIN `tz_prod` p ON s.prod_id = p.prod_id
+      LEFT JOIN `tz_sku_lang` sl ON s.sku_id = sl.sku_id
+      WHERE s.is_delete = 0 AND s.prod_id IN
+      <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+          #{prodId}
+      </foreach>
+  </select>
+
+    <select id="stockWarningCount" resultMap="BaseResultMap">
+        select s.sku_id,s.stock_warning, s.stocks
+        from tz_prod p
+        join tz_sku s on p.prod_id = s.prod_id
+        where s.is_delete = 0 and p.shop_id = #{shopId} and p.mold != 2
+    </select>
+
+    <select id="listSkuWithLang" resultMap="skuWithLang">
+        SELECT
+            sku.*,
+            sl.sku_name sku_name_lang,
+            sl.properties properties_lang,
+            sl.*
+        FROM
+            tz_sku sku
+            LEFT JOIN tz_sku_lang sl ON sku.sku_id = sl.sku_id
+            <if test="skuDto.stockPointId != null">
+                LEFT JOIN tz_stock_point_sku sps ON sps.sku_id = sku.sku_id
+            </if>
+        <where>
+            <if test="skuDto.skuIds != null and skuDto.skuIds.size() > 0">
+                sku.sku_id IN
+                    <foreach collection="skuDto.skuIds" item="skuId" open="(" separator="," close=")">
+                        #{skuId}
+                    </foreach>
+            </if>
+            <if test="skuDto.partyCodes != null and skuDto.partyCodes.size() > 0">
+                AND sku.party_code IN
+                    <foreach collection="skuDto.partyCodes" item="partyCode" open="(" separator="," close=")">
+                        #{partyCode}
+                    </foreach>
+            </if>
+            <if test="skuDto.stockPointId != null">
+                AND sps.stock_point_id = #{skuDto.stockPointId}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="batchUpdateSkuWarning">
+        <foreach collection="skuList" item="sku" separator=";">
+            UPDATE `tz_sku` SET stock_warning_status  = IF(stock_warning &lt; #{sku.stocks}, 2, 1) WHERE sku_id = #{sku.skuId}
+        </foreach>
+    </update>
+
+    <update id="deductStock">
+        update tz_sku set stocks = stocks - #{count}, version = version + 1,update_time = NOW() where sku_id = #{skuId} and #{count} &lt;= stocks
+    </update>
+
+
+  <select id="listSkuAndComboByProdIds" resultMap="skuAndComboMap">
+      SELECT s.sku_id,s.prod_id,sc.* FROM tz_sku s
+      LEFT JOIN tz_sku_combo sc ON s.sku_id = sc.sku_id
+      WHERE s.status = 1 AND s.is_delete = 0 AND s.prod_id IN
+      <foreach collection="prodIds" item="prodId" open="(" separator="," close=")">
+          #{prodId}
+      </foreach>
+  </select>
+
+  <select id="page" resultMap="BaseResultMap">
+      SELECT s.*,p.shop_id FROM tz_sku s
+      LEFT JOIN tz_prod p ON s.prod_id = p.prod_id
+      ORDER BY s.sku_id
+  </select>
+</mapper>

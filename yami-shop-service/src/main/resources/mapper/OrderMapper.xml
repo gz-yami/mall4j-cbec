@@ -1,0 +1,2177 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.Order">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="prod_name" jdbcType="VARCHAR" property="prodName"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="total" jdbcType="DECIMAL" property="total"/>
+        <result column="actual_total" jdbcType="DECIMAL" property="actualTotal"/>
+        <result column="pay_type" jdbcType="INTEGER" property="payType"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="dvy_type" jdbcType="VARCHAR" property="dvyType"/>
+        <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
+        <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>
+        <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount"/>
+        <result column="addr_order_id" jdbcType="BIGINT" property="addrOrderId"/>
+        <result column="product_nums" jdbcType="INTEGER" property="productNums"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+        <result column="dvy_time" jdbcType="TIMESTAMP" property="dvyTime"/>
+        <result column="finally_time" jdbcType="TIMESTAMP" property="finallyTime"/>
+        <result column="cancel_time" jdbcType="TIMESTAMP" property="cancelTime"/>
+        <result column="is_payed" jdbcType="BIT" property="isPayed"/>
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus"/>
+        <result column="refund_status" jdbcType="INTEGER" property="refundStatus"/>
+        <result column="close_type" jdbcType="INTEGER" property="closeType"/>
+        <result column="receiver_mobile" jdbcType="VARCHAR" property="receiverMobile"/>
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="free_transfee" jdbcType="DECIMAL" property="freeTransfee"/>
+        <result column="change_amount_version" jdbcType="INTEGER" property="changeAmountVersion"/>
+        <result column="platform_free_freight_amount" jdbcType="DECIMAL" property="platformFreeFreightAmount"/>
+    </resultMap>
+
+    <resultMap id="MyOrderMap" type="com.yami.shop.bean.app.dto.MyOrderDto">
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="actual_total" jdbcType="DECIMAL" property="actualTotal"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="order_type" jdbcType="INTEGER" property="orderType"/>
+        <result column="product_nums" jdbcType="INTEGER" property="productNums"/>
+        <result column="order_mold" jdbcType="INTEGER" property="orderMold"/>
+        <result column="pay_type" jdbcType="INTEGER" property="payType"/>
+        <result column="refund_status" jdbcType="INTEGER" property="refundStatus"/>
+        <result column="dvy_type" jdbcType="VARCHAR" property="dvyType"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="pre_sale_time" jdbcType="TIMESTAMP" property="preSaleTime"/>
+        <result column="order_invoice_id" property="orderInvoiceId"/>
+        <result column="write_off_num" property="writeOffNum"/>
+        <collection property="orderItemDtos" ofType="com.yami.shop.bean.app.dto.MyOrderItemDto">
+            <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+            <result column="pic" jdbcType="VARCHAR" property="pic"/>
+            <result column="prod_id" jdbcType="BIGINT" property="prodId"/>
+            <result column="prod_name" jdbcType="VARCHAR" property="prodName"/>
+            <result column="prod_count" jdbcType="INTEGER" property="prodCount"/>
+            <result column="use_score" jdbcType="INTEGER" property="useScore"/>
+            <result column="price" jdbcType="DECIMAL" property="price"/>
+            <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
+            <result column="properties" jdbcType="VARCHAR" property="properties"/>
+            <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+            <result column="order_item_id" property="orderItemId"/>
+            <result column="comm_sts" property="commSts"/>
+            <result column="refund_type" jdbcType="INTEGER" property="refundType"/>
+            <result column="return_money_sts" jdbcType="INTEGER" property="returnMoneySts"/>
+            <result column="rec_time" property="recTime"/>
+            <result column="giveaway_order_item_id" property="giveawayOrderItemId"/>
+            <result column="return_giveaway_ids" property="returnGiveawayIds"/>
+            <result column="pre_sell_time" jdbcType="TIMESTAMP" property="preSellTime"/>
+            <result column="pre_sell_status" property="preSellStatus"/>
+            <result column="activity_id" property="activityId"/>
+            <result column="activity_type" property="activityType"/>
+            <result column="mold" property="mold"/>
+            <result column="oi_actual_total" property="actualTotal"/>
+        </collection>
+    </resultMap>
+    <resultMap id="MyOrderItemMap" type="com.yami.shop.bean.app.dto.MyOrderItemDto">
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="pic" jdbcType="VARCHAR" property="pic"/>
+        <result column="prod_id" jdbcType="BIGINT" property="prodId"/>
+        <result column="prod_name" jdbcType="VARCHAR" property="prodName"/>
+        <result column="prod_count" jdbcType="INTEGER" property="prodCount"/>
+        <result column="use_score" jdbcType="INTEGER" property="useScore"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
+        <result column="order_item_id" property="orderItemId"/>
+        <result column="comm_sts" property="commSts"/>
+        <result column="rec_time" property="recTime"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="order_type" property="orderType"/>
+    </resultMap>
+
+    <resultMap type="com.yami.shop.bean.model.Order" id="orderAndOrderItemMap">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="prod_name" jdbcType="VARCHAR" property="prodName"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="total" jdbcType="DECIMAL" property="total"/>
+        <result column="actual_total" jdbcType="DECIMAL" property="actualTotal"/>
+        <result column="pay_type" jdbcType="INTEGER" property="payType"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="dvy_type" jdbcType="VARCHAR" property="dvyType"/>
+        <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
+        <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>
+        <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount"/>
+        <result column="reduce_amount" jdbcType="DECIMAL" property="reduceAmount"/>
+        <result column="score_amount" jdbcType="DECIMAL" property="scoreAmount"/>
+        <result column="member_amount" jdbcType="DECIMAL" property="memberAmount"/>
+        <result column="distribution_amount" jdbcType="DECIMAL" property="distributionAmount"/>
+        <result column="shop_coupon_amount" jdbcType="DECIMAL" property="shopCouponAmount"/>
+        <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount"/>
+        <result column="platform_free_freight_amount" jdbcType="DECIMAL" property="platformFreeFreightAmount"/>
+        <result column="free_transfee" jdbcType="DECIMAL" property="freeTransfee"/>
+        <result column="shop_change_free_amount" jdbcType="DECIMAL" property="shopChangeFreeAmount"/>
+        <result column="is_settled" jdbcType="DECIMAL" property="isSettled"/>
+        <result column="addr_order_id" jdbcType="BIGINT" property="addrOrderId"/>
+        <result column="product_nums" jdbcType="INTEGER" property="productNums"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+        <result column="dvy_time" jdbcType="TIMESTAMP" property="dvyTime"/>
+        <result column="finally_time" jdbcType="TIMESTAMP" property="finallyTime"/>
+        <result column="cancel_time" jdbcType="TIMESTAMP" property="cancelTime"/>
+        <result column="is_payed" jdbcType="BIT" property="isPayed"/>
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus"/>
+        <result column="refund_status" jdbcType="INTEGER" property="refundStatus"/>
+        <result column="order_type" jdbcType="INTEGER" property="orderType"/>
+        <result column="order_mold" jdbcType="INTEGER" property="orderMold"/>
+        <result column="close_type" jdbcType="INTEGER" property="closeType"/>
+        <result column="receiver_mobile" jdbcType="VARCHAR" property="receiverMobile"/>
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="write_off_end" jdbcType="VARCHAR" property="writeOffEnd"/>
+        <collection property="orderItems" ofType="com.yami.shop.bean.model.OrderItem">
+            <id column="order_item_id" jdbcType="BIGINT" property="orderItemId"/>
+            <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+            <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+            <result column="prod_id" jdbcType="BIGINT" property="prodId"/>
+            <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+            <result column="prod_count" jdbcType="INTEGER" property="prodCount"/>
+            <result column="use_score" jdbcType="INTEGER" property="useScore"/>
+            <result column="oi_prod_name" jdbcType="VARCHAR" property="prodName"/>
+            <result column="pic" jdbcType="VARCHAR" property="pic"/>
+            <result column="price" jdbcType="DECIMAL" property="price"/>
+            <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+            <result column="product_total_amount" jdbcType="DECIMAL" property="productTotalAmount"/>
+            <result column="oi_platform_free_freight_amount" jdbcType="DECIMAL" property="platformFreeFreightAmount"/>
+            <result column="oi_free_freight_amount" jdbcType="DECIMAL" property="freeFreightAmount"/>
+            <result column="oi_score_amount" jdbcType="DECIMAL" property="scoreAmount"/>
+            <result column="oi_member_amount" jdbcType="DECIMAL" property="memberAmount"/>
+            <result column="oi_distribution_amount" jdbcType="DECIMAL" property="distributionAmount"/>
+            <result column="oi_shop_coupon_amount" jdbcType="DECIMAL" property="shopCouponAmount"/>
+            <result column="oi_discount_amount" jdbcType="DECIMAL" property="discountAmount"/>
+            <result column="oi_shop_change_free_amount" jdbcType="DECIMAL" property="shopChangeFreeAmount"/>
+            <result column="rec_time" jdbcType="TIMESTAMP" property="recTime"/>
+            <result column="comm_sts" jdbcType="INTEGER" property="commSts"/>
+            <result column="distribution_card_no" property="distributionCardNo"/>
+            <result column="basket_date" property="basketDate"/>
+            <result column="oi_share_reduce" property="shareReduce"/>
+            <result column="oi_distribution_parent_amount" property="distributionParentAmount"/>
+            <result column="oi_return_money_sts" property="returnMoneySts"/>
+            <result column="oi_actual_total" property="actualTotal"/>
+            <result column="oi_status" property="status"/>
+            <result column="oi_giveaway_order_item_id" property="giveawayOrderItemId"/>
+            <result column="oi_stock_point_id" property="stockPointId"/>
+            <result column="oi_activity_type" property="activityType"/>
+            <result column="oi_activity_id" property="activityId"/>
+            <result column="oi_mold" property="mold"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="orderAndPayinfoMap" type="com.yami.shop.bean.vo.OrderAndPayInfoVO" extends="BaseResultMap">
+        <result column="settlement_id" property="settlementId"/>
+        <result column="order_pay_no" property="orderPayNo"/>
+        <collection property="orderItems" ofType="com.yami.shop.bean.model.OrderItem">
+            <id column="order_item_id" jdbcType="BIGINT" property="orderItemId"/>
+            <result column="oi_status" property="status"/>
+            <result column="oi_actual_total" property="actualTotal"/>
+            <result column="oi_prod_count" property="prodCount"/>
+            <result column="oi_activity_id" property="activityId"/>
+            <result column="oi_activity_type" property="activityType"/>
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.yami.shop.bean.model.Order" id="simpleOrderAndOrderItemMap">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="status" jdbcType="DECIMAL" property="status"/>
+        <result column="actual_total" jdbcType="DECIMAL" property="actualTotal"/>
+        <result column="is_payed" jdbcType="BIT" property="isPayed"/>
+        <result column="order_type" jdbcType="BIT" property="orderType"/>
+        <collection property="orderItems" ofType="com.yami.shop.bean.model.OrderItem">
+            <id column="order_item_id" jdbcType="BIGINT" property="orderItemId"/>
+            <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+            <result column="prod_id" jdbcType="BIGINT" property="prodId"/>
+            <result column="price" jdbcType="DECIMAL" property="price"/>
+            <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+            <result column="oi_actual_total" property="actualTotal"/>
+        </collection>
+    </resultMap>
+    <resultMap id="unDeliveryOrderMap" type="com.yami.shop.bean.vo.UnDeliveryOrderExcelVO">
+        <result column="order_number" property="orderNumber"/>
+        <result column="dvy_type" property="dvyType"/>
+        <result column="receiver" property="receiver"/>
+        <result column="mobile" property="mobile"/>
+        <result column="receiving_addr" property="receivingAddr"/>
+        <collection property="orderItemList" javaType="list" ofType="com.yami.shop.bean.model.OrderItem">
+            <result column="order_item_id" property="orderItemId"/>
+            <result column="prod_name" jdbcType="VARCHAR" property="prodName"/>
+            <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
+            <result column="status" property="status"/>
+            <result column="be_delivery_num" property="changeNum"/>
+            <result column="prod_count" property="prodCount"/>
+            <result column="giveaway_order_item_id" property="giveawayOrderItemId"/>
+            <result column="activity_type" property="activityType"/>
+            <result column="activity_id" property="activityId"/>
+            <result column="mold" property="mold"/>
+        </collection>
+    </resultMap>
+    <resultMap type="com.yami.shop.bean.model.Order" id="orderAndOrderItemAndUserAddrMap">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="order_prod_name" jdbcType="VARCHAR" property="prodName"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="total" jdbcType="DECIMAL" property="total"/>
+        <result column="actual_total" jdbcType="DECIMAL" property="actualTotal"/>
+        <result column="pay_type" jdbcType="INTEGER" property="payType"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="dvy_type" jdbcType="VARCHAR" property="dvyType"/>
+        <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
+        <result column="nick_name" jdbcType="BIGINT" property="nickName"/>
+        <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>
+        <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount"/>
+        <result column="reduce_amount" jdbcType="DECIMAL" property="reduceAmount"/>
+        <result column="order_type" jdbcType="INTEGER" property="orderType"/>
+        <result column="order_mold" jdbcType="INTEGER" property="orderMold"/>
+        <result column="addr_order_id" jdbcType="BIGINT" property="addrOrderId"/>
+        <result column="product_nums" jdbcType="INTEGER" property="productNums"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="pre_sale_time" jdbcType="TIMESTAMP" property="preSaleTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+        <result column="dvy_time" jdbcType="TIMESTAMP" property="dvyTime"/>
+        <result column="finally_time" jdbcType="TIMESTAMP" property="finallyTime"/>
+        <result column="cancel_time" jdbcType="TIMESTAMP" property="cancelTime"/>
+        <result column="is_payed" jdbcType="BIT" property="isPayed"/>
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus"/>
+        <result column="pay_score" jdbcType="INTEGER" property="score"/>
+        <result column="refund_status" jdbcType="INTEGER" property="refundStatus"/>
+        <result column="close_type" jdbcType="INTEGER" property="closeType"/>
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
+        <result column="order_receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="receiver_mobile" jdbcType="VARCHAR" property="receiverMobile"/>
+        <result column="user_mobile" jdbcType="VARCHAR" property="userMobile"/>
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="write_off_num" jdbcType="INTEGER" property="writeOffNum"/>
+        <result column="write_off_multiple_count" jdbcType="INTEGER" property="writeOffMultipleCount"/>
+        <result column="write_off_status" jdbcType="INTEGER" property="writeOffStatus"/>
+        <result column="virtual_remark" jdbcType="VARCHAR" property="virtualRemark"/>
+        <result column="pay_no" jdbcType="VARCHAR" property="payNo"/>
+        <result column="station_name" jdbcType="VARCHAR" property="stationName"/>
+        <result column="free_transfee" jdbcType="DECIMAL" property="freeTransfee"/>
+        <result column="user_write_off" jdbcType="INTEGER" property="userWriteOff"/>
+        <result column="platform_free_freight_amount" jdbcType="DECIMAL" property="platformFreeFreightAmount"/>
+        <association property="userAddrOrder" javaType="com.yami.shop.bean.model.UserAddrOrder">
+            <id column="addr_order_id" jdbcType="BIGINT" property="addrOrderId"/>
+            <result column="province" jdbcType="VARCHAR" property="province"/>
+            <result column="city" jdbcType="VARCHAR" property="city"/>
+            <result column="area" jdbcType="VARCHAR" property="area"/>
+            <result column="addr" jdbcType="VARCHAR" property="addr"/>
+            <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+            <result column="receiver" jdbcType="VARCHAR" property="receiver"/>
+            <result column="province_id" jdbcType="BIGINT" property="provinceId"/>
+            <result column="area_id" jdbcType="BIGINT" property="areaId"/>
+            <result column="city_id" jdbcType="BIGINT" property="cityId"/>
+        </association>
+        <collection property="writeOffCodes" javaType="java.util.List" ofType="String">
+            <id column="writeOffCodes" />
+        </collection>
+        <collection property="orderItems" ofType="com.yami.shop.bean.model.OrderItem">
+            <id column="order_item_id" jdbcType="BIGINT" property="orderItemId"/>
+            <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+            <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+            <result column="prod_id" jdbcType="BIGINT" property="prodId"/>
+            <result column="item_prod_name" jdbcType="BIGINT" property="prodName"/>
+            <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+            <result column="prod_count" jdbcType="INTEGER" property="prodCount"/>
+            <result column="use_score" jdbcType="INTEGER" property="useScore"/>
+            <result column="pic" jdbcType="VARCHAR" property="pic"/>
+            <result column="price" jdbcType="DECIMAL" property="price"/>
+            <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+            <result column="oi_actual_total" jdbcType="DECIMAL" property="actualTotal"/>
+            <result column="product_total_amount" jdbcType="DECIMAL" property="productTotalAmount"/>
+            <result column="rec_time" jdbcType="TIMESTAMP" property="recTime"/>
+            <result column="comm_sts" jdbcType="INTEGER" property="commSts"/>
+            <result column="item_status" jdbcType="INTEGER" property="status"/>
+            <result column="distribution_card_no" property="distributionCardNo"/>
+            <result column="distribution_amount" property="distributionAmount"/>
+            <result column="basket_date" property="basketDate"/>
+            <result column="share_reduce" property="shareReduce"/>
+            <result column="oi_return_money_sts" property="returnMoneySts"/>
+            <result column="oi_status" property="status"/>
+            <result column="giveaway_order_item_id" property="giveawayOrderItemId"/>
+            <result column="sku_name" property="skuName"/>
+            <result column="properties" property="properties"/>
+            <result column="pre_sell_time" property="preSellTime"/>
+            <result column="item_dvy_type" property="dvyType"/>
+            <result column="activity_type" property="activityType"/>
+            <result column="activity_id" property="activityId"/>
+            <result column="mold" property="mold"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="orderShopDtoMap" type="com.yami.shop.bean.app.dto.OrderShopDto">
+        <id column="order_id" property="orderId"/>
+        <result column="order_number" property="orderNumber"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="shop_name" property="shopName"/>
+        <result column="actual_total" property="actualTotal"/>
+        <result column="total" property="total"/>
+        <result column="total_num" property="totalNum"/>
+        <result column="pay_type" property="payType"/>
+        <result column="transfee" property="transfee"/>
+        <result column="reduce_amount" property="reduceAmount"/>
+        <result column="discount_amount" property="discountMoney"/>
+        <result column="shop_amount" property="shopAmount"/>
+        <result column="shop_coupon_amount" property="shopCouponMoney"/>
+        <result column="score_amount" property="scoreAmount"/>
+        <result column="member_amount" property="memberAmount"/>
+        <result column="shop_combo_amount" property="shopComboAmount"/>
+        <result column="platform_free_freight_amount" property="platformFreeFreightAmount"/>
+        <result column="shop_change_free_amount" property="shopChangeFreeAmount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="dvy_time" property="dvyTime"/>
+        <result column="finally_time" property="finallyTime"/>
+        <result column="cancel_time" property="cancelTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="pre_sale_time" property="preSaleTime"/>
+        <result column="remarks" property="remarks"/>
+        <result column="dvy_type" property="dvyType"/>
+        <result column="order_type" property="orderType"/>
+        <result column="status" property="status"/>
+        <result column="can_refund" property="canRefund"/>
+        <result column="can_all_refund" property="canAllRefund"/>
+        <result column="can_refund_amount" property="canRefundAmount"/>
+        <result column="order_score" property="orderScore"/>
+        <result column="seckill_id" property="seckillId"/>
+        <result column="free_transfee" property="freeTransfee"/>
+        <result column="order_invoice_id" property="orderInvoiceId"/>
+        <result column="refund_status" property="refundStatus"/>
+        <result column="order_mold" property="orderMold"/>
+        <result column="virtual_remark" property="virtualRemark"/>
+        <result column="write_off_num" property="writeOffNum"/>
+        <result column="write_off_multiple_count" property="writeOffMultipleCount"/>
+        <result column="write_off_start" property="writeOffStart"/>
+        <result column="write_off_end" property="writeOffEnd"/>
+        <result column="is_refund" property="isRefund"/>
+        <association property="userAddrDto" javaType="com.yami.shop.bean.dto.UserAddrOrderDto">
+            <id column="addr_order_id" property="addrOrderId"/>
+            <result column="addr_id" property="addrId"/>
+            <result column="user_id" property="userId"/>
+            <result column="receiver" property="receiver"/>
+            <result column="province" property="province"/>
+            <result column="city" property="city"/>
+            <result column="area" property="area"/>
+            <result column="addr" property="addr"/>
+            <result column="post_code" property="postCode"/>
+            <result column="province_id" property="provinceId"/>
+            <result column="city_id" property="cityId"/>
+            <result column="area_id" property="areaId"/>
+            <result column="mobile" property="mobile"/>
+            <result column="create_time" property="createTime"/>
+            <result column="version" property="version"/>
+        </association>
+    </resultMap>
+
+    <select id="getOrderByOrderNumber" resultType="com.yami.shop.bean.model.Order">
+        select *
+        from tz_order o
+        where o.order_number = #{orderNumber}
+    </select>
+
+    <select id="listUnRefundOrderAndOrderItems" resultMap="orderAndOrderItemMap">
+        select o.*,
+               oi.*,oi.stock_point_id as oi_stock_point_id,
+               oi.distribution_amount as oi_distribution_amount,oi.distribution_parent_amount as oi_distribution_parent_amount,
+               oi.score_amount as oi_score_amount,oi.member_amount as oi_member_amount,
+               oi.shop_coupon_amount as oi_shop_coupon_amount,oi.discount_amount as oi_discount_amount,
+               oi.platform_free_freight_amount as oi_platform_free_freight_amount,oi.free_freight_amount as oi_free_freight_amount,
+               oi.shop_change_free_amount as oi_shop_change_free_amount,oi.share_reduce as oi_share_reduce,
+               oi.prod_name as oi_prod_name, oi.actual_total as oi_actual_total,oi.status as oi_status,
+               ifnull(o.prod_name, oi.prod_name) as prod_name
+        from tz_order o
+        join tz_order_item oi on o.order_number = oi.order_number
+        where o.status = #{orderStatus}
+          and (refund_status IS NULL OR o.refund_status &lt;&gt; 1)
+          and o.update_time &lt; #{lessThanUpdateTime}
+    </select>
+
+    <select id="listDeliveryOutTimeOrder" resultMap="orderAndPayinfoMap">
+        SELECT o.*,oi.order_item_id,oi.status as oi_status,os.pay_no AS order_pay_no,oi.actual_total as oi_actual_total,
+        oi.activity_id as oi_activity_id,oi.activity_type as oi_activity_type,oi.prod_count as oi_prod_count,
+        os.settlement_id AS settlement_id FROM tz_order o
+        LEFT JOIN tz_order_item oi ON oi.`order_number` = o.`order_number`
+        LEFT JOIN tz_order_settlement os ON o.order_number = os.order_number
+        WHERE o.`status` = 2
+        AND (o.order_type  <![CDATA[ <> ]]> 3 OR o.order_type IS NULL) AND o.`dvy_type` IN (0, 1)
+        AND (
+            (o.pre_sale_time IS NULL AND o.`pay_time` <![CDATA[ <= ]]> #{lessPayTime} AND o.`pay_time` <![CDATA[ > ]]> #{dateTime})
+            OR
+            (o.pre_sale_time IS NOT NULL AND o.`pre_sale_time` <![CDATA[ <= ]]> #{lessPayTime}  AND o.`pay_time` <![CDATA[ > ]]> #{dateTime})
+        )
+    </select>
+
+    <update id="cancelOrders">
+        <!-- 订单状态为"1:未支付"或"7:待成团"的订单，才取消订单 -->
+        update
+            tz_order
+        set
+            `status` = 6,
+            pay_type = null,
+            cancel_time = NOW(),
+            update_time = NOW()
+        where
+            `status` IN (1, 7)
+            AND order_id in
+                <foreach collection="orders" item="order" open="(" close=")" separator=",">
+                    #{order.orderId}
+                </foreach>
+    </update>
+
+    <update id="receiptOrder">
+        <!-- 订单状态为"3:已发货"的订单，才确认收货 -->
+        update
+            tz_order
+        set
+            `status` = 5,
+            finally_time = NOW(),
+            update_time = NOW()
+        where
+            `status` = 3
+            AND order_id in
+                <foreach collection="orders" item="order" open="(" close=")" separator=",">
+                    #{order.orderId}
+                </foreach>
+    </update>
+
+    <update id="updateByToPaySuccess">
+        # 未支付变更为支付，只能改变一次
+        update tz_order set `status` = 2,is_payed =1,update_time=NOW(),pay_time=NOW() where is_payed = 0 and
+        order_number in
+        <foreach collection="orderNumbers" item="orderNumber" separator="," open="(" close=")">
+            #{orderNumber}
+        </foreach>
+    </update>
+
+
+    <select id="getOrderCountByShopId" resultType="com.yami.shop.bean.param.OrderPayParam">
+        SELECT ifnull(SUM(actual_total), 0) as payActualTotal,COUNT(DISTINCT user_id) as payUserCount,
+        COUNT(*) as payOrderCount
+        FROM tz_order o
+        <where>
+            <if test="shopId != null">
+                and o.shop_id = #{shopId}
+            </if>
+            <if test="startTime != null">
+                and o.pay_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and o.pay_time &lt;= #{endTime}
+            </if>
+            AND o.is_payed =1
+        </where>
+    </select>
+
+    <select id="getPayOrderByTime" resultType="com.yami.shop.bean.param.OrderPayParam">
+        SELECT dates, MAX(orderCount) AS payOrderCount,MAX(payActualTotal) as payActualTotal FROM(
+        SELECT @cdate := DATE_ADD(@cdate,INTERVAL - 1 DAY) dates ,0 AS 'orderCount',0 AS 'payActualTotal'
+        FROM (SELECT @cdate :=DATE_ADD(CURDATE(),INTERVAL + 1 DAY) FROM tz_user) t1
+        <where>
+            <if test="startTime != null">
+                and @cdate >= #{startTime}
+            </if>
+        </where>
+        UNION ALL
+        SELECT DATE_FORMAT(o.pay_time, '%Y-%m-%d') AS dates,COUNT(*) AS orderCount,SUM(actual_total) AS payActualTotal
+        FROM tz_order o
+        <where>
+            <if test="shopId != null">
+                o.shop_id = #{shopId}
+            </if>
+            <if test="startTime != null">
+                and o.pay_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and o.pay_time &lt;= #{endTime}
+            </if>
+            AND o.is_payed =1
+        </where>
+        GROUP BY dates) _tmpAllTable GROUP BY dates
+        ORDER BY dates
+    </select>
+
+    <select id="getActualTotalByHour" resultType="com.yami.shop.bean.param.OrderPayParam">
+        SELECT DATE_FORMAT(o.pay_time, '%k') AS dates,SUM(actual_total) as payActualTotal
+        FROM tz_order o
+        <where>
+            <if test="shopId != null">
+                and o.shop_id = #{shopId}
+            </if>
+            <if test="startTime != null">
+                and o.pay_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and o.pay_time &lt;= #{endTime}
+            </if>
+            AND o.is_payed =1
+        </where>
+        GROUP BY dates
+    </select>
+
+    <select id="listOrdersDetailByOrderParam" resultMap="orderAndOrderItemAndUserAddrMap">
+        SELECT *, ifnull(temp.receiver_name, u.nick_name) as order_receiver_name, if(isnull(u.user_id), 1, 0) as user_write_off,
+        oi.prod_name as item_prod_name, oi.properties,
+        oi.actual_total as oi_actual_total,ovi.write_off_code as writeOffCodes,
+        temp.prod_name as order_prod_name,oi.status as oi_status, oi.sku_name,
+        oi.pre_sell_time,oi.dvy_type as item_dvy_type,oi.activity_id,oi.activity_type,oi.mold
+        FROM
+        (
+        SELECT o.*,sd.shop_name,uao.receiver,uao.mobile,
+        <if test="orderParam.shopId == null">
+            os.pay_no,
+        </if>
+        IF(os.pay_score IS NULL,0,os.pay_score) as pay_score FROM tz_order o
+        LEFT JOIN tz_shop_detail sd ON o.shop_id = sd.shop_id
+        LEFT JOIN tz_user_addr_order uao ON o.addr_order_id = uao.addr_order_id
+        LEFT JOIN tz_order_settlement os ON o.order_number = os.order_number
+        <if test="orderParam.orderMold != null and orderParam.orderMold != 1">
+            JOIN tz_order_item oi ON o.`order_number` = oi.`order_number`
+        </if>
+        <where>
+            <if test="orderParam.stationName != null and orderParam.stationName != ''">
+                and trim(replace(s.station_name,' ','')) like trim(replace(concat('%',#{orderParam.stationName},'%'),'
+                ',''))
+            </if>
+            <if test="orderParam.orderNumber != null and orderParam.orderNumber != ''">
+                and trim(replace(o.order_number,' ','')) like trim(replace(concat('%',#{orderParam.orderNumber},'%'),' ',''))
+            </if>
+            <if test="orderParam.status != null">
+                and o.status = #{orderParam.status}
+            </if>
+            <if test="orderParam.shopId != null">
+                and o.shop_id = #{orderParam.shopId}
+            </if>
+            <if test="orderParam.shopId == null and orderParam.payNo != null and orderParam.payNo != ''">
+                and os.pay_no = #{orderParam.payNo}
+            </if>
+            <if test="orderParam.isPayed != null">
+                and o.is_payed = #{orderParam.isPayed}
+                and o.status != 6
+            </if>
+            <if test="orderParam.startTime != null">
+                and o.create_time &gt; #{orderParam.startTime}
+            </if>
+            <if test="orderParam.endTime != null">
+                and o.create_time &lt; #{orderParam.endTime}
+            </if>
+            <if test="orderParam.orderType != null">
+                and o.order_type = #{orderParam.orderType}
+            </if>
+            <if test="orderParam.orderMold != null and orderParam.orderMold == 1">
+                and o.order_mold = #{orderParam.orderMold}
+            </if>
+            <if test="orderParam.orderMold != null and orderParam.orderMold != 1">
+                and oi.mold = #{orderParam.orderMold} and oi.activity_type = 0
+            </if>
+            <if test="orderParam.orderType == null">
+                and (o.order_type <![CDATA[ <> ]]> 3 OR o.order_type IS NULL)
+            </if>
+            <if test="orderParam.shopName != null and orderParam.shopName != ''">
+                and trim(replace(sd.shop_name,' ','')) like trim(replace(concat('%',#{orderParam.shopName},'%'),' ',''))
+            </if>
+            <if test="orderParam.refundStatus == 0">
+                and o.refund_status IS NULL
+            </if>
+            <if test="orderParam.refundStatus != null and orderParam.refundStatus != 0">
+                and o.refund_status = #{orderParam.refundStatus}
+            </if>
+            <if test="orderParam.prodName != null">
+                and trim(replace(o.prod_name,' ','')) like trim(replace(concat('%',#{orderParam.prodName},'%'),' ',''))
+            </if>
+            <if test="orderParam.receiver != null and orderParam.receiver != ''">
+                and (  trim(replace(o.receiver_name,' ','')) like trim(replace(concat('%',#{orderParam.receiver},'%'),' ',''))
+                or (o.user_id IN (select user_id from tz_user where nick_name like concat('%',#{orderParam.receiver},'%')) and o.order_mold = 1 ))
+            </if>
+            <if test="orderParam.mobile != null and orderParam.mobile != ''" >
+                and o.receiver_mobile LIKE concat("%",#{orderParam.mobile},"%")
+            </if>
+            <if test="orderParam.payType == -1">
+                AND o.is_payed = 0
+            </if>
+            <if test="orderParam.payType == 0">
+                and o.pay_type = 0
+            </if>
+            <if test="orderParam.payType == 1">
+                and o.pay_type IN (1,3,4,5,8)
+            </if>
+            <if test="orderParam.payType == 2">
+                and o.pay_type IN (2,6,7)
+            </if>
+            <if test="orderParam.payType == 3">
+                and o.pay_type IN (9)
+            </if>
+            <if test="orderParam.payType == 4">
+                and o.pay_type IN (10)
+            </if>
+            <if test="orderParam.payType == 5">
+                and o.pay_type IN (12)
+            </if>
+            <if test="orderParam.dvyType != null">
+                <if test="orderParam.dvyType == 1">
+                    and o.dvy_type in (0, 1)
+                </if>
+                <if test="orderParam.dvyType != 1">
+                    and o.dvy_type = #{orderParam.dvyType}
+                </if>
+            </if>
+        </where>
+        <if test="orderParam.orderMold != null and orderParam.orderMold != 1">
+            group by o.`order_number`
+        </if>
+        ORDER BY o.create_time
+        <choose>
+            <when test="orderParam.seq == 0">
+                DESC
+            </when>
+            <when test="orderParam.seq == 1">
+                ASC
+            </when>
+            <otherwise>
+                DESC
+            </otherwise>
+        </choose>
+        LIMIT #{adapter.begin} , #{adapter.size}
+        ) AS temp
+        LEFT JOIN tz_order_item oi ON temp.order_number = oi.order_number
+        LEFT JOIN tz_order_virtual_info ovi ON temp.order_number = ovi.order_number and (ovi.is_write_off = 0 or ovi.write_off_multiple_count)
+        LEFT JOIN tz_user u ON temp.user_id = u.user_id
+        <!-- 补充商品预售时间 -->
+        LEFT JOIN `tz_prod` p ON p.prod_id = oi.prod_id
+        ORDER BY temp.create_time
+        <choose>
+            <when test="orderParam.seq == 0">
+                DESC
+            </when>
+            <when test="orderParam.seq == 1">
+                ASC
+            </when>
+            <otherwise>
+                DESC
+            </otherwise>
+        </choose>,oi.order_item_id
+        <choose>
+            <when test="orderParam.seq == 0">
+                DESC
+            </when>
+            <when test="orderParam.seq == 1">
+                ASC
+            </when>
+            <otherwise>
+                DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="countOrderDetail" resultType="long">
+        SELECT count(0) from
+        (
+            SELECT o.`order_number` FROM tz_order o
+            LEFT JOIN tz_order_settlement os ON o.order_number = os.order_number
+            LEFT JOIN tz_shop_detail sd ON o.shop_id = sd.shop_id
+            <if test="orderParam.orderMold != null and orderParam.orderMold != 1">
+                JOIN tz_order_item oi ON o.`order_number` = oi.`order_number`
+            </if>
+            <where>
+                <if test="orderParam.stationName != null and orderParam.stationName != ''">
+                    and trim(replace(s.station_name,' ','')) like trim(replace(concat('%',#{orderParam.stationName},'%'),'
+                    ',''))
+                </if>
+                <if test="orderParam.dvyType != null and orderParam.dvyType != ''">
+                    and o.dvy_type = #{orderParam.dvyType}
+                </if>
+                <if test="orderParam.orderNumber != null and orderParam.orderNumber != ''">
+                    and trim(replace(o.order_number,' ','')) like trim(replace(concat('%',#{orderParam.orderNumber},'%'),' ',''))
+                </if>
+                <if test="orderParam.status != null">
+                    and o.status = #{orderParam.status}
+                </if>
+                <if test="orderParam.shopId != null">
+                    and o.shop_id = #{orderParam.shopId}
+                </if>
+                <if test="orderParam.isPayed != null">
+                    and o.is_payed = #{orderParam.isPayed}
+                    and o.status != 6
+                </if>
+                <if test="orderParam.startTime != null">
+                    and o.create_time &gt; #{orderParam.startTime}
+                </if>
+                <if test="orderParam.endTime != null">
+                    and o.create_time &lt; #{orderParam.endTime}
+                </if>
+                <if test="orderParam.orderType != null">
+                    and o.order_type = #{orderParam.orderType}
+                </if>
+                <if test="orderParam.orderType == null">
+                    and (o.order_type <![CDATA[ <> ]]> 3 OR o.order_type IS NULL)
+                </if>
+                <if test="orderParam.orderMold != null and orderParam.orderMold == 1">
+                    and o.order_mold = #{orderParam.orderMold}
+                </if>
+                <if test="orderParam.shopId == null and orderParam.payNo != null and orderParam.payNo != ''">
+                    and os.pay_no = #{orderParam.payNo}
+                </if>
+                <if test="orderParam.orderMold != null and orderParam.orderMold != 1">
+                    and oi.mold = #{orderParam.orderMold} and oi.activity_type = 0
+                </if>
+                <if test="orderParam.payType == -1">
+                    AND o.is_payed = 0
+                </if>
+                <if test="orderParam.payType == 0">
+                    and o.pay_type = 0
+                </if>
+                <if test="orderParam.payType == 1">
+                    and o.pay_type IN (1,3,4,5,8)
+                </if>
+                <if test="orderParam.payType == 2">
+                    and o.pay_type IN (2,6,7)
+                </if>
+                <if test="orderParam.payType == 3">
+                    and o.pay_type IN (9)
+                </if>
+                <if test="orderParam.payType == 4">
+                    and o.pay_type IN (10)
+                </if>
+                <if test="orderParam.shopName != null">
+                    and trim(replace(sd.shop_name,' ','')) like trim(replace(concat('%',#{orderParam.shopName},'%'),' ',''))
+                </if>
+                <if test="orderParam.refundStatus == 0">
+                    and o.refund_status IS NULL
+                </if>
+                <if test="orderParam.refundStatus != null and orderParam.refundStatus != 0">
+                    and o.refund_status = #{orderParam.refundStatus}
+                </if>
+                <if test="orderParam.prodName != null">
+                    and trim(replace(o.prod_name,' ','')) like trim(replace(concat('%',#{orderParam.prodName},'%'),' ',''))
+                </if>
+                <if test="orderParam.receiver != null">
+                    and trim(replace(o.receiver_name,' ','')) like trim(replace(concat('%',#{orderParam.receiver},'%'),'
+                    ',''))
+                </if>
+                <if test="orderParam.mobile != null">
+                    and o.receiver_mobile LIKE concat("%",#{orderParam.mobile},"%")
+                </if>
+            </where>
+            <if test="orderParam.orderMold != null and orderParam.orderMold != 1">
+                group by o.`order_number`
+            </if>
+        ) orders
+    </select>
+
+
+
+    <select id="listMyOrderByUserIdAndStatus" resultMap="MyOrderMap">
+        SELECT
+            o.order_type,o.actual_total,o.status,o.order_number,o.freight_amount,o.create_time,o.order_id,o.dvy_type,o.refund_status,o.product_nums, o.pre_sale_time, o.order_mold, o.write_off_num,
+            oi.pic,oi.price,oi.prod_name,oi.pic,oi.sku_name, oi.properties,oi.activity_id,oi.activity_type,oi.mold,
+            ifnull(oi.use_score,0) as use_score,oi.prod_id,oi.rec_time,oi.prod_count,oi.order_item_id,oi.comm_sts,oi.giveaway_order_item_id,
+            sd.shop_id,sd.shop_name,oi.actual_total as oi_actual_total,oi.pre_sell_time AS oi_pre_sell_time, p.pre_sell_status
+        FROM
+            (
+                SELECT
+                    temp.refund_status,temp.order_type,temp.order_id, temp.create_time,temp.product_nums, temp.pre_sale_time, temp.order_mold,
+                    temp.freight_amount,temp.order_number,temp.dvy_type,temp.actual_total,temp.status,temp.shop_id, temp.write_off_num
+                FROM
+                    tz_order temp
+                WHERE
+                    temp.user_id = #{userId} and temp.delete_status = 0
+                    <if test="prodName != null and prodName != ''">
+                        and temp.prod_name like  CONCAT('%',#{prodName},'%')
+                    </if>
+                    <if test="status != null and status != 0">
+                        AND temp.status = #{status}
+                    </if>
+                ORDER BY
+                    temp.create_time DESC
+                LIMIT
+                    #{adapter.begin} , #{adapter.size}
+            ) AS o
+            JOIN tz_order_item oi ON o.order_number = oi.order_number
+            left join tz_shop_detail sd on o.shop_id = sd.shop_id
+            LEFT JOIN tz_prod p ON oi.prod_id = p.prod_id
+        ORDER BY
+            o.create_time DESC,
+            oi.`order_item_id` ASC
+    </select>
+
+
+    <select id="countMyOrderByUserIdAndStatus" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM (
+        SELECT count(distinct order_id) FROM tz_order temp
+        JOIN tz_order_item oi ON temp.order_number = oi.order_number
+        WHERE temp.user_id = #{userId} and temp.delete_status = 0
+        <if test="prodName != null and prodName != ''">
+            AND temp.prod_name like CONCAT('%',#{prodName},'%')
+        </if>
+        <if test="status != null and status != 0">
+            AND temp.status = #{status}
+        </if>
+        <if test="stationId != null">
+            and temp.dvy_id = #{stationId} and temp.dvy_type = 2
+        </if>
+        <if test="isComm != null">
+            AND temp.status = 5
+        </if>
+        <if test="isComm != null">
+            AND oi.comm_sts = #{isComm}
+        </if>
+        group by temp.order_id
+        )AS o
+    </select>
+
+    <select id="countByStatusAndStationId" resultType="java.lang.Long">
+        SELECT ifnull(count(*),0) FROM (
+            -- 当前门店的自提订单
+            SELECT
+            temp.order_type, temp.create_time,temp.product_nums,
+            temp.freight_amount,temp.order_number,temp.actual_total,temp.status,temp.shop_id
+            FROM tz_order temp
+            WHERE temp.delete_status = 0 and temp.dvy_id = #{stationId} AND dvy_type = 2
+            <if test="status != null and status != 0">
+                AND temp.status = #{status}
+            </if>
+            UNION ALL
+            -- 当前门店核销的券码
+            SELECT
+            temp.order_type, temp.create_time,IFNULL(COUNT(ov.order_number),0) AS product_nums,
+            temp.freight_amount,temp.order_number,temp.actual_total,temp.status,temp.shop_id
+            FROM tz_order temp
+            JOIN tz_order_virtual_info ov ON temp.order_number = ov.`order_number`
+            AND ov.`station_id` = #{stationId} AND is_write_off = 1
+            <if test="status != null and status != 0">
+                AND temp.status = #{status}
+            </if>
+            GROUP BY ov.order_number
+        ) as temp
+    </select>
+
+    <select id="countMyOrderByUserIdAndComm" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM (
+                 SELECT count(*)
+                 FROM tz_order temp
+                 JOIN tz_order_item oi ON temp.order_number = oi.order_number
+                 WHERE temp.user_id = #{userId}
+                   and temp.delete_status = 0
+                   AND temp.order_type != 3
+                   AND temp.status = 5
+                   AND (temp.`refund_status` = 3 OR temp.`refund_status` = 4 OR temp.`refund_status` IS NULL )
+                 group by temp.order_id
+             ) AS o
+    </select>
+
+    <update id="deleteOrders">
+        UPDATE tz_order SET `delete_status`=2,update_time=NOW()
+        WHERE order_id IN
+        <foreach collection="orders" item="order" open="(" close=")" separator=",">
+            #{order.orderId}
+        </foreach>
+    </update>
+
+    <select id="getOrderCount" resultType="com.yami.shop.bean.app.dto.OrderCountData">
+        SELECT COUNT(o.order_id)                                              all_count,
+               COUNT(CASE WHEN o.status = 1 THEN o.order_id ELSE NULL END) AS unPay,
+               COUNT(CASE WHEN o.status = 2 THEN o.order_id ELSE NULL END) AS payed,
+               COUNT(CASE WHEN o.status = 3 THEN o.order_id ELSE NULL END) AS consignment,
+               COUNT(CASE WHEN o.status = 4 THEN o.order_id ELSE NULL END) AS confirm,
+               COUNT(CASE WHEN o.status = 5 THEN o.order_id ELSE NULL END) AS success,
+               COUNT(CASE WHEN o.status = 6 THEN o.order_id ELSE NULL END) AS close,
+               COUNT(CASE WHEN o.status = 7 THEN o.order_id ELSE NULL END) AS `grouping`
+        FROM tz_order o
+        WHERE o.user_id = #{userId}
+          AND o.delete_status = 0
+    </select>
+    <update id="batchCancelSeckillOrder">
+        UPDATE tz_order
+        SET `status`=6, cancel_time = NOW(), update_time=NOW()
+        where is_payed = 0 and `status` = 1 and order_type = 2 and order_number in
+        <foreach collection="orderNumbers" item="orderNumber" open="(" separator="," close=")">
+            #{orderNumber}
+        </foreach>
+    </update>
+
+    <update id="updateToWaitGroup">
+        <!-- 订单状态为"2:已支付"的团购订单，才能变成"待成团" -->
+        UPDATE tz_order
+        SET status     = 7,
+            update_time=NOW()
+        WHERE
+            order_number = #{orderNumber}
+            AND `status` = 2
+            AND order_type = 1
+    </update>
+
+    <select id="getOrderByOrderNumberAndUserId" resultType="com.yami.shop.bean.model.Order">
+        select o.*
+        from tz_order o
+        where o.order_number = #{orderNumber}
+          and o.user_id = #{userId}
+    </select>
+    <sql id="orderAndOrderItemByOrderNumberSql">
+        select o.*, oi.*,
+               oi.distribution_amount as oi_distribution_amount,oi.distribution_parent_amount as oi_distribution_parent_amount,
+               oi.score_amount as oi_score_amount,oi.member_amount as oi_member_amount,
+               oi.shop_coupon_amount as oi_shop_coupon_amount,oi.discount_amount as oi_discount_amount,
+               oi.platform_free_freight_amount as oi_platform_free_freight_amount,oi.free_freight_amount as oi_free_freight_amount,
+               oi.shop_change_free_amount as oi_shop_change_free_amount,oi.share_reduce as oi_share_reduce,
+               oi.prod_name as oi_prod_name, oi.actual_total as oi_actual_total,oi.status as oi_status,
+               oi.giveaway_order_item_id as oi_giveaway_order_item_id,oi.stock_point_id as oi_stock_point_id,
+               oi.activity_id as oi_activity_id,oi.activity_type as oi_activity_type,oi.mold as oi_mold
+        from tz_order o
+        left join tz_order_item oi on o.order_number = oi.order_number
+    </sql>
+
+    <select id="getOrderAndOrderItemByOrderNumber" resultMap="orderAndOrderItemMap">
+        <include refid="orderAndOrderItemByOrderNumberSql" />
+        where o.order_number = #{orderNumber}
+    </select>
+
+    <select id="listOrderAndOrderItemByOrderNumber" resultMap="orderAndOrderItemMap">
+
+        <include refid="orderAndOrderItemByOrderNumberSql" />
+        where o.order_number in
+        <foreach collection="orderNumbers" item="orderNumber" open="(" separator="," close=")">
+            #{orderNumber}
+        </foreach>
+    </select>
+
+
+
+    <select id="getOrderAndOrderItemByOrderNumberList" resultMap="simpleOrderAndOrderItemMap">
+        select
+        o.user_id,o.order_id,o.order_number,o.actual_total,o.status,o.is_payed,oi.order_item_id,oi.prod_id,oi.order_number,oi.price,o.order_type,
+        oi.actual_total as oi_actual_total from tz_order o
+        left join tz_order_item oi on o.order_number = oi.order_number
+        where o.order_number IN
+        <foreach collection="orderNumberList" item="orderNumber" open="(" close=")" separator=",">
+            #{orderNumber}
+        </foreach>
+    </select>
+
+    <select id="hasBuySuccessProd" resultType="java.lang.Integer">
+        select count(*)
+        from tz_order_item oi
+                 join tz_order o on o.order_number = oi.order_number
+        where o.user_id = #{userId}
+          and o.status = 5
+          and oi.prod_id = #{prodId}
+    </select>
+
+    <select id="listMyOrderByParams" resultMap="MyOrderMap">
+        SELECT
+        o.order_type,o.actual_total,o.pay_type,o.product_nums,o.refund_status,o.order_mold,
+        oi.pic,oi.price,oi.prod_id,oi.prod_name,oi.sku_name,oi.pre_sell_time,oi.activity_id,oi.activity_type,oi.mold,
+        oi.actual_total as oi_actual_total,oi.sku_id,ifnull(oi.use_score,0) as
+        use_score,oi.prod_count,oi.order_item_id,o.status,o.order_number,oi.comm_sts,oi.giveaway_order_item_id,
+        sd.shop_id,sd.shop_name
+        FROM (
+        SELECT temp.order_type, temp.create_time, temp.pay_type,temp.order_number,temp.actual_total, temp.pre_sale_time,
+               temp.status,temp.shop_id,prod_name,temp.product_nums,temp.refund_status,temp.order_id,temp.order_mold
+        FROM tz_order temp
+        WHERE temp.user_id = #{userId} and temp.delete_status = 0
+        <if test="status != null and status != 0">
+            AND temp.status = #{status}
+        </if>
+        <if test="orderNumber != null and orderNumber != ''">
+            AND temp.order_number LIKE CONCAT('%',#{orderNumber},'%')
+        </if>
+        <if test="orderType == 0">
+            AND (temp.order_type = 0 or temp.order_type is null)
+        </if>
+        <if test="orderMold == 1">
+            AND temp.order_mold = #{orderMold}
+        </if>
+        <if test="orderMold == 0 or orderMold == null">
+            AND (temp.order_mold = 0 or temp.order_mold is null)
+        </if>
+        <if test="orderType != null and orderType !='' and orderType != 0">
+            AND temp.order_type = #{orderType}
+        </if>
+        <if test="orderTimeStatus == 1 or orderTimeStatus == 2">
+            AND temp.create_time &gt;= #{preTime}
+        </if>
+        <if test="orderTimeStatus == 3">
+            AND temp.create_time &lt;= #{preTime}
+        </if>
+        <if test="orderName != null and orderName != ''">
+            AND temp.prod_name LIKE concat('%',#{orderName},'%')
+        </if>
+        <if test="shopId != null">
+            AND temp.shop_id = #{shopId}
+        </if>
+        ORDER BY temp.create_time DESC
+        LIMIT #{adapter.begin} , #{adapter.size}
+        )AS o
+        JOIN tz_order_item oi ON o.order_number = oi.order_number
+        LEFT JOIN tz_shop_detail sd on o.shop_id = sd.shop_id
+        ORDER BY o.create_time DESC
+    </select>
+
+    <select id="countMyOrderByParams" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM(
+        SELECT
+        count(1)
+        FROM tz_order o
+        JOIN tz_order_item oi ON o.order_number = oi.order_number
+        join tz_shop_detail sd on o.shop_id = sd.shop_id
+        WHERE o.user_id = #{userId} and o.delete_status = 0
+        <if test="status != null and status != 0">
+            AND o.status = #{status}
+        </if>
+        <if test="orderNumber != null and orderNumber != ''">
+            AND o.order_number LIKE CONCAT("%",#{orderNumber},"%")
+        </if>
+        <if test="orderType == 0">
+            AND (o.order_type = 0 or o.order_type is null)
+        </if>
+        <if test="orderType != null and orderType !='' and orderType != 0">
+            AND o.order_type = #{orderType}
+        </if>
+        <if test="orderMold == 1">
+            AND o.order_mold = #{orderMold}
+        </if>
+        <if test="orderMold == 0 or orderMold == null">
+            AND (o.order_mold = 0 or o.order_mold is null)
+        </if>
+        <if test="orderTimeStatus == 1 or orderTimeStatus == 2">
+            AND o.create_time &gt;= #{preTime}
+        </if>
+        <if test="orderTimeStatus == 3">
+            AND o.create_time &lt;= #{preTime}
+        </if>
+        <if test="orderName != null and orderName != ''">
+            AND (o.prod_name LIKE concat('%',#{orderName},'%') OR oi.prod_name LIKE concat('%',#{orderName},'%'))
+        </if>
+        <if test="shopId != null">
+            AND o.shop_id = #{shopId}
+        </if>
+        GROUP BY o.order_number
+        ) AS temp
+    </select>
+    <select id="listOrdersDetailByOrderInfo" resultMap="orderAndOrderItemAndUserAddrMap">
+        SELECT *,ovi.write_off_code as writeOffCodes, oi.prod_name as item_prod_name,oi.actual_total as oi_actual_total,temp.prod_name as
+        order_prod_name,oi.status as oi_status
+        FROM
+        (
+        SELECT o.*,os.pay_no,sd.shop_name FROM tz_order o
+        LEFT JOIN tz_shop_detail sd ON o.shop_id = sd.shop_id
+        LEFT JOIN tz_user_addr_order uao ON o.addr_order_id = uao.addr_order_id
+        LEFT JOIN tz_order_settlement os ON o.order_number = os.order_number
+        <where>
+            <if test="orderParam.stationName != null and orderParam.stationName != ''">
+                and trim(replace(s.station_name,' ','')) like trim(replace(concat('%',#{orderParam.stationName},'%'),'
+                ',''))
+            </if>
+            <if test="orderParam.payType == -1">
+                AND o.is_payed = 0
+            </if>
+            <if test="orderParam.shopId == null and orderParam.payNo != null and orderParam.payNo != ''">
+                and os.pay_no = #{orderParam.payNo}
+            </if>
+            <if test="orderParam.payType == 0">
+                and o.pay_type = 0
+            </if>
+            <if test="orderParam.payType == 1">
+                and o.pay_type IN (1,3,4,5,8)
+            </if>
+            <if test="orderParam.payType == 2">
+                and o.pay_type IN (2,6,7)
+            </if>
+            <if test="orderParam.payType == 3">
+                and o.pay_type IN (9)
+            </if>
+            <if test="orderParam.payType == 4">
+                and o.pay_type IN (10)
+            </if>
+            <if test="orderParam.orderNumber != null and orderParam.orderNumber != ''">
+                AND trim(replace(o.order_number,' ','')) like trim(replace(concat('%',#{orderParam.orderNumber},'%'),' ',''))
+            </if>
+            <if test="orderParam.status != null">
+                and o.status = #{orderParam.status}
+            </if>
+            <if test="orderParam.shopId != null">
+                and o.shop_id = #{orderParam.shopId}
+            </if>
+            <if test="orderParam.isPayed != null">
+                and o.is_payed = #{orderParam.isPayed}
+                and o.status != 6
+            </if>
+            <if test="orderParam.startTime != null">
+                and o.create_time &gt; #{orderParam.startTime}
+            </if>
+            <if test="orderParam.endTime != null">
+                and o.create_time &lt; #{orderParam.endTime}
+            </if>
+            <if test="orderParam.orderType != null">
+                and o.order_type = #{orderParam.orderType}
+            </if>
+            <if test="orderParam.orderType == null">
+                and (o.order_type <![CDATA[ <> ]]> 3 OR o.order_type IS NULL)
+            </if>
+            <if test="orderParam.shopName != null and orderParam.shopName != ''">
+                and trim(replace(sd.shop_name,' ','')) like trim(replace(concat('%',#{orderParam.shopName},'%'),' ',''))
+            </if>
+            <if test="orderParam.refundStatus == 0">
+                and o.refund_status IS NULL
+            </if>
+            <if test="orderParam.refundStatus != null and orderParam.refundStatus != 0">
+                and o.refund_status = #{orderParam.refundStatus}
+            </if>
+            <if test="orderParam.prodName != null">
+                and o.prod_name LIKE concat("%",#{orderParam.prodName},"%")
+            </if>
+            <if test="orderParam.receiver != null and orderParam.receiver != ''">
+                AND (trim(replace(o.receiver_name,' ','')) like trim(replace(concat('%',#{orderParam.receiver},'%'),' ',''))
+                OR (o.user_id IN (select user_id from tz_user where nick_name like concat('%',#{orderParam.receiver},'%')) and o.order_mold = 1 ))
+            </if>
+            <if test="orderParam.mobile != null and orderParam.mobile != ''">
+                and o.receiver_mobile LIKE concat("%",#{orderParam.mobile},"%")
+            </if>
+            <if test="orderParam.dvyType != null">
+                and o.dvy_type = #{orderParam.dvyType}
+            </if>
+            <if test="orderParam.orderMold != null">
+                and o.order_mold = #{orderParam.orderMold}
+            </if>
+        </where>
+        ORDER BY o.create_time DESC
+        ) AS temp
+        LEFT JOIN tz_order_item oi
+        ON temp.order_number = oi.order_number
+        LEFT JOIN tz_order_virtual_info ovi ON temp.order_number = ovi.order_number and is_write_off = 0
+        LEFT JOIN tz_user_addr_order uao
+        ON temp.addr_order_id = uao.addr_order_id
+        ORDER BY temp.create_time DESC
+    </select>
+    <select id="listUnDeliveryOrderExcel" resultMap="unDeliveryOrderMap">
+        SELECT reo.order_number,oi.`prod_name`,oi.`sku_name`,
+        reo.`dvy_type`,oa.`receiver`,CONCAT(oa.province, oa.city, oa.area, oa.addr) AS receiving_addr,oa.`mobile`,
+        IF(oi.`status` = -1,oi.`prod_count`,oi.`status`) AS be_delivery_num,oi.`order_item_id`,oi.`status`,oi.mold, oi.activity_id,oi.activity_type
+        FROM
+        (SELECT tzo.`order_number`,tzo.`product_nums`,tzo.`create_time`,tzo.`addr_order_id`,tzo.`dvy_type`,
+        SUM(IF(tzoi.`status` = -1,tzoi.`prod_count`,tzoi.`status`)) AS all_count
+        FROM `tz_order` tzo
+        JOIN `tz_order_item` tzoi ON tzo.`order_number` = tzoi.`order_number` and tzoi.activity_type != 6
+        <where>
+            <if test="orderParam.shopId != null">
+                tzo.shop_id = #{orderParam.shopId}
+            </if>
+            <if test="orderParam.startTime != null">
+                and tzo.create_time &gt;= #{orderParam.startTime}
+            </if>
+            <if test="orderParam.endTime != null">
+                and tzo.create_time &lt;= #{orderParam.endTime}
+            </if>
+            <if test="orderParam.orderType != null">
+                and tzo.order_type = #{orderParam.orderType}
+            </if>
+            <if test="orderParam.orderType == null">
+                and (tzo.order_type <![CDATA[ <> ]]> 3 OR tzo.order_type IS NULL)
+            </if>
+            AND tzo.status = 2 AND (tzo.`refund_status` IS NULL OR tzo.`refund_status` = 4) AND tzo.dvy_type != 2
+        </where>
+        GROUP BY tzo.`order_number`) reo
+        JOIN `tz_order_item` oi ON reo.`order_number` = oi.`order_number`
+        JOIN `tz_user_addr_order` oa ON oa.`addr_order_id` = reo.`addr_order_id`
+        WHERE reo.all_count = reo.product_nums
+        ORDER BY reo.create_time DESC
+    </select>
+    <select id="getOrderPayInfoByOrderNumber" resultMap="orderAndOrderItemMap">
+        SELECT o.*,oi.*,
+        oi.distribution_amount as oi_distribution_amount,oi.distribution_parent_amount as oi_distribution_parent_amount,
+        oi.score_amount as oi_score_amount,oi.member_amount as oi_member_amount,
+        oi.shop_coupon_amount as oi_shop_coupon_amount,oi.discount_amount as oi_discount_amount,
+        oi.platform_free_freight_amount as oi_platform_free_freight_amount,oi.free_freight_amount as oi_free_freight_amount,
+        oi.shop_change_free_amount as oi_shop_change_free_amount,oi.share_reduce as oi_share_reduce,
+        oi.prod_name as oi_prod_name, oi.actual_total as oi_actual_total,oi.status as oi_status,oi.use_score
+        FROM tz_order o
+        LEFT JOIN tz_order_item oi ON oi.order_number = o.order_number
+        WHERE o.order_number IN
+        <foreach collection="orderNumberList" item="orderNumber" separator="," open="(" close=")">
+            #{orderNumber}
+        </foreach>
+    </select>
+    <select id="getOrderDetailByOrderNumberAndShopId" resultMap="orderAndOrderItemAndUserAddrMap">
+        SELECT o.*,ovi.write_off_code as writeOffCodes,oi.prod_name as item_prod_name,oi.*,
+               uao.*, u.`nick_name`, u.user_mobile, oi.status as oi_status,
+               oi.actual_total as oi_actual_total
+        FROM (
+        SELECT temp.*
+        FROM tz_order temp
+        WHERE temp.order_number =#{orderNumber}
+        <if test="shopId != null">
+            and temp.shop_id =#{shopId}
+        </if>
+        ) as o
+        LEFT JOIN tz_order_item oi ON oi.order_number = o.order_number and oi.giveaway_order_item_id is null
+        LEFT JOIN tz_order_virtual_info ovi ON o.order_number = ovi.order_number and is_write_off = 0
+        LEFT JOIN tz_user_addr_order uao ON o.addr_order_id = uao.addr_order_id
+        LEFT JOIN tz_user u ON u.user_id = o.user_id
+    </select>
+    <select id="orderCommentByUserIdAndStatus" resultMap="MyOrderMap">
+        SELECT o.order_type,
+               o.actual_total,
+               o.pay_type,
+               o.status,
+               o.order_number,
+               o.freight_amount,
+               o.create_time,
+               o.pay_time,
+               oi.pic,
+               oi.price,
+               oi.prod_name,
+               oi.sku_name,
+               oi.use_score,
+               oi.prod_id,
+               oi.rec_time,
+               oi.prod_count,
+               oi.order_item_id,
+               oi.comm_sts,
+               oi.activity_id,
+               oi.activity_type,
+               oi.mold,
+               sd.shop_id,
+               sd.shop_name,
+               oi.actual_total as oi_actual_total
+
+        FROM (
+                 SELECT DISTINCT temp.order_type,
+                                 temp.create_time,
+                                 temp.pay_type,
+                                 temp.pay_time,
+                                 temp.freight_amount,
+                                 temp.order_number,
+                                 temp.actual_total,
+                                 temp.status,
+                                 temp.shop_id
+                 FROM tz_order temp
+                 JOIN tz_order_item toi ON temp.order_number = toi.order_number
+                 WHERE temp.user_id = #{userId}
+                   and temp.delete_status = 0
+                   AND temp.status = 5
+                   AND (temp.refund_status = 3 OR temp.refund_status = 4 OR temp.refund_status IS NULL )
+                   AND temp.order_type != 3
+                 ORDER BY temp.create_time DESC
+                     LIMIT #{adapter.begin}, #{adapter.size}
+             ) AS o
+         JOIN tz_order_item oi ON o.order_number = oi.order_number
+         LEFT JOIN tz_shop_detail sd on o.shop_id = sd.shop_id
+        ORDER BY o.create_time DESC
+    </select>
+    <select id="orderItemCommentByUserIdAndStatus" resultMap="MyOrderItemMap">
+        SELECT
+        oi.pic,oi.price,oi.order_number,oi.pic,
+        oi.use_score,oi.prod_id,oi.rec_time,oi.prod_count,oi.order_item_id,oi.comm_sts,
+        oi.actual_total as oi_actual_total,o.`pay_time`,o.order_type,
+        oi.prod_name,
+        oi.sku_name
+        FROM tz_order o
+        left JOIN tz_order_item oi ON o.order_number = oi.order_number
+        where oi.comm_sts = #{isComm} and o.user_id = #{userId}
+        <if test="isComm == 1">
+            AND o.status = 5
+        </if>
+        LIMIT #{adapter.begin} , #{adapter.size}
+    </select>
+
+    <select id="countOrderItemComment" resultType="long">
+        SELECT count(*)
+        FROM tz_order o
+        left JOIN tz_order_item oi ON o.order_number = oi.order_number
+        where oi.comm_sts = #{isComm} and o.user_id = #{userId}
+        <if test="isComm == 1">
+            AND o.status = 5
+        </if>
+    </select>
+    <select id="countPayCustomerNum" resultType="java.lang.Integer"
+            parameterType="com.yami.shop.bean.param.CustomerReqParam">
+        SELECT COUNT(DISTINCT(user_id)) FROM `tz_order` o
+        <where>
+            o.is_payed = 1
+            <if test="param.dateTime != null">
+                AND o.pay_time <![CDATA[ <= ]]> #{param.dateTime}
+            </if>
+            <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+                AND ( o.pay_time  <![CDATA[ >= ]]> #{param.startTime} AND o.pay_time  <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+    </select>
+    <select id="countMemberPayNum" resultType="java.lang.Integer"
+            parameterType="com.yami.shop.bean.param.CustomerReqParam">
+        SELECT COUNT(DISTINCT(o.user_id)) FROM `tz_order` o
+        LEFT JOIN `tz_user_extension` ue ON ue.user_id = o.user_id
+        <where>
+            o.is_payed = 1 AND ue.level_type <![CDATA[ >= ]]> 0
+            <if test="param.dateTime != null">
+                AND o.pay_time <![CDATA[ <= ]]> #{param.dateTime}
+            </if>
+            <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+                AND ( o.pay_time  <![CDATA[ >= ]]> #{param.startTime} AND o.pay_time  <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+    </select>
+    <select id="countNewMemberPayNum" resultType="java.lang.Integer">
+
+        SELECT COUNT(DISTINCT (oe.user_id))
+        FROM `tz_order` oe
+        WHERE oe.is_payed = 1
+          AND oe.create_time <![CDATA[ >= ]]> #{startTime}
+          AND oe.create_time &lt; #{endTime}
+          AND oe.user_id IN
+              (
+                  SELECT DISTINCT(tempu.user_id)
+                  FROM `tz_user` tempu
+                  WHERE tempu.user_id
+                            NOT IN (
+                            SELECT tempo.user_id
+                            FROM `tz_order` tempo
+                            WHERE tempo.is_payed = 1
+                              AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear}
+                              AND tempo.create_time &lt; #{startTime}
+                        )
+              )
+    </select>
+    <select id="countOldMemberPayNum" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT (oe.user_id))
+        FROM `tz_order` oe
+        WHERE oe.is_payed = 1
+          AND oe.create_time <![CDATA[ >= ]]> #{startTime}
+          AND oe.create_time &lt; #{endTime}
+          AND oe.user_id IN (
+            SELECT DISTINCT(tempo.user_id)
+            FROM `tz_order` tempo
+            WHERE tempo.is_payed = 1
+              AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear}
+              AND tempo.create_time &lt; #{startTime}
+        )
+    </select>
+    <select id="countMemberPayAmount" resultType="java.lang.Double"
+            parameterType="com.yami.shop.bean.param.CustomerReqParam">
+        SELECT SUM(o.actual_total) FROM `tz_order` o
+        LEFT JOIN `tz_user_extension` ue ON ue.user_id = o.user_id
+        <where>
+            o.is_payed = 1 AND ue.level_type <![CDATA[ >= ]]> 0
+            <if test="param.dateTime != null">
+                AND o.pay_time <![CDATA[ <= ]]> #{param.dateTime}
+            </if>
+            <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+                AND ( o.pay_time  <![CDATA[ >= ]]> #{param.startTime} AND o.pay_time  <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+    </select>
+    <select id="countNewMemberPayAmount" resultType="java.lang.Double">
+        SELECT SUM(oe.actual_total)
+        FROM `tz_order` oe
+        WHERE oe.is_payed = 1
+          AND oe.create_time <![CDATA[ >= ]]> #{startTime}
+          AND oe.create_time &lt; #{endTime}
+          AND oe.user_id IN (
+            SELECT DISTINCT(tempu.user_id)
+            FROM `tz_user` tempu
+            WHERE tempu.user_id
+                      NOT IN (
+                      SELECT tempo.user_id
+                      FROM `tz_order` tempo
+                      WHERE tempo.is_payed = 1
+                        AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear}
+                        AND tempo.create_time &lt; #{startTime}
+                  )
+        )
+    </select>
+    <select id="countOldMemberPayAmount" resultType="java.lang.Double">
+        SELECT SUM(oe.actual_total)
+        FROM `tz_order` oe
+        WHERE oe.is_payed = 1
+          AND oe.create_time <![CDATA[ >= ]]> #{startTime}
+          AND oe.create_time &lt; #{endTime}
+          AND oe.user_id IN (
+            SELECT DISTINCT(tempo.user_id)
+            FROM `tz_order` tempo
+            WHERE tempo.is_payed = 1
+              AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear}
+              AND tempo.create_time &lt; #{startTime}
+        )
+    </select>
+    <select id="countPayNumRfm" resultType="java.lang.Integer">
+        SELECT COUNT(temp.user_id) FROM
+        (
+        SELECT o.user_id,COUNT(*) AS nums FROM `tz_order` o
+        WHERE o.is_payed = 1
+        <choose>
+            <when test="type == 0">
+                AND o.pay_time <![CDATA[ < ]]> #{startTime}
+            </when>
+            <otherwise>
+                AND (#{startTime} <![CDATA[ < ]]> o.pay_time AND o.pay_time<![CDATA[ <= ]]> #{endTime})
+            </otherwise>
+        </choose>
+        GROUP BY o.user_id
+        ) temp
+        <where>
+            <choose>
+                <when test="f == 5">
+                    temp.nums <![CDATA[ >= ]]> #{f}
+                </when>
+                <otherwise>
+                    temp.nums = #{f}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <select id="sumPayAmountRfm" resultType="java.lang.Double">
+        SELECT SUM(temp.actualAmount) FROM
+        (
+        SELECT o.user_id,COUNT(*) AS nums,SUM(o.actual_total) actualAmount FROM `tz_order` o
+        WHERE o.is_payed = 1
+        <choose>
+            <when test="type == 0">
+                AND o.pay_time <![CDATA[ < ]]> #{startTime}
+            </when>
+            <otherwise>
+                AND (#{startTime} <![CDATA[ < ]]> o.pay_time AND o.pay_time<![CDATA[ <= ]]> #{endTime})
+            </otherwise>
+        </choose>
+        GROUP BY o.user_id
+        ) temp
+        <where>
+            <choose>
+                <when test="f == 5">
+                    temp.nums <![CDATA[ >= ]]> #{f}
+                </when>
+                <otherwise>
+                    temp.nums = #{f}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <select id="countNewOrOldPayProdNum" resultType="java.lang.Integer">
+        SELECT SUM(oe.product_nums) FROM `tz_order` oe
+        WHERE oe.is_payed = 1 AND oe.create_time <![CDATA[ >= ]]> #{startTime} AND oe.create_time &lt; #{endTime} AND
+        oe.user_id
+        <if test="type == 0">
+            NOT
+        </if>
+        IN (
+        SELECT tempo.user_id FROM `tz_order` tempo
+        WHERE tempo.is_payed = 1 AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear} AND tempo.create_time &lt;
+        #{startTime}
+        )
+    </select>
+    <select id="countNewOrOldPayTimes" resultType="java.lang.Integer">
+        SELECT COUNT(oe.order_id) FROM `tz_order` oe
+        WHERE oe.is_payed = 1 AND oe.create_time <![CDATA[ >= ]]> #{startTime} AND oe.create_time &lt; #{endTime} AND
+        oe.user_id
+        <if test="type == 0">
+            NOT
+        </if>
+        IN (
+        SELECT tempo.user_id FROM `tz_order` tempo
+        WHERE tempo.is_payed = 1 AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear} AND tempo.create_time &lt;
+        #{startTime}
+        )
+    </select>
+
+    <select id="getNewRepurchaseCount" resultType="com.yami.shop.bean.param.CustomerRepurchaseDetailParam">
+        SELECT COUNT(temp.user_id) AS repurchaseCount,SUM(temp.product_nums) AS payProdCount,SUM(temp.actual_total) AS
+        payAmount FROM
+        (
+        SELECT oe.order_id,oe.shop_id,oe.user_id ,oe.pay_time,oe.product_nums,oe.actual_total FROM `tz_order` oe
+        WHERE oe.is_payed = 1
+        <if test="shopId != null">
+            AND oe.shop_id = #{shopId}
+        </if>
+        AND oe.create_time <![CDATA[ >= ]]> #{startTime} AND oe.create_time &lt; #{endTime} AND
+        oe.user_id IN (
+        SELECT DISTINCT(tempu.user_id) FROM `tz_user` tempu
+        WHERE tempu.user_id
+        <if test="type == 0">
+            NOT
+        </if>
+        IN(
+        SELECT tempo.user_id FROM `tz_order` tempo
+        WHERE tempo.is_payed = 1 AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear} AND tempo.create_time &lt;
+        #{startTime}
+        )
+        )
+        ) temp WHERE temp.user_id = #{userId} AND (temp.pay_time > #{payTime} AND temp.pay_time <![CDATA[ <= ]]>
+        DATE_SUB(#{payTime},INTERVAL #{cycle} DAY))
+
+    </select>
+    <select id="countPaidMemberByParam" resultType="java.lang.Integer"
+            parameterType="com.yami.shop.bean.param.MemberReqParam">
+        SELECT
+        <if test="isOrderNum != null">
+            COUNT(*)
+        </if>
+        <if test="isOrderNum == null">
+            COUNT(DISTINCT(o.user_id))
+        </if>
+        FROM `tz_order` o
+        LEFT JOIN `tz_user_extension` ue ON ue.user_id = o.user_id
+        <where>
+            o.is_payed = 1
+            <choose>
+                <when test="param.memberType == 1">
+                    AND ue.level_type = 0
+                </when>
+                <when test="param.memberType == 2">
+                    AND ue.level_type = 1
+                </when>
+            </choose>
+            <if test="param.shopId != null">
+                AND o.shop_id = #{param.shopId}
+            </if>
+            <if test="param.dateTime != null">
+                AND o.pay_time <![CDATA[ <= ]]> #{param.dateTime}
+            </if>
+            <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+                AND ( o.pay_time  <![CDATA[ >= ]]> #{param.startTime} AND o.pay_time  <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+    </select>
+    <select id="countMemberPaidAmount" resultType="java.lang.Double"
+            parameterType="com.yami.shop.bean.param.MemberReqParam">
+        SELECT SUM(o.actual_total) FROM `tz_order` o
+        LEFT JOIN `tz_user_extension` ue ON ue.user_id = o.user_id
+        <where>
+            o.is_payed = 1
+            <choose>
+                <when test="param.memberType == 1">
+                    AND ue.level_type = 0
+                </when>
+                <when test="param.memberType == 2">
+                    AND ue.level_type = 1
+                </when>
+                <otherwise>
+                    AND ue.level_type <![CDATA[ >=]]> 0
+                </otherwise>
+            </choose>
+            <if test="param.shopId != null">
+                AND o.shop_id = #{param.shopId}
+            </if>
+            <if test="param.dateTime != null">
+                AND o.pay_time <![CDATA[ <= ]]> #{param.dateTime}
+            </if>
+            <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+                AND ( o.pay_time  <![CDATA[ >= ]]> #{param.startTime} AND o.pay_time  <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+    </select>
+    <select id="countMemberPayOrder" resultType="java.lang.Integer"
+            parameterType="com.yami.shop.bean.param.MemberReqParam">
+        SELECT COUNT(o.order_id) FROM `tz_order` o
+        LEFT JOIN `tz_user_extension` ue ON ue.user_id = o.user_id
+        <where>
+            o.is_payed = 1
+            <choose>
+                <when test="param.memberType == 1">
+                    AND ue.level_type = 0
+                </when>
+                <when test="param.memberType == 2">
+                    AND ue.level_type = 1
+                </when>
+                <otherwise>
+                    AND ue.level_type <![CDATA[ >=]]> 0
+                </otherwise>
+            </choose>
+            <if test="param.shopId != null">
+                AND o.shop_id = #{param.shopId}
+            </if>
+            <if test="param.dateTime != null">
+                AND o.pay_time <![CDATA[ <= ]]> #{param.dateTime}
+            </if>
+            <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+                AND ( o.pay_time  <![CDATA[ >= ]]> #{param.startTime} AND o.pay_time  <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+    </select>
+    <select id="countPayMemberNum" resultType="java.lang.Integer"
+            parameterType="com.yami.shop.bean.param.MemberReqParam">
+        SELECT COUNT(DISTINCT(o.user_id)) FROM `tz_order` o
+        LEFT JOIN `tz_user_extension` ue ON ue.user_id = o.user_id
+        <where>
+            o.is_payed = 1
+            <choose>
+                <when test="param.memberType == 1">
+                    AND ue.level_type = 0
+                </when>
+                <when test="param.memberType == 2">
+                    AND ue.level_type = 1
+                </when>
+                <otherwise>
+                    AND ue.level_type <![CDATA[ >=]]> 0
+                </otherwise>
+            </choose>
+            <if test="param.shopId != null">
+                AND o.shop_id = #{param.shopId}
+            </if>
+            <if test="param.dateTime != null">
+                AND o.pay_time <![CDATA[ <= ]]> #{param.dateTime}
+            </if>
+            <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+                AND ( o.pay_time  <![CDATA[ >= ]]> #{param.startTime} AND o.pay_time  <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+    </select>
+    <select id="countNewOrOldMemberPayOrder" resultType="java.lang.Integer"
+            parameterType="com.yami.shop.bean.param.MemberReqParam">
+        SELECT COUNT(oe.order_id) FROM `tz_order` oe
+        LEFT JOIN `tz_user_extension` ue ON ue.user_id = oe.user_id
+        WHERE oe.is_payed = 1 AND ue.level_type <![CDATA[ >=]]> 0 AND oe.create_time <![CDATA[ >= ]]> #{startTime} AND
+        oe.create_time &lt; #{endTime} AND
+        oe.user_id IN (
+        SELECT DISTINCT(tempu.user_id) FROM `tz_user` tempu
+        WHERE tempu.user_id
+        <if test="type == 0">
+            NOT
+        </if>
+        IN(
+        SELECT tempo.user_id FROM `tz_order` tempo
+        WHERE tempo.is_payed = 1 AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear} AND tempo.create_time &lt;
+        #{startTime}
+        )
+        )
+    </select>
+    <select id="countNewMemberEveryDayPayNum" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT(u.user_id)) FROM `tz_user` u
+        WHERE u.user_id
+        IN(
+        SELECT oe.user_id FROM `tz_order` oe
+        WHERE oe.is_payed = 1 AND oe.create_time <![CDATA[ >= ]]> #{dayStartTime} AND oe.create_time &lt; #{dayEndTime}
+        AND
+        oe.user_id IN (
+        SELECT DISTINCT(tempu.user_id) FROM `tz_user` tempu
+        WHERE tempu.user_id
+        <if test="type == 0">
+            NOT
+        </if>
+        IN(
+        SELECT tempo.user_id FROM `tz_order` tempo
+        WHERE tempo.is_payed = 1 AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear} AND tempo.create_time &lt;
+        #{startTime}
+        )
+        )
+        )
+    </select>
+    <select id="countNewOrOldMemberEveryDayPayPayOrder" resultType="java.lang.Integer">
+        SELECT COUNT(oe.order_id) FROM `tz_order` oe
+        LEFT JOIN `tz_user_extension` ue ON ue.user_id = oe.user_id
+        WHERE oe.is_payed = 1 AND ue.level_type <![CDATA[ >=]]> 0 AND oe.create_time <![CDATA[ >= ]]> #{dayStartTime}
+        AND oe.create_time &lt; #{dayEndTime} AND
+        oe.user_id IN (
+        SELECT DISTINCT(tempu.user_id) FROM `tz_user` tempu
+        WHERE tempu.user_id
+        <if test="type == 0">
+            NOT
+        </if>
+        IN(
+        SELECT tempo.user_id FROM `tz_order` tempo
+        WHERE tempo.is_payed = 1 AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear} AND tempo.create_time &lt;
+        #{startTime}
+        )
+        )
+    </select>
+    <select id="countNewMemberEveryDayPayAmount" resultType="java.lang.Double">
+        SELECT SUM(oe.actual_total) FROM `tz_order` oe
+        WHERE oe.is_payed = 1 AND oe.create_time <![CDATA[ >= ]]> #{dayStartTime} AND oe.create_time &lt; #{dayEndTime}
+        AND
+        oe.user_id IN (
+        SELECT DISTINCT(tempu.user_id) FROM `tz_user` tempu
+        WHERE tempu.user_id
+        <if test="type == 0">
+            NOT
+        </if>
+        IN(
+        SELECT tempo.user_id FROM `tz_order` tempo
+        WHERE tempo.is_payed = 1 AND tempo.create_time <![CDATA[ >= ]]> #{beforeYear} AND tempo.create_time &lt;
+        #{startTime}
+        )
+        )
+    </select>
+
+    <select id="getOrderListByStationId" resultMap="MyOrderMap">
+        SELECT temp.*,s.shop_name,s.shop_id,oi.price,oi.pic,oi.prod_name,oi.sku_name,oi.prod_count,oi.use_score,oi.giveaway_order_item_id,oi.order_item_id,oi.activity_id,oi.activity_type
+        from (
+            SELECT o.order_number,o.actual_total,o.status,o.shop_id,
+                   o.order_mold,o.create_time,o.product_nums
+            FROM tz_order o
+            WHERE o.user_id = #{userId} and o.shop_id = #{shopId}
+            AND (o.refund_status IS NULL OR o.refund_status NOT IN (1, 2))
+            and (
+                -- 自提订单自提
+                  (
+                   o.dvy_type = 2 AND o.status = 2
+                   <if test="stationId != null">
+                    AND o.dvy_id = #{stationId}
+                   </if>
+                  )
+                -- 虚拟商品订单待核销,为虚拟商品订单，且可以核销，且没有核销，且订单状态为3，5且核销时间没有过期
+                or (o.order_mold = 1 and o.write_off_status <![CDATA[ <> ]]> 1
+                and (o.write_off_num &gt; 0 or o.write_off_num = -1)
+                and  o.status in (3, 5)
+                and (write_off_end > NOW() or write_off_end IS NULL))
+            )
+            order by o.create_time desc
+            LIMIT #{page.begin}, #{page.size}
+            ) as temp
+        LEFT JOIN tz_order_item oi ON temp.order_number = oi.order_number
+        LEFT JOIN tz_shop_detail s ON s.shop_id = temp.shop_id
+    </select>
+
+    <select id="countOrderListByStationId" resultType="int">
+        SELECT ifnull(count(*),0) FROM tz_order o
+        WHERE o.user_id = #{userId} and o.shop_id = #{shopId}
+        AND (o.refund_status IS NULL OR o.refund_status NOT IN (1, 2))
+        and (
+            -- 自提订单自提
+           (
+               o.dvy_type = 2 AND o.status = 2
+                <if test="stationId != null">
+                    AND o.dvy_id = #{stationId}
+                </if>
+           )
+           -- 虚拟商品订单核销
+            or (o.order_mold = 1 and o.write_off_num != 0 AND o.write_off_status <![CDATA[ <> ]]> 1  and  o.status IN (3, 5)
+                AND (write_off_end > NOW() OR write_off_end IS NULL))
+        )
+    </select>
+
+    <select id="orderListByStatusAndStationId" resultMap="MyOrderMap">
+        SELECT
+            o.order_type,o.actual_total,o.status,o.order_number,o.freight_amount,o.create_time,o.product_nums,o.order_mold,o.refund_status,
+            oi.pic,oi.price,oi.prod_name,oi.pic,oi.sku_name,oi.use_score,oi.prod_id,oi.rec_time,oi.prod_count,oi.order_item_id,oi.comm_sts,
+            oi.activity_id,oi.activity_type,sd.shop_id,sd.shop_name
+        FROM (
+             SELECT * FROM (
+                -- 当前门店的自提订单
+                SELECT
+                    temp.order_type, temp.create_time,temp.product_nums,temp.order_mold,temp.refund_status,
+                    temp.freight_amount,temp.order_number,temp.actual_total,temp.status,temp.shop_id
+                FROM tz_order temp
+                WHERE temp.delete_status = 0 and temp.dvy_id = #{stationId} AND dvy_type = 2
+                <if test="status != null and status != 0">
+                    AND temp.status = #{status}
+                </if>
+                UNION ALL
+                -- 当前门店核销的券码
+                SELECT
+                    temp.order_type, temp.create_time,IFNULL(COUNT(ov.order_number),0) AS product_nums,temp.order_mold,temp.refund_status,
+                    temp.freight_amount,temp.order_number,temp.actual_total,temp.status,temp.shop_id
+                FROM tz_order temp
+                JOIN tz_order_virtual_info ov ON temp.order_number = ov.`order_number`
+                AND  ov.`station_id` =  #{stationId} AND is_write_off = 1
+                <if test="status != null and status != 0">
+                    AND temp.status = #{status}
+                </if>
+                GROUP BY ov.order_number
+             ) AS temp
+            ORDER BY temp.create_time DESC
+            LIMIT #{adapter.begin} , #{adapter.size}
+         )AS o
+        JOIN tz_order_item oi ON o.order_number = oi.order_number
+        LEFT JOIN tz_shop_detail sd ON o.shop_id = sd.shop_id
+        ORDER BY o.create_time DESC
+    </select>
+    <select id="getStationOrderByOrderNumbers" resultType="com.yami.shop.bean.model.Order">
+        SELECT * FROM tz_order WHERE order_number IN
+        <foreach collection="orderNumberList" item="orderNumber" open="(" close=")" separator=",">
+            #{orderNumber}
+        </foreach>
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
+        <if test="stationId != null">
+            AND dvy_type = 2 AND dvy_id = #{stationId}
+        </if>
+    </select>
+    <select id="getUserOrderCrateTime" resultType="com.yami.shop.bean.param.CustomerRfmRespTableParam">
+        SELECT o.recency,o.frequency,SUM(o.actual_total) AS amount,COUNT(*) AS user_num FROM (
+        SELECT temp.actual_total,
+               IF(temp.create_time <![CDATA[ <= ]]> #{recentTime} AND temp.create_time <![CDATA[ >= ]]> #{mouth},1,
+               IF(temp.create_time <![CDATA[ < ]]> #{mouth} AND temp.create_time <![CDATA[ >= ]]> #{threeMouth},2,
+               IF(temp.create_time <![CDATA[ < ]]> #{threeMouth} AND temp.create_time <![CDATA[ >= ]]> #{halfYear},3,
+               IF(temp.create_time <![CDATA[ < ]]> #{halfYear} AND temp.create_time <![CDATA[ >= ]]> #{year},4,
+               IF(temp.create_time <![CDATA[ < ]]> #{year},5,6))))) AS recency,
+               IF(temp.frequency <![CDATA[ < ]]> 5,temp.frequency,5) AS frequency
+        FROM (
+        SELECT user_id,MAX(create_time) AS create_time,SUM(actual_total) AS actual_total,COUNT(*)
+        AS frequency
+        FROM tz_order WHERE is_payed = 1
+        <if test="type == 1">
+            AND create_time &gt; #{year}
+        </if>
+        GROUP BY user_id) AS temp
+        ) AS o
+        GROUP BY o.recency,frequency
+        ORDER BY o.recency
+    </select>
+
+    <select id="listUserIdByPurchaseNum" resultType="java.lang.String">
+        SELECT user_id
+        FROM tz_order
+        WHERE is_payed = #{isPayed}
+        AND delete_status = #{deleteStatus}
+        AND status = #{status}
+        <if test="startDate != null">
+            AND finally_time BETWEEN #{startDate}
+        </if>
+        <if test="endDate != null">
+            AND #{endDate}
+        </if>
+        GROUP BY user_id
+        HAVING COUNT(user_id) BETWEEN #{minNum} AND #{maxNum}
+    </select>
+
+    <select id="listUserIdByAverageActualTotal" resultType="java.lang.String">
+        SELECT user_id
+        FROM tz_order
+        WHERE is_payed = #{isPayed}
+        AND delete_status = #{deleteStatus}
+        AND status = #{status}
+        <if test="startDate != null">
+            AND finally_time BETWEEN #{startDate}
+        </if>
+        <if test="endDate != null">
+            AND #{endDate}
+        </if>
+        GROUP BY user_id
+        HAVING AVG(actual_total) BETWEEN #{minAmount} AND #{maxAmount}
+    </select>
+    <select id="getLastConsumeDateByUserId" resultType="java.util.Date" parameterType="java.lang.String">
+        SELECT o.pay_time
+        FROM `tz_order` o
+        WHERE o.is_payed = 1
+          AND o.delete_status = 0
+          AND o.user_id = #{userId}
+        ORDER BY o.pay_time LIMIT 0,1
+    </select>
+    <select id="countConsumeAmount" resultType="java.lang.Double" parameterType="java.lang.String">
+        SELECT SUM(o.actual_total) FROM `tz_order` o
+        <where>
+            (o.pay_type != 0
+            <if test="type == 0">
+                AND o.pay_type != 9
+            </if>
+            )
+            AND o.is_payed = 1 AND o.delete_status = 0 AND o.user_id = #{userId}
+        </where>
+    </select>
+    <select id="countPayNumByUserId" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(o.order_id)
+        FROM `tz_order` o
+        WHERE o.pay_type != 0 AND o.is_payed = 1
+      AND o.delete_status = 0 AND o.user_id = #{userId}
+    </select>
+    <select id="countReduceAmountByUserId" resultType="java.lang.Double" parameterType="java.lang.String">
+        SELECT SUM(o.reduce_amount)
+        FROM `tz_order` o
+        WHERE o.pay_type != 0 AND o.is_payed = 1 AND o.delete_status = 0 AND o.user_id = #{userId}
+    </select>
+    <select id="getPageByUserId" resultType="com.yami.shop.bean.model.Order">
+        SELECT o.`pay_time`,
+               o.`order_number`,
+               o.`freight_amount`,
+               o.`actual_total`,
+               o.`reduce_amount`,
+               o.`order_type`,
+               o.`pay_type`,
+               IF(os.pay_score IS NULL, 0, os.pay_score)                                                   as pay_score,
+               (SELECT SUM(oi.`price` * oi.prod_count) FROM `tz_order_item` oi WHERE oi.`order_number` = o.order_number AND  ISNULL(oi.giveaway_order_item_id)) AS total
+        FROM `tz_order` o
+                 LEFT JOIN `tz_order_settlement` os ON os.order_number = o.order_number
+        WHERE o.user_id = #{userId}
+          AND o.`pay_time` IS NOT NULL
+        ORDER BY o.`pay_time` DESC
+    </select>
+    <select id="prodSurveyList" resultType="com.yami.shop.bean.param.ProdAnalysisDataParam">
+        SELECT
+            current_day,
+            COUNT(*) AS dynamic_sale,
+            SUM(o.pay_num) AS pay_num,
+            SUM(o.order_num) AS order_num
+        FROM
+            (
+            SELECT
+                DATE_FORMAT(create_time,'%Y-%m-%d') AS current_day,
+                oi.prod_id,
+                SUM(IF(o.is_payed = 1,oi.prod_count,0)) AS pay_num,
+                SUM(oi.prod_count) AS order_num
+            FROM
+                tz_order o
+                JOIN tz_order_item oi ON o.order_number = oi.order_number
+            <where>
+                <if test="param.startTime != null">
+                    AND create_time &gt;= #{param.startTime}
+                </if>
+                <if test="param.endTime != null">
+                    AND create_time &lt;= #{param.endTime}
+                </if>
+                <if test="param.shopId != null">
+                    AND o.shop_id = #{param.shopId}
+                </if>
+            </where>
+            GROUP BY
+                DATE_FORMAT(create_time,'%Y-%m-%d'), oi.prod_id
+            ) AS o
+        GROUP BY
+            o.current_day
+    </select>
+
+    <select id="countByOrderNumber" resultType="java.lang.Integer">
+        select count(*)
+        from `tz_order`
+        where order_number = #{orderNumber}
+    </select>
+    <select id="getTradeRetained" resultType="com.yami.shop.bean.param.CustomerRetainRespParam"
+            parameterType="com.yami.shop.bean.param.CustomerRetainedReqParam">
+        SELECT
+        <!--当前月-->
+        a.pay_time_month AS currentMonth,
+        <!--新成交客户数-->
+        COUNT(DISTINCT a.user_id_a) AS newCustomers,
+        <!--第1月留存数-->
+        COUNT(DISTINCT CASE WHEN PERIOD_DIFF(DATE_FORMAT(b.pay_time,'%Y%m'), DATE_FORMAT(CONCAT(a.pay_time_month,
+        '-01'),'%Y%m')) = 1 THEN b.user_id ELSE NULL END) AS firstMonthRemain,
+        <!--第2月留存数-->
+        COUNT(DISTINCT CASE WHEN PERIOD_DIFF(DATE_FORMAT(b.pay_time,'%Y%m'), DATE_FORMAT(CONCAT(a.pay_time_month,
+        '-01'),'%Y%m')) = 2 THEN b.user_id ELSE NULL END) AS secondMonthRemain,
+        <!--第3月留存数-->
+        COUNT(DISTINCT CASE WHEN PERIOD_DIFF(DATE_FORMAT(b.pay_time,'%Y%m'), DATE_FORMAT(CONCAT(a.pay_time_month,
+        '-01'),'%Y%m')) = 3 THEN b.user_id ELSE NULL END) AS thirdMonthRemain,
+        <!--第4月留存数-->
+        COUNT(DISTINCT CASE WHEN PERIOD_DIFF(DATE_FORMAT(b.pay_time,'%Y%m'), DATE_FORMAT(CONCAT(a.pay_time_month,
+        '-01'),'%Y%m')) = 4 THEN b.user_id ELSE NULL END) AS fourthMonthRemain,
+        <!--第5月留存数-->
+        COUNT(DISTINCT CASE WHEN PERIOD_DIFF(DATE_FORMAT(b.pay_time,'%Y%m'), DATE_FORMAT(CONCAT(a.pay_time_month,
+        '-01'),'%Y%m')) = 5 THEN b.user_id ELSE NULL END) AS fifthMonthRemain,
+        <!--第6月留存数-->
+        COUNT(DISTINCT CASE WHEN PERIOD_DIFF(DATE_FORMAT(b.pay_time,'%Y%m'), DATE_FORMAT(CONCAT(a.pay_time_month,
+        '-01'),'%Y%m')) = 6 THEN b.user_id ELSE NULL END) AS sixthMonthRemain
+        FROM
+        (
+        SELECT DISTINCT
+        DATE_FORMAT(MIN(pay_time),'%Y-%m') AS pay_time_month,
+        user_id AS user_id_a
+        FROM `tz_order`
+        WHERE is_payed = 1
+        <if test="param.shopId != null and param.shopId != 0">
+            AND shop_id = #{param.shopId}
+        </if>
+        GROUP BY user_id
+        ORDER BY pay_time_month
+        ) a
+        LEFT JOIN `tz_order` b ON a.user_id_a = b.user_id AND b.is_payed = 1
+        <if test="param.shopId != null and param.shopId != 0">
+            AND b.shop_id = #{param.shopId}
+        </if>
+        GROUP BY a.pay_time_month
+        <if test="param.startTime != null and param.endTime != null">
+            HAVING (a.pay_time_month &gt;= #{param.startTime} AND a.pay_time_month &lt;= #{param.endTime})
+        </if>
+    </select>
+    <select id="getOrderAndOrderItemsByOrderNumberAndShopId" resultMap="unDeliveryOrderMap">
+        select o.`dvy_type`,oi.`order_item_id`,IF(oi.`status` = -1,oi.`prod_count`,oi.`status`) AS be_delivery_num,oi.`status`,oi.`prod_count`, oi.activity_id,oi.activity_type,oi.mold
+        from tz_order o
+        join tz_order_item oi on o.order_number = oi.order_number
+        where o.`order_number` = #{orderNumber} and o.shop_id = #{shopId} and o.status = 2
+    </select>
+    <select id="countPayCustomerNumByTime" resultType="com.yami.shop.bean.param.CustomerPayParam">
+        SELECT DATE_FORMAT(o.pay_time,'%Y-%m-%d') AS create_date,COUNT(DISTINCT(user_id)) AS number FROM `tz_order` o
+        WHERE  o.pay_time &gt;= #{startTime} AND o.pay_time &lt;= #{endTime}
+        GROUP BY DATE_FORMAT(o.pay_time,'%Y-%m-%d');
+    </select>
+    <select id="getOrderCountOfStatusByShopId" resultType="com.yami.shop.bean.app.dto.OrderCountData">
+        SELECT COUNT(DISTINCT o.order_id)                                           as all_count,
+               COUNT(DISTINCT CASE WHEN o.status = 1 THEN o.order_id ELSE NULL END) AS unPay,
+               COUNT(DISTINCT CASE WHEN o.status = 2 THEN o.order_id ELSE NULL END) AS payed,
+               COUNT(DISTINCT CASE WHEN o.status = 3 THEN o.order_id ELSE NULL END) AS consignment,
+               COUNT(DISTINCT CASE WHEN o.status = 5 THEN o.order_id ELSE NULL END) AS success,
+               COUNT(DISTINCT oi.order_item_id)                                     AS comment
+        FROM `tz_order` o
+                 LEFT JOIN `tz_order_item` oi ON (o.order_number = oi.order_number AND oi.comm_sts = 0 AND o.status = 5)
+        <where>
+            <if test="shopId != null">
+                AND o.shop_id = #{shopId}
+                AND (o.order_type <![CDATA[ <> ]]> 3 OR o.order_type IS NULL)
+            </if>
+        </where>
+    </select>
+
+    <select id="getConsumePowerUserInfo" resultType="com.yami.shop.bean.param.CustomerConsumeRespParam">
+        SELECT COUNT(DISTINCT user_id) AS
+        <if test="type == 1">
+            new_pay_buyers
+        </if>
+        <if test="type == 2">
+            old_pay_buyers
+        </if>
+        ,
+        IFNULL(SUM(actual_total),0) AS
+        <if test="type == 1">
+            new_pay_amount
+        </if>
+        <if test="type == 2">
+            old_pay_amount
+        </if>,
+        IFNULL(SUM(product_nums), 0) AS
+        <if test="type == 1">
+            new_pay_prod_count
+        </if>
+        <if test="type == 2">
+            old_pay_prod_count
+        </if>
+        FROM tz_order
+        WHERE create_time &gt;= #{startTime} AND create_time &lt;= #{endTime} AND is_payed = 1 AND
+        user_id
+        <if test="type == 1">
+            NOT
+        </if>
+        IN (SELECT DISTINCT user_id FROM tz_order WHERE is_payed = 1 AND create_time &lt; #{startTime})
+    </select>
+
+    <select id="getOrdersActualAmount" resultType="com.yami.shop.bean.vo.OrderAmountVO">
+        SELECT SUM(`actual_total`) AS payAmount,
+        (SELECT SUM(`use_score`) AS payScore FROM tz_order_item
+        WHERE order_number IN
+        <foreach collection="orderNumbers" open="(" item="orderNumber" close=")" separator=",">
+            #{orderNumber}
+        </foreach> ) AS payScore
+        FROM tz_order
+        WHERE order_number IN
+        <foreach collection="orderNumbers" open="(" item="orderNumber" close=")" separator=",">
+            #{orderNumber}
+        </foreach>
+    </select>
+
+    <select id="listUserIdByAverageActualTotals" resultType="java.lang.String">
+        SELECT user_id
+        FROM tz_order
+        WHERE is_payed = #{isPayed}
+        AND delete_status = #{deleteStatus}
+        AND status = #{status}
+        <if test="startDate != null">
+            AND finally_time BETWEEN #{startDate}
+        </if>
+        <if test="endDate != null">
+            AND #{endDate}
+        </if>
+        GROUP BY user_id
+        HAVING AVG(actual_total) > #{minAmount}
+    </select>
+
+    <select id="getProdSurvey" resultType="com.yami.shop.bean.param.ProdAnalysisDataParam">
+        SELECT
+            a.*,
+            b.*
+        FROM
+            (
+            SELECT
+                <!-- 下单件数 -->
+                IFNULL( SUM( oi.prod_count ), 0 ) orderNum,
+                <!-- 支付件数 -->
+                IFNULL( SUM( IF ( o.is_payed = 1, oi.prod_count, 0 )), 0 ) payNum,
+                <!-- 动销商品数 -->
+                COUNT( DISTINCT oi.prod_id ) dynamicSale
+            FROM
+                tz_order o
+                LEFT JOIN tz_order_item oi ON o.order_number = oi.order_number
+            WHERE
+                o.create_time &gt;= #{param.startTime}
+                AND o.create_time &lt;= #{param.endTime}
+                <if test="param.shopId != null">
+                    AND o.shop_id = #{param.shopId}
+                </if>
+            ) a,
+            (
+            SELECT
+                <!-- 新增商品数 -->
+                COUNT(prod_id) newProd
+            FROM
+                tz_prod
+            WHERE
+                `status` != -1
+                AND create_time BETWEEN #{param.startTime} AND #{param.endTime}
+                <if test="param.shopId != null and param.shopId != ''">
+                    AND shop_id = #{param.shopId}
+                </if>
+            ) b
+    </select>
+
+    <select id="listProdIdByTime" resultType="java.lang.Long">
+        SELECT DISTINCT(oi.prod_id) prod_id FROM tz_order o
+        JOIN tz_order_item oi ON o.order_number = oi.order_number
+        WHERE o.create_time &gt;= #{startTime} OR o.pay_time &gt;= #{startTime}
+    </select>
+
+    <select id="listOrderProdIdByCreateTime" resultType="java.lang.Long">
+        SELECT DISTINCT(oi.prod_id) prod_id FROM tz_order o
+        JOIN tz_order_item oi ON o.order_number = oi.order_number
+        WHERE o.create_time &gt; #{startTime} AND o.create_time &lt; #{endTime}
+        <if test="shopId != null and shopId != ''">
+            AND o.shop_id = #{shopId}
+        </if>
+    </select>
+    <select id="getPageByUserIdAndShopId" resultType="com.yami.shop.bean.model.Order">
+        SELECT o.`pay_time`,
+        o.`order_number`,
+        o.`freight_amount`,
+        o.`actual_total`,
+        o.`reduce_amount`,
+        o.`order_type`,
+        o.`pay_type`,
+        IF(os.pay_score IS NULL, 0, os.pay_score)                                                   as pay_score,
+        (SELECT SUM(oi.`price` * oi.prod_count) FROM `tz_order_item` oi WHERE oi.`order_number` = o.order_number) AS total
+        FROM `tz_order` o
+        LEFT JOIN `tz_order_settlement` os ON os.order_number = o.order_number
+        WHERE o.user_id = #{userId}
+        AND o.`pay_time` IS NOT NULL
+        <if test="shopId != null">
+            AND o.shop_id = #{shopId}
+        </if>
+        ORDER BY o.`pay_time` DESC
+    </select>
+    <select id="orderDetailByOrderNumberList" resultMap="orderShopDtoMap">
+        SELECT o.*,o.freight_amount as transfee,
+               uao.*,sd.shop_name
+        FROM tz_order o
+        LEFT JOIN tz_shop_detail sd ON o.shop_id = sd.shop_id
+        LEFT JOIN tz_user_addr_order uao ON o.addr_order_id = uao.addr_order_id
+        WHERE
+        <if test="userId != null and userId != ''">
+            o.user_id = #{userId} and
+        </if>
+        o.order_number IN
+        <foreach collection="orderNumberList" item="orderNumber" separator="," open="(" close=")">
+            #{orderNumber}
+        </foreach>
+    </select>
+    <select id="listUnPayOrder" resultMap="orderAndOrderItemMap">
+        SELECT o.order_id,oi.order_item_id,oi.order_number,oi.sku_id,oi.prod_count,oi.user_id,
+            oi.stock_point_id oi_stock_point_id,oi.activity_id oi_activity_id
+        FROM tz_order o
+        JOIN tz_order_item oi ON o.order_number = oi.order_number
+        JOIN tz_seckill s ON s.seckill_id = oi.activity_id
+        WHERE o.order_type = 2 AND o.is_payed = 0 AND o.`status` = 1 AND create_time &lt; #{cancelTime}
+          AND (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(o.`create_time`))/60 > s.`max_cancel_time`
+    </select>
+</mapper>

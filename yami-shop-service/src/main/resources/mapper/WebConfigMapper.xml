@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yami.shop.dao.WebConfigMapper">
+
+  <resultMap id="webConfigMap" type="com.yami.shop.bean.model.WebConfig">
+    <id column="id" property="id" />
+    <result column="is_activity" property="isActivity"/>
+    <result column="bs_login_logo_img" property="bsLoginLogoImg"/>
+    <result column="bs_login_bg_img" property="bsLoginBgImg"/>
+<!--    <result column="bs_copyright_cn" property="bsCopyrightCn"/>-->
+<!--    <result column="bs_copyright_en" property="bsCopyrightEn"/>-->
+<!--    <result column="bs_title_content_cn" property="bsTitleContentCn"/>-->
+<!--    <result column="bs_title_content_en" property="bsTitleContentEn"/>-->
+    <result column="bs_title_img" property="bsTitleImg"/>
+    <result column="pc_title_img" property="pcTitleImg"/>
+    <result column="pc_logo_img_text" property="pcLogoImgText"/>
+    <result column="pc_login_bg_img" property="pcLoginBgImg"/>
+    <result column="uni_login_logo_img" property="uniLoginLogoImg"/>
+    <result column="pc_logo_img" property="pcLogoImg"/>
+    <result column="pc_qrcode_img" property="pcQrcodeImg"/>
+<!--    <result column="bs_menu_title_open_cn" property="bsMenuTitleOpenCn"/>-->
+<!--    <result column="bs_menu_title_open_en" property="bsMenuTitleOpenEn"/>-->
+<!--    <result column="bs_menu_title_close_cn" property="bsMenuTitleCloseCn"/>-->
+<!--    <result column="bs_menu_title_close_en" property="bsMenuTitleCloseEn"/>-->
+<!--    <result column="pc_copyright_cn" property="pcCopyrightCn"/>-->
+<!--    <result column="pc_copyright_en" property="pcCopyrightEn"/>-->
+<!--    <result column="pc_company_name_cn" property="pcCompanyNameCn"/>-->
+<!--    <result column="pc_company_name_en" property="pcCompanyNameEn"/>-->
+<!--    <result column="pc_company_info_cn" property="pcCompanyInfoCn"/>-->
+<!--    <result column="pc_company_info_en" property="pcCompanyInfoEn"/>-->
+<!--    <result column="pc_title_content_cn" property="pcTitleContentCn"/>-->
+<!--    <result column="pc_title_content_en" property="pcTitleContentEn"/>-->
+<!--    <result column="pc_company_name_short_cn" property="pcCompanyNameShortCn"/>-->
+<!--    <result column="pc_company_name_short_en" property="pcCompanyNameShortEn"/>-->
+<!--    <result column="pc_welcome_cn" property="pcWelcomeCn"/>-->
+<!--    <result column="pc_welcome_en" property="pcWelcomeEn"/>-->
+<!--    <result column="uni_title_content_cn" property="uniTitleContentCn"/>-->
+<!--    <result column="uni_title_content_en" property="uniTitleContentEn"/>-->
+  </resultMap>
+</mapper>

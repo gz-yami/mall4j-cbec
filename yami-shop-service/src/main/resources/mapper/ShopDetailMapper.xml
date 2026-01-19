@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.ShopDetailMapper">
+  <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.ShopDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="shop_id" jdbcType="BIGINT" property="shopId" />
+    <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="intro" jdbcType="VARCHAR" property="intro" />
+    <result column="shop_owner" jdbcType="VARCHAR" property="shopOwner" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="tel" jdbcType="VARCHAR" property="tel" />
+    <result column="shop_logo" jdbcType="VARCHAR" property="shopLogo" />
+    <result column="shop_status" jdbcType="TINYINT" property="shopStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_distribution" jdbcType="TINYINT" property="isDistribution" />
+    <result column="business_license" jdbcType="VARCHAR" property="businessLicense" />
+    <result column="identity_card_front" jdbcType="VARCHAR" property="identityCardFront" />
+    <result column="identity_card_later" jdbcType="VARCHAR" property="identityCardLater" />
+    <result column="mobile_background_pic" property="mobileBackgroundPic" />
+    <result column="pc_background_pic" property="pcBackgroundPic" />
+    <result column="merchant_name" property="merchantName" />
+    <result column="contract_start_time" property="contractStartTime" />
+    <result column="contract_end_time" property="contractEndTime" />
+    <result column="is_platform" property="isPlatform"/>
+  </resultMap>
+  <select id="getShopByMobile" resultMap="BaseResultMap">
+    select * from tz_shop_detail where mobile = #{mobile}
+  </select>
+    <update id="updatePasswordByUserName">
+      update tz_shop_detail set `password` = #{newPassword} where mobile = #{username}
+    </update>
+
+  <select id="getShopDetailByUserId" resultMap="BaseResultMap">
+      select * from tz_shop_detail where user_id = #{userId}
+  </select>
+
+  <update id="updateStatus">
+     UPDATE tz_shop_detail sd SET sd.`update_time` = NOW(),sd.`shop_status` = #{status}
+     WHERE sd.`shop_id` = #{shopId}
+  </update>
+
+    <select id="selectShopDetailById" resultType="com.yami.shop.bean.model.ShopDetail">
+      select
+        *
+      from
+        tz_shop_detail
+      where
+        shop_id = #{shopId}
+    </select>
+    <select id="getDistance" resultType="double">
+    SELECT  ROUND(6378.138 * 2 * ASIN(
+    SQRT(   POW(   SIN(
+    ( #{lat} * PI() / 180 - shop_lat * PI() / 180  ) / 2 ),
+    2 ) + COS(#{lat} * PI() / 180) * COS(shop_lat * PI() / 180) * POW(
+    SIN(  (  #{lng} * PI() / 180 - shop_lng * PI() / 180 ) / 2),
+    2 ) ) ) * 1000   ) AS distance
+    FROM
+    tz_shop_detail
+    WHERE
+    shop_status = 1 and shop_id = #{shopId}
+  </select>
+  <select id="listShopIdsOfStatusChangeToStopByContractTime" resultType="java.lang.Long">
+    SELECT shop_id FROM tz_shop_detail
+    WHERE (#{now} &lt; contract_start_time OR #{now} &gt;= contract_end_time) AND shop_status = 1
+  </select>
+  <select id="listShopIdsOfStatusChangeToOpenByContractTime" resultType="java.lang.Long">
+    SELECT shop_id FROM tz_shop_detail
+    WHERE #{now} &gt;= contract_start_time and (#{now} &lt; contract_end_time or contract_end_time is null) and shop_status = 0
+  </select>
+
+  <update id="batchUpdateShopType">
+    update tz_shop_detail set `type` = #{type}, update_time = NOW()
+    where shop_id IN
+    <foreach collection="shopIds" item="shopId" open="(" close=")" separator=",">
+      #{shopId}
+    </foreach>
+  </update>
+  <update id="batchUpdateShopStatusByShopIds">
+    update tz_shop_detail set shop_status = #{newStatus}
+    where shop_status = #{oldStatus}
+    and shop_id in
+    <foreach collection="shopIds" item="shopId" open="(" close=")" separator=",">
+      #{shopId}
+    </foreach>
+  </update>
+
+
+  <select id="getShopDetailByShopIds" resultType="com.yami.shop.bean.model.ShopDetail">
+
+    select shop_id,shop_name,user_id,intro,shop_owner,mobile,tel,
+           shop_logo,shop_status,create_time,update_time,is_distribution,business_license,identity_card_front,identity_card_later,`type`,
+           mobile_background_pic, pc_background_pic, merchant_name, contract_start_time, contract_end_time
+    from tz_shop_detail
+    where shop_id in
+    <foreach collection="shopIds" item="shopId" open="(" close=")" separator=",">
+    #{shopId}
+   </foreach>
+  </select>
+
+  <update id="batchUpdateShopScore">
+    <foreach collection="shopScoreList" item="shopDetail" separator=";">
+      UPDATE tz_shop_detail
+      SET shop_score = #{shopDetail.shopScore}
+      WHERE
+      shop_id = #{shopDetail.shopId}
+    </foreach>
+  </update>
+  <update id="updateAcctProtocolNoByType">
+    update tz_shop_detail
+    <set>
+      <if test="type == 2">
+        legal_acct_protocol_no = #{acctProtocolNo},
+      </if>
+      <if test="type == 3">
+        company_acct_protocol_no = #{acctProtocolNo}
+      </if>
+    </set>
+    where shop_id = #{shopId}
+  </update>
+</mapper>

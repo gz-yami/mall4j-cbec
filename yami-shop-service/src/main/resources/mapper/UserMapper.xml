@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.User">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="user_mail" jdbcType="VARCHAR" property="userMail" />
+    <result column="login_password" jdbcType="VARCHAR" property="loginPassword" />
+    <result column="pay_password" jdbcType="VARCHAR" property="payPassword" />
+    <result column="user_mobile" jdbcType="VARCHAR" property="userMobile" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="user_regtime" jdbcType="TIMESTAMP" property="userRegtime" />
+    <result column="user_regip" jdbcType="VARCHAR" property="userRegip" />
+    <result column="user_memo" jdbcType="VARCHAR" property="userMemo" />
+    <result column="disable_remark" jdbcType="VARCHAR" property="disableRemark" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="birth_date" jdbcType="CHAR" property="birthDate" />
+    <result column="growth" jdbcType="BIGINT" property="growth" />
+    <result column="score" jdbcType="BIGINT" property="score" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="level_type" jdbcType="INTEGER" property="levelType" />
+    <result column="pic" jdbcType="VARCHAR" property="pic" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="prod_recommendation" jdbcType="INTEGER" property="prodRecommendation" />
+  </resultMap>
+
+  <resultMap id="BaseAndAppMap" type="com.yami.shop.bean.model.User">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="user_mail" jdbcType="VARCHAR" property="userMail" />
+    <result column="login_password" jdbcType="VARCHAR" property="loginPassword" />
+    <result column="pay_password" jdbcType="VARCHAR" property="payPassword" />
+    <result column="user_mobile" jdbcType="VARCHAR" property="userMobile" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="user_regtime" jdbcType="TIMESTAMP" property="userRegtime" />
+    <result column="vip_end_time" jdbcType="TIMESTAMP" property="vipEndTime" />
+    <result column="user_regip" jdbcType="VARCHAR" property="userRegip" />
+    <!--<result column="user_lasttime" jdbcType="TIMESTAMP" property="userLasttime" />-->
+    <!--<result column="user_lastip" jdbcType="VARCHAR" property="userLastip" />-->
+    <result column="user_memo" jdbcType="VARCHAR" property="userMemo" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="birth_date" jdbcType="CHAR" property="birthDate" />
+    <result column="pic" jdbcType="VARCHAR" property="pic" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="level_type" jdbcType="INTEGER" property="levelType" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="prod_recommendation" jdbcType="INTEGER" property="prodRecommendation" />
+    <collection property="bizUserIdList"  javaType="java.util.List" ofType="string">
+      <id column="bizUserIdList" />
+    </collection>
+  </resultMap>
+    <update id="setUserLevelBylevelId">
+      UPDATE
+        tz_user
+      SET
+        `level` = #{level}-1
+      WHERE `level` = #{level} AND level_type = #{levelType}
+    </update>
+  <update id="setMaxUserLevelBylevelId">
+    UPDATE
+    tz_user
+    SET
+    `level` = #{level}
+    WHERE user_id IN
+    (SELECT user_id FROM tz_user_extension WHERE growth &gt; #{minNeedGrowth}
+      <if test="maxNeedGrowth != null">
+        AND growth &lt; #{maxNeedGrowth}
+      </if>
+      <if test="levelType != null">
+        AND level_type = #{levelType}
+      </if>
+    )
+  </update>
+
+  <select id="selectMemberByEndTime" resultMap="BaseResultMap">
+    select * from tz_user u where vip_end_time &lt; #{endOfDay} and level_type=1
+  </select>
+
+  <update id="updateBatchById">
+    <foreach collection="userList" item="user"  separator=";">
+      update tz_user set level =#{user.level},level_type=0 where user_id = #{user.userId}
+    </foreach>
+  </update>
+    <select id="getUserPage" resultType="com.yami.shop.bean.model.User">
+      SELECT u.nick_name,u.status,u.pic,u.level,u.level_type,u.user_id,u.real_name,u.user_mobile,ue.score
+      FROM tz_user u
+      JOIN tz_user_extension ue ON ue.`user_id` = u.user_id
+      <where>
+        <if test="user.nickName != null and user.nickName != ''">
+          AND u.nick_name LIKE CONCAT('%',#{user.nickName},'%')
+        </if>
+        <if test="user.status != null">
+          AND u.status = #{user.status}
+        </if>
+        <if test="user.levelType != null and user.levelType != ''">
+          AND u.level_Type = #{user.levelType}
+          <if test="user.level != null">
+              AND u.level = #{user.level}
+          </if>
+        </if>
+        <if test="user.realName != null and user.realName != ''">
+          AND u.real_name LIKE CONCAT('%',#{user.realName},'%')
+        </if>
+        <if test="user.userMobile != null and user.userMobile != ''">
+          AND u.user_mobile LIKE CONCAT('%',#{user.userMobile},'%')
+        </if>
+      </where>
+    </select>
+
+    <select id="getUserDetail" resultMap="BaseAndAppMap">
+        SELECT u.*
+        FROM tz_user u
+        WHERE u.user_id =  #{userId}
+    </select>
+
+    <select id="getUserListByUserNumbers" resultType="com.yami.shop.bean.model.User">
+      SELECT user_id,user_regtime,nick_name,user_mobile,pic FROM tz_user WHERE user_id IN
+      <foreach collection="userSet" item="userId" open="(" close=")" separator=",">
+        #{userId}
+      </foreach>
+    </select>
+    <select id="countUserByParam" resultType="java.lang.Integer"
+            parameterType="com.yami.shop.bean.param.CustomerReqParam">
+      SELECT COUNT(u.user_id) FROM `tz_user` u
+      <where>
+        <if test="param.dateTime != null">
+          AND u.user_regtime  <![CDATA[ <= ]]> #{param.dateTime}
+        </if>
+        <if test="param.member != null">
+          and u.level_type = #{param.member}
+        </if>
+        <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+          AND ( u.user_regtime  <![CDATA[ >= ]]> #{param.startTime} AND u.user_regtime  <![CDATA[ <= ]]> #{param.endTime})
+        </if>
+      </where>
+    </select>
+  <select id="countMemberByParam" resultType="java.lang.Integer"
+          parameterType="com.yami.shop.bean.param.CustomerReqParam">
+    SELECT COUNT(DISTINCT(u.user_id)) FROM `tz_user` u
+    <where>
+      u.`status` = 1
+      <if test="param.dateTime != null">
+        AND u.user_regtime  <![CDATA[ <= ]]> #{param.dateTime}
+      </if>
+      <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+        AND ( u.user_regtime  <![CDATA[ >= ]]> #{param.startTime} AND u.user_regtime  <![CDATA[ <= ]]> #{param.endTime})
+      </if>
+    </where>
+  </select>
+
+  <select id="getUserPageByParam" resultType="com.yami.shop.bean.param.UserManagerParam">
+    SELECT utemp.*
+    FROM (
+    SELECT u.nick_name,u.status,u.pic,u.level,u.level_type,
+      u.user_id,u.real_name,u.user_mobile, u.user_mail,
+      u.user_regtime
+      FROM tz_user u
+        <where>
+          <if test="param.nickName != null and param.nickName != ''">
+            AND u.nick_name LIKE CONCAT('%',#{param.nickName},'%')
+          </if>
+          <if test="param.status != null">
+            AND u.status = #{param.status}
+          </if>
+          <if test="param.levelType != null">
+            AND u.level_Type = #{param.levelType}
+          </if>
+          <if test="param.level != null">
+            AND u.level = #{param.level}
+          </if>
+          <if test="param.realName != null and param.realName != ''">
+            AND u.real_name LIKE CONCAT('%',#{param.realName},'%')
+          </if>
+          <if test="param.userMobile != null and param.userMobile != ''">
+            AND u.user_mobile LIKE CONCAT('%',#{param.userMobile},'%')
+          </if>
+          <if test="param.userMail != null and param.userMail != ''">
+            AND u.user_mail LIKE CONCAT('%', #{param.userMail}, '%')
+          </if>
+          <if test="param.userRegStartTime != null and param.userRegEndTime != null">
+            AND (u.user_regtime  <![CDATA[ >= ]]> #{param.userRegStartTime} AND u.user_regtime  <![CDATA[ <= ]]> #{param.userRegEndTime})
+          </if>
+        </where>
+        ORDER BY
+          u.user_regtime DESC
+        LIMIT
+          #{adapter.begin} , #{adapter.size}
+      ) AS utemp
+  </select>
+  <select id="countGetUserPageByParam" resultType="java.lang.Integer">
+    SELECT COUNT(u.user_id)
+    FROM tz_user u
+    JOIN tz_user_extension ue ON ue.`user_id` = u.user_id
+    <where>
+      <if test="param.nickName != null and param.nickName != ''">
+        AND u.nick_name LIKE CONCAT('%',#{param.nickName},'%')
+      </if>
+      <if test="param.status != null">
+        AND u.status = #{param.status}
+      </if>
+      <if test="param.level != null">
+        AND u.level = #{param.level}
+      </if>
+      <if test="param.levelType != null">
+        AND u.level_Type = #{param.levelType}
+      </if>
+      <if test="param.realName != null and param.realName != ''">
+        AND u.real_name LIKE CONCAT('%',#{param.realName},'%')
+      </if>
+      <if test="param.userMobile != null and param.userMobile != ''">
+        AND u.user_mobile LIKE CONCAT('%',#{param.userMobile},'%')
+      </if>
+      <if test="param.userMail != null and param.userMail != ''">
+        AND u.user_mail LIKE CONCAT('%',#{param.userMail},'%')
+      </if>
+      <if test="param.userRegStartTime != null and param.userRegEndTime != null">
+        AND (u.user_regtime  <![CDATA[ >= ]]> #{param.userRegStartTime} AND u.user_regtime  <![CDATA[ <= ]]> #{param.userRegEndTime})
+      </if>
+      <if test="param.tagIds != null and param.tagIds.size() > 0">
+        AND u.user_id IN
+        (
+        SELECT DISTINCT(utg.user_id) FROM `tz_user_tag_user` utg
+        WHERE utg.user_tag_id IN
+        <foreach collection="param.tagIds" item="tagId" index="index" open="(" close=")" separator=",">
+          #{tagId}
+        </foreach>
+        )
+      </if>
+    </where>
+    ORDER BY u.user_regtime DESC
+  </select>
+  <select id="getuserInfo" resultType="com.yami.shop.bean.param.UserManagerParam"
+          parameterType="java.lang.String">
+      SELECT u.nick_name,u.status,u.pic,u.level,u.level_type,
+        u.user_id,u.real_name,ue.score,u.user_regtime,u.disable_remark
+          , ue.balance AS currentBalance,
+          ue.total_balance AS sumBalance
+      FROM tz_user u
+      JOIN tz_user_extension ue ON ue.`user_id` = u.user_id
+      WHERE u.user_id = #{userId}
+  </select>
+    <select id="listByUserPhones" resultType="com.yami.shop.bean.model.User">
+      select * from `tz_user` where user_mobile in
+      <foreach collection="phones" item="phone" index="index" open="(" close=")" separator=",">
+        #{phone}
+      </foreach>
+    </select>
+    <select id="listByUserMails" resultType="com.yami.shop.bean.model.User" parameterType="java.util.List">
+      select * from `tz_user` where user_mail in
+      <foreach collection="mails" item="mail" index="index" open="(" close=")" separator=",">
+        #{mail}
+      </foreach>
+    </select>
+    <select id="selectOneByUserName" resultType="com.yami.shop.bean.model.User">
+      select * from `tz_user` where binary user_name = #{userName} and status != -1 limit 1
+    </select>
+    <select id="countUserByMemberParam" resultType="com.yami.shop.bean.param.CustomerPayParam">
+      SELECT DATE_FORMAT(u.user_regtime,'%Y-%m-%d') as create_date,COUNT(u.user_id) as number FROM `tz_user` u
+      WHERE
+      u.user_regtime &gt;= #{startTime} AND u.user_regtime &lt;= #{endTime}
+      <if test="levelType != null">
+        and u.level_type = #{levelType}
+      </if>
+      GROUP BY DATE_FORMAT(u.user_regtime,'%Y-%m-%d')
+    </select>
+
+
+  <select id="getUserIdList" resultType="java.lang.String">
+    SELECT user_id FROM tz_user
+  </select>
+    <select id="getUserByUserIds" resultType="com.yami.shop.bean.model.User">
+      SELECT user_id, nick_name, real_name, user_mail, user_name, user_mobile, pic FROM tz_user WHERE user_id IN
+      <foreach collection="ids" item="userId" open="(" close=")" separator=",">
+        #{userId}
+      </foreach>
+    </select>
+
+
+  <select id="getUserByUserMobileAndNickName" resultType="java.lang.String">
+    SELECT user_id
+    FROM `tz_user`
+    WHERE nick_name = #{nickName} AND user_mobile = #{userMobile} AND status = 1
+    LIMIT 1
+  </select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.DeliveryMapper">
+  <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.Delivery">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="dvy_id" jdbcType="BIGINT" property="dvyId" />
+    <result column="dvy_name" jdbcType="VARCHAR" property="dvyName" />
+    <result column="company_home_url" jdbcType="VARCHAR" property="companyHomeUrl" />
+    <result column="rec_time" jdbcType="TIMESTAMP" property="recTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="query_url" jdbcType="VARCHAR" property="queryUrl" />
+    <result column="dvy_no" jdbcType="VARCHAR" property="dvyNo" />
+    <result column="dvy_no_hd" jdbcType="VARCHAR" property="dvyNoHd" />
+    <result column="ali_no" jdbcType="VARCHAR" property="aliNo" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <select id="listDeliveryCountByOrderNumber" resultType="com.yami.shop.bean.vo.DeliveryOrderVO">
+    SELECT order_number, SUM(product_nums) as delivery_count
+    FROM tz_delivery_order
+    WHERE order_number IN
+    <foreach collection="orderNumbers" item="orderNumber" open="(" close=")" separator=",">
+      #{orderNumber}
+    </foreach>
+    GROUP BY order_number
+  </select>
+</mapper>

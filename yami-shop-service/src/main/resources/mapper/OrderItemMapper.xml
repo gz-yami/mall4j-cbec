@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.OrderItemMapper">
+    <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.OrderItem">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="order_item_id" jdbcType="BIGINT" property="orderItemId"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="prod_id" jdbcType="BIGINT" property="prodId"/>
+        <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+        <result column="prod_count" jdbcType="INTEGER" property="prodCount"/>
+        <result column="gain_score" jdbcType="INTEGER" property="gainScore"/>
+        <result column="use_score" jdbcType="INTEGER" property="useScore"/>
+        <result column="prod_name" jdbcType="VARCHAR" property="prodName"/>
+        <result column="pic" jdbcType="VARCHAR" property="pic"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="product_total_amount" jdbcType="DECIMAL" property="productTotalAmount"/>
+        <!--<result column="subsidy_amount" jdbcType="DECIMAL" property="subsidyAmount"/>-->
+        <result column="rec_time" jdbcType="TIMESTAMP" property="recTime"/>
+        <result column="comm_sts" jdbcType="INTEGER" property="commSts"/>
+        <result column="actual_total" jdbcType="DECIMAL" property="actualTotal"/>
+        <result column="basket_date" property="basketDate"/>
+        <result column="distribution_card_no" property="distributionCardNo"/>
+        <result column="share_reduce" jdbcType="DECIMAL" property="shareReduce"/>
+        <result column="dvy_type" jdbcType="INTEGER" property="dvyType"/>
+        <result column="change_amount_version" jdbcType="INTEGER" property="changeAmountVersion"/>
+    </resultMap>
+
+
+    <select id="listByOrderNumber" resultType="com.yami.shop.bean.model.OrderItem">
+        select toi.*
+        from tz_order_item toi
+        where toi.order_number = #{orderNumber}
+    </select>
+
+    <select id="getUnGiveawayOrderItemsByOrderNumber" resultType="com.yami.shop.bean.model.OrderItem">
+        select toi.*, s.properties
+        from tz_order_item toi
+        left join `tz_sku`s on s.sku_id = toi.sku_id
+        where toi.order_number = #{orderNumber} and giveaway_order_item_id is null and activity_id = 0
+    </select>
+
+
+    <update id="updateByDeliveries">
+        <foreach collection="orderItems" item="orderItem" separator=";">
+            UPDATE tz_order_item oi  set status=#{orderItem.prodCount} - #{orderItem.changeNum}, dvy_type = #{orderItem.dvyType}  WHERE order_item_id = #{orderItem.orderItemId}
+        </foreach>
+    </update>
+    <select id="getListByOrderNumber" resultType="com.yami.shop.bean.model.OrderItem">
+        SELECT oi.* FROM tz_order_item oi
+        JOIN tz_order o ON o.order_number = oi.order_number  AND o.order_number = #{orderNumber}
+
+    </select>
+    <!--<select id="getPayAmounts" resultType="com.yami.shop.bean.param.PayTopParam">-->
+        <!--/*使用分组*/-->
+        <!--SELECT oi.prod_id,oi.prod_name,SUM(actual_total) payAmount FROM `tz_order_item` oi-->
+        <!--<where>-->
+            <!--<if test="param.shopId != null">-->
+                <!--AND oi.shop_id = #{param.shopId}-->
+            <!--</if>-->
+        <!--</where>-->
+        <!--GROUP BY oi.prod_id-->
+        <!--ORDER BY payAmount DESC-->
+    <!--</select>-->
+    <select id="getPayAmounts" resultType="com.yami.shop.bean.param.PayTopParam">
+        SELECT
+            DISTINCT oi.prod_id,
+            p.pic,
+            SUM(oi.actual_total) payAmount,
+            sum(oi.prod_count) payCount,
+            sd.shop_name
+        FROM
+            `tz_order_item` oi
+            LEFT JOIN `tz_order` o ON o.order_number = oi.order_number
+            LEFT JOIN `tz_prod` p ON p.prod_id = oi.prod_id
+            LEFT JOIN tz_shop_detail sd ON sd.`shop_id` = p.`shop_id`
+        <where>
+            o.is_payed = 1 and p.status != -1
+            <if test="param.shopId != null">
+                AND oi.shop_id = #{param.shopId}
+            </if>
+            <if test="param.dateTime != null">
+                AND o.pay_time <![CDATA[ <= ]]> #{param.dateTime}
+            </if>
+            <if test="param.dateTime == null and param.startTime != null and param.endTime != null">
+                AND (o.pay_time  <![CDATA[ >= ]]> #{param.startTime} AND o.pay_time <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+        GROUP BY
+            oi.`prod_id`
+        ORDER BY
+            payAmount DESC
+    </select>
+
+    <select id="countPayPerson" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT(oi.user_id)) FROM `tz_order_item` oi
+        LEFT JOIN `tz_order` o ON o.order_number = oi.order_number
+        <where>
+            oi.prod_id = #{prodId} AND o.is_payed = 1
+            <if test="param.shopId != null and param.shopId != ''">
+                AND oi.shop_id = #{param.shopId}
+            </if>
+            <if test="param.startTime != null and param.endTime != null">
+                AND (oi.rec_time <![CDATA[ >= ]]> #{param.startTime} AND oi.rec_time <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+    </select>
+    <select id="getPayPersonNumByParam" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT(oi.user_id)) FROM `tz_order_item` oi
+        LEFT JOIN `tz_order` o ON o.order_number = oi.order_number
+        <where>
+            oi.prod_id = #{prodId}
+            <if test="shopId != null">
+                AND oi.shop_id = #{shopId}
+            </if>
+            AND oi.rec_time &gt;= #{startTime} AND oi.rec_time &lt;= #{endTime}
+        </where>
+    </select>
+
+
+    <select id="getProdEffectByDateAndProdIds" resultType="com.yami.shop.bean.param.ProdEffectRespParam">
+        SELECT op.prod_id, op.user_id, op.is_payed, sum(op.place_order_num) place_order_num,
+        sum(op.pay_num) pay_num, sum(op.place_order_amount) place_order_amount, sum(op.pay_amount) pay_amount,
+        sum(op.pay_oder) pay_oder, COUNT(*) place_order_person,SUM(IF(op.pay_oder > 0,1,0)) pay_person FROM
+        (
+            SELECT oi.prod_id,o.user_id,o.is_payed,SUM(oi.prod_count) place_order_num,SUM(IF(o.is_payed = 1,oi.prod_count, 0)) pay_num
+            ,SUM(oi.actual_total) place_order_amount,SUM(IF(o.is_payed = 1,oi.actual_total,0)) pay_amount
+            ,SUM(o.is_payed) pay_oder
+            FROM tz_order_item oi
+            JOIN tz_order o ON o.order_number = oi.order_number
+            WHERE o.create_time &gt;= #{startTime} AND o.create_time &lt;= #{endTime} AND oi.prod_id IN
+            <foreach collection="prodIds" item="prodId" separator="," open="(" close=")">
+                #{prodId}
+            </foreach>
+            GROUP BY oi.prod_id,o.user_id
+        ) AS op
+        GROUP BY op.prod_id
+    </select>
+    <select id="getByOrderItemId" resultType="com.yami.shop.bean.model.OrderItem">
+        select oi.*, s.properties
+        from tz_order_item oi
+        left join `tz_sku`s on s.sku_id = oi.sku_id
+        where oi.order_item_id = #{orderItemId}
+    </select>
+    <select id="getInfoByOrderItemId" resultType="com.yami.shop.bean.model.OrderItem">
+        select oi.*
+        from tz_order_item oi
+        where oi.order_item_id = #{orderItemId}
+        LIMIT 1
+    </select>
+
+    <select id="listDetailByOrderNumber" resultType="com.yami.shop.bean.vo.OrderItemDetailVO">
+        SELECT oi.prod_name,sd.shop_name,oi.category_id,
+                oi.share_reduce AS multishop_reduce,
+               (IFNULL(oi.distribution_amount,0) + IFNULL(oi.distribution_parent_amount,0)) AS distribution_amount,
+               oi.*
+        FROM tz_order_item oi
+        LEFT JOIN tz_shop_detail sd ON oi.shop_id = sd.shop_id
+        WHERE oi.order_number = #{orderNumber} and oi.activity_type != 6
+    </select>
+
+    <select id="getOrderItemProdNum" resultType="java.lang.Integer">
+        SELECT SUM(prod_count) FROM tz_order_item WHERE order_item_id = #{orderItemId} OR giveaway_order_item_id = #{orderItemId}
+    </select>
+
+    <select id="listAndPayTimeByOrderNumber" resultType="com.yami.shop.bean.model.OrderItem">
+        SELECT oi.order_item_id,oi.pic,oi.order_number,oi.prod_id,oi.user_id,o.pay_time,o.shop_id,oi.prod_name,oi.sku_name,
+               oi.activity_id,oi.activity_type,oi.mold
+        FROM tz_order_item oi
+        JOIN tz_order o ON oi.order_number = o.order_number AND oi.order_number = #{orderNumber}
+    </select>
+
+    <select id="getSoldNumRankByShopIdAndTime" resultType="long">
+        select prod_id from
+        (
+            select
+                p.prod_id,
+                sum( IFNULL(prod_count, 0) ) as num
+            from
+                tz_prod p
+                LEFT JOIN `tz_order_item` oi ON p.prod_id = oi.prod_id
+                LEFT JOIN tz_order o on o.order_number = oi.order_number
+                AND o.is_payed = 1
+                <if test="time != null">
+                    AND o.pay_time >= #{time}
+                </if>
+                LEFT JOIN tz_shop_detail sd ON sd.`shop_id` = p.`shop_id`
+                <if test="primaryCategoryId != null">
+                    LEFT JOIN `tz_category` tc3 ON tc3.category_id = p.category_id
+                    LEFT JOIN `tz_category` tc2 ON tc2.category_id = tc3.parent_id
+                </if>
+            where
+                p.`status` = 1
+                AND sd.`shop_status` = 1
+                <if test="prodType == null">
+                    AND p.prod_type NOT IN ( 3, 5 )
+                </if>
+                <if test="prodType != null">
+                    AMD p.prod_type = #{prodType}
+                </if>
+                <if test="shopId != null and shopId != 0">
+                    and p.shop_id = #{shopId}
+                </if>
+                <if test="primaryCategoryId != null">
+                    AND tc2.parent_id = #{primaryCategoryId}
+                </if>
+            group by p.prod_id
+            order by num
+            <if test="esRenovationSpuSort == 2">
+                desc
+            </if>
+            limit 0,1000
+        ) o
+    </select>
+
+    <select id="getOrderProdPayCount" resultType="com.yami.shop.bean.param.PayTopParam">
+        SELECT * FROM
+        (
+        SELECT oi.prod_id,oi.prod_name,p.pic,sum(prod_count) payCount
+        FROM `tz_order_item` oi
+        LEFT JOIN `tz_order` o ON o.order_number = oi.order_number
+        LEFT JOIN `tz_prod` p ON oi.prod_id = p.prod_id
+        <where>
+            o.is_payed = 1
+            <if test="statisticsRefundDto.shopId != null">
+                AND oi.shop_id = #{statisticsRefundDto.shopId}
+            </if>
+            <if test="statisticsRefundDto.startTime != null">
+                AND o.pay_time  <![CDATA[ >= ]]> #{statisticsRefundDto.startTime}
+            </if>
+            <if test="statisticsRefundDto.endTime != null">
+                AND o.pay_time <![CDATA[ <= ]]> #{statisticsRefundDto.endTime}
+            </if>
+        </where>
+        GROUP BY oi.`prod_id`
+        ORDER BY payCount DESC
+        LIMIT 0, #{statisticsRefundDto.size}
+        ) AS a
+    </select>
+
+    <select id="listUnCommOrderItem" resultType="com.yami.shop.bean.model.OrderItem">
+        SELECT
+            oi.*
+        FROM
+            tz_order o
+            LEFT JOIN tz_order_item oi ON o.order_number = oi.order_number
+        WHERE
+            o.status = 5
+            AND oi.comm_sts = 0
+            <if test="endTime != null">
+                AND o.finally_time &lt;= #{endTime}
+            </if>
+    </select>
+
+    <select id="countSkuSaleAndLockNum" resultType="com.yami.shop.bean.vo.SkuStockVO">
+        SELECT oi.sku_id, oi.stock_point_id, COUNT(IF(o.is_payed = 1, 1, NULL)) sale,
+               COUNT(IF(o.status = 1, 1, NULL)) lockStock
+        FROM `tz_order_item` oi
+        JOIN tz_order o ON oi.order_number = o.order_number
+        WHERE (o.is_payed = 1 OR o.status = 1) AND oi.sku_id IN
+        <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+            #{skuId}
+        </foreach>
+        GROUP BY oi.sku_id,oi.stock_point_id
+    </select>
+</mapper>

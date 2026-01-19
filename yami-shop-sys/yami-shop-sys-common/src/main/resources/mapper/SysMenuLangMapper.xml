@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yami.shop.sys.common.dao.SysMenuLangMapper">
+
+  <resultMap id="sysMenuMap" type="com.yami.shop.sys.common.model.SysMenuLang">
+    <id column="menu_id" property="menuId" />
+    <result column="lang" property="lang"/>
+    <result column="name" property="name"/>
+  </resultMap>
+
+  <insert id="batchSave">
+    insert into tz_sys_menu_lang (`menu_id`,`lang`,`name`)
+    values
+    <foreach collection="menuLangList" item="menuLang" separator=",">
+      (#{menuLang.menuId},#{menuLang.lang},#{menuLang.name})
+    </foreach>
+  </insert>
+
+  <delete id="deleteByMenuId">
+    DELETE FROM tz_sys_menu_lang WHERE menu_id = #{menuId}
+  </delete>
+</mapper>

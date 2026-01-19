@@ -1,0 +1,298 @@
+.component-prod-sku-select{
+  /* 已选 */
+  .sku {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    padding: 20rpx;
+    background: #fff;
+    padding: 30rpx 20rpx;
+    margin-top: 20rpx;
+    .sku-tit {
+      font-size: 22rpx;
+      color: #999;
+      margin-right: 20rpx;
+    }
+    .sku-con {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-size: 28rpx;
+      font-weight: bold;
+      max-width: 77%;
+    }
+    .more {
+      position: absolute;
+      right: 20rpx;
+      width: 60rpx;
+      top: 16rpx;
+      text-align: right;
+      font-size: 40rpx;
+      color: #999;
+      letter-spacing: 1px;
+    }
+  }
+  /* 已选 end */
+  /** 规格弹窗**/
+  .pup-sku {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.3);
+
+    .pup-sku-main {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      min-height: 375px;
+      max-height: 750px;
+      background-color: #fff;
+      border-radius: 20rpx 20rpx 0 0;
+      .pup-sku-header {
+        position: relative;
+        font-size: 16px;
+        color: #333;
+        padding: 20rpx 20rpx;
+        background-color: #fff;
+        padding-top: 35rpx;
+        border-radius: 20rpx 20rpx 0 0;
+        .close {
+          color: #aaa;
+          border-radius: 12px;
+          line-height: 20px;
+          text-align: center;
+          height: 20px;
+          width: 20px;
+          font-size: 18px;
+          padding: 1px;
+          top: 10px;
+          right: 10px;
+          position: absolute;
+          &::before {
+            content: '\2716';
+          }
+        }
+        .pup-sku-img {
+          display: inline-block;
+          width: 27%;
+          height: 180rpx;
+          vertical-align: middle;
+          border-radius: 10rpx;
+          image {
+            display: block;
+            width: 180rpx;
+            height: 100%;
+          }
+        }
+        .pup-sku-prod {
+          display: inline-block;
+          width: 70%;
+          vertical-align: middle;
+          padding-left: 10rpx;
+          .pup-sku-price {
+            display: inline-block;
+            height: 1.5em;
+            line-height: 1.5em;
+            color: #F81A1A;
+            font-size: 26rpx;
+            .pup-sku-price-int {
+              font-size: 34rpx;
+            }
+          }
+        }
+        .pup-sku-prop {
+          display: flex;
+          align-items: flex-start;
+          flex-direction: column;
+          font-size: 26rpx;
+          color: #333;
+          line-height: 1.4em;
+          padding-right: 10px;
+          margin-top: 16rpx;
+          overflow: unset;
+          text:first-child {
+            color: #999;
+          }
+        }
+      }
+      .pup-sku-body {
+        padding-bottom: calc(110rpx + var(--mall4j-safe-area-inset-bottom));
+        /* 留言（虚拟商品） */
+        .virtual-goods-tips {
+          display: block;
+          background: #F9F9F9;
+          padding: 20rpx;
+          color: #999999;
+          font-size: 24rpx;
+          margin-bottom: 20rpx;
+          line-height: 1.5em;
+        }
+        /* 留言（虚拟商品）/ */
+        .pup-sku-area {
+          max-height: 245px;
+          overflow-y: scroll;
+          .sku-box{
+            max-height: 245px;
+            overflow-y: scroll;
+            .sku-kind {
+              font-size: 12px;
+              color: #999;
+              margin: 0 10px;
+              height: 40px;
+              line-height: 40px;
+            }
+            .con {
+              padding-right: 20rpx;
+              .sku-choose-item {
+                display: inline-block;
+                min-width: 100rpx;
+                max-width: 540rpx;
+                padding: 0 10rpx;
+                overflow: hidden;
+                height: 50rpx;
+                line-height: 50rpx;
+                text-align: center;
+                margin-left: 10px;
+                margin-bottom: 10px;
+                border-radius: 30rpx;
+                color: #333;
+                background-color: #f7f7f7;
+                font-size: 14px;
+                border: 1px solid #aaa;
+                &.active {
+                  background-color: #F81A1A;
+                  color: #fff;
+                  border: 1px solid #F81A1A !important;
+                }
+
+                &.gray {
+                  background-color: #f9f9f9;
+                  color: #ddd;
+                }
+                &.dashed {
+                  border: 1px dashed #ccc;
+                }
+              }
+            }
+          }
+
+        }
+        .pup-sku-count {
+          padding: 0 10px 13px;
+          font-size: 12px;
+          margin-top: 20rpx;
+           /* #region 加减框 */
+          .m-numSelector {
+            width: 152rpx;
+            display: flex;
+            box-sizing: border-box;
+            border: 1px #E1E1E1 solid;
+            border-radius: 22rpx;
+            position: relative;
+            z-index: 0;
+            float: right;
+            vertical-align: middle;
+            .minus,.plus {
+              width: 44rpx;
+              height: 44rpx;
+              box-sizing: border-box;
+              position: relative;
+            }
+            input {
+              width: 56rpx;
+              height: 44rpx;
+              text-align: center;
+              color: #333;
+              border-left: 1rpx #E1E1E1 solid;
+              border-right: 1rpx #E1E1E1 solid;
+              font-size: 24rpx;
+              font-family: arial;
+            }
+            .minus::before,.plus::before,.plus::after {
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              margin: auto;
+              content: ' ';
+              width: 20rpx;
+              height: 2rpx;
+              background-color: #333333;
+            }
+            .minus.m-p-btn::before,.plus.m-p-btn::before,.plus.m-p-btn::after {
+              background-color: #999999;
+            }
+            .plus::after {
+              transform: rotate(90deg);
+              z-index: 1;
+            }
+            &:not(.disabled) .minus:not(.disabled):active,&:not(.disabled) .plus:not(.disabled):active {
+              opacity: 0.6;
+            }
+          }
+          /* #endregion 加减框 */
+          .count-name {
+            height: 31px;
+            line-height: 31px;
+            width: 100rpx;
+            color: #000;
+            font-weight: bold;
+          }
+        }
+      }
+      .pup-sku-footer {
+        position: fixed;
+        bottom: 0;
+        bottom: var(--mall4j-safe-area-inset-bottom);
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: row nowrap;
+        align-items: center;
+        height: 110rpx;
+        z-index: 999;
+        .btn {
+          position: relative;
+          display: flex;
+          flex-grow: 1;
+          justify-content: center;
+          align-items: center;
+          background-color: #fff;
+          font-size: 30rpx;
+          flex-flow: column;
+          border-radius: 60rpx;
+          height: 2.8em;
+          width: 45%;
+          margin: 0 15rpx;
+          &.cart {
+            background: #584e61;
+            color: #fff;
+          }
+          &.buy {
+            background: #F81A1A;
+            color: #fff;
+          }
+          &.pre-sale-buy {
+            background: #F81A1A;
+            color: #fff;
+          }
+        }
+        &.gray{
+          .btn {
+            background: #eee;
+            color: #999;
+          }
+        }
+        .gray-btn {
+          background-color: #eeeeee;
+          color: #999999;
+        }
+      }
+    }
+  }
+}

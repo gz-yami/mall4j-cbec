@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yami.shop.dao.NoticeTagMapper">
+
+  <resultMap id="noticeTagMap" type="com.yami.shop.bean.model.NoticeTag">
+    <id column="id" property="id" />
+    <result column="notice_id" property="noticeId"/>
+    <result column="user_tag_id" property="userTagId"/>
+  </resultMap>
+
+  <select id="listNoticeIdByUserId" resultType="java.lang.Long">
+    SELECT DISTINCT nt.`notice_id` FROM `tz_notice_tag` nt
+    LEFT JOIN tz_user_tag_user  ut ON ut.`user_tag_id` = nt.`user_tag_id`
+    WHERE user_id = #{userId}
+  </select>
+</mapper>

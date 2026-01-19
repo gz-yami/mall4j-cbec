@@ -1,0 +1,17 @@
+# eslint 忽略列表
+
+# disk编译目录
+dist
+
+build/*.js
+src/assets
+src/components/tki-barcode
+src/package-user/components/feng-parse
+src/js_sdk
+src/utils/jwx
+src/package-user/static/js/jgoldplan-1.0.0.js
+
+uni_modules
+auto-imports.d.ts
+
+/src/package-prod/utils/pinyin-pro.mjs

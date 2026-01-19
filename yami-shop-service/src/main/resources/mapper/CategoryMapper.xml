@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.CategoryMapper">
+
+  <resultMap id="categoryProdMap" type="com.yami.shop.bean.model.Category">
+    <id column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="shop_id" property="shopId"/>
+    <result column="parent_id" property="parentId"/>
+    <result column="icon" property="icon"/>
+    <result column="pic" property="pic"/>
+    <result column="seq" property="seq"/>
+    <result column="deduction_rate" property="deductionRate"/>
+    <result column="status" property="status"/>
+    <result column="rec_time" property="recTime"/>
+    <result column="grade" property="grade"/>
+    <result column="update_time" property="updateTime"/>
+    <collection property="products" column="prod_id" ofType="com.yami.shop.bean.model.Product">
+        <id property="prodId" column="prod_id"/>
+        <result property="prodName" column="prod_name"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="oriPrice" column="ori_price"/>
+        <result property="price" column="price"/>
+        <result property="brief" column="brief"/>
+        <result property="content" column="content"/>
+        <result property="imgs" column="imgs"/>
+        <result property="status" column="status"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="soldNum" column="sold_num"/>
+        <result property="totalStocks" column="total_stocks"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </collection>
+  </resultMap>
+
+  <resultMap id="categoryAndLang" type="com.yami.shop.bean.model.Category">
+      <id column="category_id" property="categoryId"/>
+      <result column="shop_id" property="shopId"/>
+      <result column="parent_id" property="parentId"/>
+      <result column="icon" property="icon"/>
+      <result column="pic" property="pic"/>
+      <result column="seq" property="seq"/>
+      <result column="deduction_rate" property="deductionRate"/>
+      <result column="status" property="status"/>
+      <result column="rec_time" property="recTime"/>
+      <result column="grade" property="grade"/>
+      <result column="update_time" property="updateTime"/>
+      <collection property="categoryLangList" ofType="com.yami.shop.bean.model.CategoryLang">
+          <id column="lang" property="lang"/>
+          <result column="category_name" property="categoryName"/>
+      </collection>
+  </resultMap>
+
+    <resultMap id="esCategory" type="com.yami.shop.bean.vo.search.CategorySearchVO">
+        <id property="categoryId" column="category_id"/>
+        <id property="name" column="name"/>
+        <collection property="categoryLangList" ofType="com.yami.shop.bean.bo.CategoryLangBO">
+            <id property="lang" column="lang"/>
+            <result property="categoryName" column="category_name"/>
+        </collection>
+    </resultMap>
+
+
+  <select id="listByParentId" resultType="com.yami.shop.bean.model.Category">
+      select c.category_id,c.icon,c.`seq`,c.`status`,c.pic
+      from tz_category c
+      where c.parent_id = #{parentId} and c.shop_id = 1  and c.`status` = 1
+      order by seq desc, update_time
+  </select>
+
+    <select id="listThreeByParentId" resultType="com.yami.shop.bean.model.Category">
+        SELECT
+        c.`category_id`,c.`shop_id`,c.`parent_id`, c.`icon`, c.`pic`, c.`seq`, c.`status`,
+        c.`rec_time`, c.`grade`, c.`update_time`
+        FROM tz_category c
+        WHERE  c.parent_id IN
+        (SELECT category_id FROM tz_category WHERE parent_id = #{parentId} AND `status` = 1 ORDER BY seq)
+        <if test="parentId == 0">
+            AND c.category_id IN
+            ( SELECT parent_id FROM tz_category WHERE grade = 2 AND `status` = 1 ORDER BY seq )
+        </if>
+        and c.`status` = 1
+        order by seq desc, update_time
+      </select>
+    <select id="getParentCategoryByParentId" resultType="long">
+        SELECT category_id FROM tz_category WHERE  category_id =(SELECT parent_id
+        FROM tz_category
+        WHERE category_id = #{parentId} AND `status` = 1 ORDER BY seq)
+        and `status` = 1 order by seq
+      </select>
+
+    <select id="categoryList" resultMap="categoryAndLang">
+        SELECT
+            c.`category_id`,c.`shop_id`,c.`parent_id`, c.`icon`, c.`pic`, c.`seq`, c.`status`,
+            c.`rec_time`, c.`grade`, c.`update_time`, cl.lang, cl.category_name
+        FROM
+            tz_category c
+            LEFT JOIN tz_category_lang cl ON c.category_id = cl.category_id
+<!--            <if test="category.lang != null">-->
+<!--                AND cl.lang = #{category.lang}-->
+<!--            </if>-->
+        <where>
+            <if test="category.grade != null">
+                AND c.grade &lt;= #{category.grade}
+            </if>
+            <if test="category.shopId != null">
+                AND c.shop_id = #{category.shopId}
+            </if>
+            <if test="category.status != null">
+                AND c.status = #{category.status}
+            </if>
+        </where>
+        ORDER BY c.seq
+    </select>
+
+    <select id="categoryLangList" resultMap="categoryAndLang">
+        SELECT
+            c.`category_id`,c.`shop_id`,c.`parent_id`, c.`icon`, c.`pic`, c.`seq`, c.`status`,
+            c.`rec_time`, c.`grade`, c.`update_time`, cl.lang, cl.category_name
+        FROM
+            tz_category c
+            LEFT JOIN tz_category_lang cl ON c.category_id = cl.category_id
+        <where>
+            <if test="category.grade != null">
+                AND c.grade &lt;= #{category.grade}
+            </if>
+            <if test="category.shopId != null">
+                AND c.shop_id = #{category.shopId}
+            </if>
+            <if test="category.status != null">
+                AND c.status = #{category.status}
+            </if>
+        </where>
+        ORDER BY c.`seq` DESC
+    </select>
+    <select id="listByLang" resultMap="categoryAndLang">
+        select
+            c.`category_id`,c.`shop_id`,c.`parent_id`, c.`icon`, c.`pic`, c.`seq`, c.`status`,
+            c.`rec_time`, c.`grade`, c.`update_time`,c.deduction_rate, cl.lang,
+            <if test="defaultLang == null">
+                cl.category_name
+            </if>
+            <if test="defaultLang != null">
+                IFNULL( cl.category_name, dcl.category_name ) category_name
+            </if>
+        from
+            tz_category c
+            LEFT JOIN tz_category_lang cl ON cl.category_id = c.category_id
+<!--            <if test="lang != null">-->
+<!--                AND cl.lang = #{lang}-->
+<!--            </if>-->
+            <if test="defaultLang != null">
+                LEFT JOIN tz_category_lang dcl ON c.category_id = dcl.category_id AND dcl.lang = #{defaultLang}
+            </if>
+        <where>
+            <if test="shopId != null">
+                AND c.shop_id = #{shopId}
+            </if>
+            <if test="status != null">
+                AND c.status = #{status}
+            </if>
+            <if test="maxGrade != null">
+                and c.grade &lt;= #{maxGrade}
+            </if>
+            <if test="parentId != null">
+                and c.parent_id = #{parentId}
+            </if>
+        </where>
+        order by
+            c.`seq` desc,
+            c.`update_time`
+    </select>
+    <select id="getCategory" resultType="com.yami.shop.bean.model.Category">
+        SELECT c.*
+        FROM tz_category c
+        WHERE c.category_id = #{categoryId}
+        <if test="shopId != null">
+            AND c.shop_id = #{shopId}
+        </if>
+    </select>
+
+    <select id="getCategoryName" resultType="java.lang.Integer">
+        SELECT count(*) FROM tz_category c
+        <if test="category.categoryLangList != null and category.categoryLangList.size() > 0">
+            JOIN tz_category_lang cl ON c.category_id = cl.category_id
+        </if>
+        WHERE  c.shop_id = #{category.shopId}
+        <if test="category.grade != null">
+            AND c.grade = #{category.grade}
+        </if>
+        <if test="category.parentId != null and category.parentId != 0">
+            AND c.parent_id = #{category.parentId}
+        </if>
+        <if test="category.categoryId != null and category.categoryId != 0">
+            AND c.category_id &lt;&gt; #{category.categoryId}
+        </if>
+        <if test="category.categoryLangList != null and category.categoryLangList.size() > 0">
+            AND
+            <foreach collection="category.categoryLangList" item="categoryLang" open="(" close=")" separator="OR">
+                cl.category_name = #{categoryLang.categoryName}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="listByGrade" resultMap="categoryAndLang">
+        select
+            c.`category_id`,c.`shop_id`,c.`parent_id`, c.`icon`, c.`pic`, c.`seq`, c.`status`,
+            c.`rec_time`, c.`grade`, c.`update_time`, cl.lang, cl.category_name
+        from
+            tz_category c
+            LEFT JOIN tz_category_lang cl ON cl.category_id = c.category_id
+            <if test="lang != null">
+                AND cl.lang = #{lang}
+            </if>
+        <where>
+            <if test="shopId != null">
+                AND c.shop_id = #{shopId}
+            </if>
+            <if test="status != null">
+                AND c.status = #{status}
+            </if>
+            <if test="grade != null">
+                and c.grade = #{grade}
+            </if>
+        </where>
+        order by seq
+    </select>
+    <select id="listSelect" resultType="com.yami.shop.bean.model.Category">
+        select c.category_id,c.icon,c.`seq`,c.`status`,c.pic
+        from tz_category c
+        where c.shop_id = #{shopId} and c.parent_id = #{parentId} and c.`status` = 1
+        order by seq
+    </select>
+    <select id="getListByCategoryIds" resultType="com.yami.shop.bean.model.Category">
+        SELECT
+            c.`category_id`,
+            c.`shop_id`,
+            c.`parent_id`,
+            c.`icon`,
+            c.`pic`,
+            c.`seq`,
+            c.`status`,
+            c.`rec_time`,
+            c.`grade`,
+            c.`update_time`,
+            c.deduction_rate
+        FROM
+            tz_category c
+        WHERE
+            c.category_id in
+                <foreach collection="categoryIds" item="categoryId" open="(" close=")" separator=",">
+                    #{categoryId}
+                </foreach>
+    </select>
+
+    <select id="listRate" resultType="com.yami.shop.bean.model.Category">
+        select category_id,deduction_rate from tz_category where shop_id = 1 and grade = 2
+    </select>
+
+  <select id="listAndParentByIds" resultMap="categoryAndLang">
+    SELECT c.*,cl.lang,cl.category_name
+    FROM (
+        SELECT category_id,parent_id,grade,`status`
+        FROM tz_category
+        WHERE category_id IN
+        <foreach collection="categoryIds" item="categoryId" open="(" close=")" separator=",">
+            #{categoryId}
+        </foreach>
+         OR category_id IN
+          (
+            SELECT parent_id FROM tz_category  WHERE category_id IN
+              (
+                SELECT parent_id FROM tz_category  WHERE category_id IN
+                <foreach collection="categoryIds" item="categoryId" open="(" close=")" separator=",">
+                    #{categoryId}
+                </foreach>
+            )
+            UNION
+            SELECT parent_id FROM tz_category  WHERE category_id IN
+            <foreach collection="categoryIds" item="categoryId" open="(" close=")" separator=",">
+              #{categoryId}
+            </foreach>
+          )
+    ) c
+    LEFT JOIN tz_category_lang cl ON c.category_id = cl.category_id
+  </select>
+
+  <select id="getParentCategoryByCategoryId" resultType="com.yami.shop.bean.model.Category">
+      SELECT * FROM tz_category WHERE category_id IN
+      <foreach collection="categoryIds" item="categoryId" separator="," open="(" close=")">
+          #{categoryId}
+      </foreach>
+      UNION ALL
+      SELECT * FROM tz_category
+      WHERE category_id IN (SELECT parent_id FROM tz_category WHERE category_id IN
+      <foreach collection="categoryIds" item="categoryId" separator="," open="(" close=")">
+          #{categoryId}
+      </foreach>
+      )
+  </select>
+  <select id="listCategoryIdByShopIdAndParentId" resultType="java.lang.Long">
+        SELECT category_id FROM tz_category
+        <where>
+            <if test="shopId != null">
+                AND shop_id = #{shopId}
+            </if>
+             <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+        </where>
+  </select>
+  <select id="getListByShopIdAndParentId" resultType="com.yami.shop.bean.model.Category">
+      SELECT c.`category_id`
+      FROM `tz_category` c
+      <where> shop_id = #{shopId}  and parent_id = #{parentId}
+          <if test="grade != null">
+              and c.`grade` <![CDATA[ <= ]]> #{grade}
+          </if>
+      </where>
+      ORDER BY c.`category_id` ASC
+  </select>
+
+  <select id="listCategoryAndLangList" resultType="com.yami.shop.bean.model.Category">
+      SELECT c.`category_id`,c.parent_id,c.grade,c.deduction_rate
+      FROM `tz_category` c
+      WHERE shop_id = #{shopId}
+  </select>
+
+  <select id="getCategoryAndParent" resultType="com.yami.shop.bean.model.Category">
+      SELECT category_id,grade,parent_id FROM tz_category WHERE category_id = #{categoryId} OR
+          category_id = (SELECT parent_id FROM tz_category WHERE category_id = #{categoryId}) OR
+          category_id = (SELECT parent_id FROM tz_category WHERE category_id = (SELECT parent_id FROM tz_category WHERE category_id = #{categoryId}))
+    </select>
+
+    <select id="listEsCategoryByCategoryIds" resultMap="esCategory">
+        SELECT
+            c.category_id,
+            cl.category_name name,
+            cl.lang,
+            cl.category_name
+        FROM
+            tz_category c
+            LEFT JOIN tz_category_lang cl ON c.category_id = cl.category_id AND cl.lang = #{lang}
+        WHERE
+            c.category_id IN
+                <foreach collection="categoryIds" item="categoryId" open="(" separator="," close=")">
+                    #{categoryId}
+                </foreach>
+    </select>
+</mapper>

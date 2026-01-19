@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yami.shop.dao.ProdParameterMapper">
+
+  <resultMap id="prodParameterMap" type="com.yami.shop.bean.model.ProdParameter">
+    <id column="prod-parameter_id" property="prodParameterId" />
+    <result column="prod_id" property="prodId"/>
+    <result column="parameter_key" property="parameterKey"/>
+    <result column="parameter_value" property="parameterValue"/>
+  </resultMap>
+  <delete id="removeByProdId">
+    DELETE pp, ppl FROM tz_prod_parameter pp
+    INNER JOIN tz_prod_parameter_lang ppl
+    WHERE pp.prod_parameter_id = ppl.prod_parameter_id AND pp.prod_id = #{prodId}
+  </delete>
+  <select id="listProdParameterByProdId" resultType="com.yami.shop.bean.model.ProdParameter">
+    SELECT pp.`prod_parameter_id`,pp.`prod_id`
+    FROM `tz_prod_parameter` pp
+    WHERE pp.`prod_id` = #{prodId}
+  </select>
+</mapper>

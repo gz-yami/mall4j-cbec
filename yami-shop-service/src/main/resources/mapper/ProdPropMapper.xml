@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.ProdPropMapper">
+    <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.ProdProp">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="prop_id" jdbcType="BIGINT" property="propId"/>
+        <result column="prop_name" jdbcType="VARCHAR" property="propName"/>
+        <result column="rule" jdbcType="TINYINT" property="rule"/>
+    </resultMap>
+
+    <resultMap id="propAndValueMap" type="com.yami.shop.bean.model.ProdProp">
+        <id column="prop_id" jdbcType="BIGINT" property="propId"/>
+        <result column="rule" jdbcType="TINYINT" property="rule"/>
+
+        <collection property="prodPropValues" column="prop_id" javaType="java.util.List"
+                    ofType="com.yami.shop.bean.model.ProdPropValue">
+            <id property="valueId" column="value_id"/>
+        </collection>
+    </resultMap>
+
+    <!-- 使用pageHelper进行关联分页时，需要的count sql -->
+    <select id="countPropAndValue" parameterType="com.yami.shop.bean.model.ProdProp" resultType="java.lang.Long">
+        SELECT count(distinct p.prop_id) count FROM tz_prod_prop p
+        <if test="prodProp.propName != null or prodProp.propName != null">
+            LEFT JOIN tz_prod_prop_lang ppl ON p.prop_id = ppl.prop_id
+        </if>
+        WHERE p.rule = #{prodProp.rule} and p.shop_id = #{prodProp.shopId}
+        <if test="prodProp.propName != null and prodProp.propName != ''">
+            and trim(replace(ppl.prop_name,' ','')) like trim(replace(concat('%',#{prodProp.propName},'%'),' ',''))
+        </if>
+    </select>
+
+    <select id="listPropAndValue" parameterType="com.yami.shop.bean.model.ProdProp" resultMap="propAndValueMap">
+        SELECT * FROM (
+            SELECT p.prop_id,p.rule
+            FROM tz_prod_prop p
+            <if test="prodProp.propName != null and prodProp.propName != ''">
+                LEFT JOIN tz_prod_prop_lang ppl ON p.prop_id = ppl.prop_id
+            </if>
+            WHERE p.rule = #{prodProp.rule} and p.shop_id = #{prodProp.shopId}
+            <if test="prodProp.propName != null and prodProp.propName != ''">
+                and trim(replace(ppl.prop_name,' ','')) like trim(replace(concat('%',#{prodProp.propName},'%'),' ',''))
+            </if>
+            LIMIT #{adapter.begin} , #{adapter.size}
+        ) pp
+        left join (
+        SELECT ppv.`value_id`,ppv.`prop_id`
+        FROM tz_prod_prop_value ppv
+        ) AS ppv ON pp.prop_id = ppv.prop_id
+    </select>
+
+    <delete id="deleteByPropId">
+        delete from tz_prod_prop where prop_id = #{propId} and rule = #{rule} and shop_id = #{shopId}
+    </delete>
+
+    <select id="listByCategoryId" resultMap="BaseResultMap">
+        select pp.prop_id ,pp.prop_name from tz_prod_prop pp
+        left join tz_category_prop cp on pp.prop_id = cp.prop_id
+        where cp.category_id = #{categoryId}
+    </select>
+
+    <select id="getProdPropByPropNameAndShopId" resultType="com.yami.shop.bean.model.ProdProp">
+       select p.* from tz_prod_prop p
+       JOIN tz_prod_prop_lang pl ON p.prop_id = pl.prop_id
+       where pl.prop_name IN (#{propName}) and p.shop_id = #{shopId} and p.rule = #{rule}
+    </select>
+
+    <select id="listByLang" resultMap="propAndValueMap">
+        SELECT pp.`prop_id`, pp.`rule`, pp.`shop_id`,ppv.*
+        FROM tz_prod_prop pp
+        LEFT JOIN tz_prod_prop_value ppv ON pp.prop_id = ppv.prop_id
+        <where>
+            <if test="prodProp.rule != null">
+                and pp.rule = #{prodProp.rule}
+            </if>
+            <if test="prodProp.shopId != null">
+                and pp.shop_id = #{prodProp.shopId}
+            </if>
+        </where>
+    </select>
+</mapper>

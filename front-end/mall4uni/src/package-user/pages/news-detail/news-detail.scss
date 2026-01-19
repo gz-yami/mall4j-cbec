@@ -1,0 +1,19 @@
+.component-news-detail {
+  padding: 20rpx;
+
+  .news-detail-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    line-height: 50rpx;
+    padding: 20rpx 0;
+    word-break: break-word;
+  }
+
+  .news-detail-text {
+    font-size: 28rpx;
+    line-height: 46rpx;
+    text-align: justify;
+    text-justify: inter-ideograph;
+    margin-top: 20rpx;
+  }
+}

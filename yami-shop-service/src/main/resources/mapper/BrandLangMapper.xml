@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yami.shop.dao.BrandLangMapper">
+
+  <resultMap id="brandLangMap" type="com.yami.shop.bean.model.BrandLang">
+    <id column="brand_id" property="brandId" />
+    <result column="lang" property="lang"/>
+    <result column="name" property="name"/>
+  </resultMap>
+
+  <update id="batchUpdate">
+    <foreach collection="brandLangList" item="brandLang">
+      update tz_brand_lang set `name` = #{brandLang.name}
+      where brand_id = #{brandLang.brandId} and lang = #{brandLang.lang};
+    </foreach>
+  </update>
+
+  <insert id="save">
+    insert into tz_brand_lang (`brand_id`,`lang`,`name`)
+    values(#{brandLang.brandId},#{brandLang.lang},#{brandLang.name})
+  </insert>
+</mapper>

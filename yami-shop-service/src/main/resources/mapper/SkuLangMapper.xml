@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.SkuLangMapper">
+  <!--<resultMap id="BaseResultMap" type="com.yami.shop.bean.model.Sku">-->
+    <!--<id column="sku_id" jdbcType="BIGINT" property="skuId" />-->
+    <!--<result column="prod_id" jdbcType="BIGINT" property="prodId" />-->
+    <!--<result column="properties" jdbcType="VARCHAR" property="properties" />-->
+    <!--<result column="ori_price" jdbcType="DECIMAL" property="oriPrice" />-->
+    <!--<result column="price" jdbcType="DECIMAL" property="price" />-->
+    <!--<result column="stocks" jdbcType="INTEGER" property="stocks" />-->
+    <!--<result column="actual_stocks" jdbcType="INTEGER" property="actualStocks" />-->
+    <!--<result column="status" jdbcType="TINYINT" property="status" />-->
+    <!--<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />-->
+    <!--<result column="rec_time" jdbcType="TIMESTAMP" property="recTime" />-->
+    <!--<result column="party_code" jdbcType="VARCHAR" property="partyCode" />-->
+    <!--<result column="model_id" jdbcType="VARCHAR" property="modelId" />-->
+    <!--<result column="pic" jdbcType="VARCHAR" property="pic" />-->
+    <!--<result column="skuName" jdbcType="VARCHAR" property="skuName" />-->
+    <!--<result column="is_delete" jdbcType="INTEGER" property="isDelete"/>-->
+  <!--</resultMap>-->
+    <update id="batchUpdateBySkuIdAndLang">
+        <foreach collection="skuLangList" item="skuLang" separator=";">
+            UPDATE tz_sku_lang
+            SET `properties` = #{skuLang.properties},`sku_name` = #{skuLang.skuName},`prod_name` = #{skuLang.prodName}
+            WHERE `sku_id` = #{skuLang.skuId} AND `lang` = #{skuLang.lang}
+        </foreach>
+    </update>
+
+    <delete id="deleteByProdId">
+        delete from tz_sku_lang where sku_id
+        in (select sku_id from tz_sku where prod_id = #{prodId})
+  </delete>
+</mapper>

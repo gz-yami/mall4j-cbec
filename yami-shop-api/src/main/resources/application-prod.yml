@@ -1,0 +1,26 @@
+server:
+  port: 8112
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/mall4j_cbec_b2c?allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 0
+      maximum-pool-size: 20
+      idle-timeout: 25000
+      auto-commit: true
+      connection-test-query: select 1
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+logging:
+  config: classpath:logback/logback-prod.xml
+  # 接受异常通知的邮箱
+  log-error-email:
+  # 当前环境，比如测试环境，生产环境
+  log-env:

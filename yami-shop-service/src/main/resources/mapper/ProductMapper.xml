@@ -1,0 +1,976 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.ProductMapper">
+
+    <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.Product">
+        <id property="prodId" column="prod_id"/>
+        <result property="prodName" column="prod_name"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="oriPrice" column="ori_price"/>
+        <result property="price" column="price"/>
+        <result property="brief" column="brief"/>
+        <result property="content" column="content"/>
+        <result property="imgs" column="imgs"/>
+        <result property="status" column="status"/>
+        <result property="scorePrice" column="score_price"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="soldNum" column="sold_num"/>
+        <result property="totalStocks" column="total_stocks"/>
+        <result property="pic" column="pic"/>
+        <result property="deliveryMode" column="delivery_mode"/>
+        <result property="deliveryTemplateId" column="delivery_template_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="putawayTime" column="putaway_time"/>
+        <result property="version" column="version"/>
+        <result property="waterSoldNum" column="water_sold_num"/>
+        <result column="shop_category_id" property="shopCategoryId"/>
+        <result column="video" property="video"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="delivery_amount" property="deliveryAmount"/>
+        <result column="pre_sell_status" property="preSellStatus"/>
+        <result column="pre_sell_time" property="preSellTime"/>
+        <result column="is_top" property="isTop"/>
+        <result column="seq" property="seq"/>
+        <result column="virtual_remark" property="virtualRemark"/>
+        <result column="write_off_num" property="writeOffNum"/>
+        <result column="write_off_multiple_count" property="writeOffMultipleCount"/>
+        <result column="write_off_time" property="writeOffTime"/>
+        <result column="write_off_start" property="writeOffStart"/>
+        <result column="write_off_end" property="writeOffEnd"/>
+        <result column="is_refund" property="isRefund"/>
+        <result column="mold" property="mold"/>
+        <result column="use_lang" property="useLang"/>
+    </resultMap>
+
+    <resultMap id="productAndSkuListMap" type="com.yami.shop.bean.param.ProductExportParam">
+        <id property="prodId" column="prod_id"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="oriPrice" column="ori_price"/>
+        <result property="transName" column="trans_name"/>
+        <result property="price" column="price"/>
+        <result property="video" column="video"/>
+        <result property="imgs" column="imgs"/>
+        <result property="status" column="status"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="shopCategoryName" column="shop_category_name"/>
+        <result property="soldNum" column="sold_num"/>
+        <result property="totalStocks" column="total_stocks"/>
+        <result property="pic" column="pic"/>
+        <result property="deliveryMode" column="delivery_mode"/>
+        <result property="putawayTime" column="putaway_time"/>
+        <result property="waterSoldNum" column="water_sold_num"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="mold" column="mold"/>
+        <result property="writeOffNum" column="write_off_num"/>
+        <result property="writeOffMultipleCount" column="write_off_multiple_count"/>
+        <result property="writeOffTime" column="write_off_time"/>
+        <result property="writeOffStart" column="write_off_start"/>
+        <result property="writeOffEnd" column="write_off_end"/>
+        <result property="isRefund" column="is_refund"/>
+        <result property="virtualRemark" column="virtual_remark"/>
+        <result property="deliveryTemplateId" column="delivery_template_id"/>
+        <result property="deliveryAmount" column="delivery_amount"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="shopCategoryId" column="shop_category_id"/>
+        <result property="lang" column="lang"/>
+        <collection property="skuList" javaType="list" ofType="com.yami.shop.bean.model.Sku">
+            <id column="sku_id" jdbcType="BIGINT" property="skuId" />
+            <result column="prod_id" jdbcType="BIGINT" property="prodId" />
+            <result column="properties" jdbcType="VARCHAR" property="properties" />
+            <result column="sku_prod_name" jdbcType="VARCHAR" property="prodName" />
+            <result column="sku_ori_price" jdbcType="DECIMAL" property="oriPrice" />
+            <result column="sku_price" jdbcType="DECIMAL" property="price" />
+            <result column="weight" jdbcType="DECIMAL" property="weight" />
+            <result column="volume" jdbcType="DECIMAL" property="volume" />
+            <result column="stock" jdbcType="INTEGER" property="stocks" />
+            <result column="sku_score" jdbcType="INTEGER" property="skuScore" />
+            <result column="status" jdbcType="TINYINT" property="status" />
+            <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+            <result column="rec_time" jdbcType="TIMESTAMP" property="recTime" />
+            <result column="party_code" jdbcType="VARCHAR" property="partyCode" />
+            <result column="model_id" jdbcType="VARCHAR" property="modelId" />
+            <result column="sku_pic" jdbcType="VARCHAR" property="pic" />
+            <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
+            <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+            <result column="stock_warning" jdbcType="INTEGER" property="stockWarning"/>
+        </collection>
+        <collection property="prodLangList" ofType="com.yami.shop.bean.model.ProdLang">
+            <id column="prod_lang" property="lang"/>
+            <result column="prod_name" property="prodName"/>
+            <result column="brief" property="brief"/>
+            <result column="content" property="content"/>
+        </collection>
+        <collection property="prodParameterList" javaType="list" ofType="com.yami.shop.bean.model.ProdParameter">
+            <result column="prod_parameter_id" property="prodParameterId"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="productAndSkuMap" type="com.yami.shop.bean.model.Product">
+        <id property="prodId" column="prod_id"/>
+        <result property="prodName" column="prod_name"/>
+        <result property="pic" column="pic"/>
+        <result property="status" column="status"/>
+        <result property="price" column="price"/>
+        <result property="preSellStatus" column="pre_sell_status"/>
+        <collection property="skuList" javaType="list" ofType="com.yami.shop.bean.model.Sku">
+            <id column="sku_id" jdbcType="BIGINT" property="skuId" />
+            <result column="stock" property="stocks" />
+            <result column="sku_name" property="skuName" />
+            <result column="price" property="price"/>
+            <result column="party_code" property="partyCode" />
+            <result column="is_delete" property="isDelete" />
+            <result column="s_pic" property="pic" />
+            <result column="properties" property="properties" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="ProdResultMap" type="com.yami.shop.bean.app.dto.ProductDto">
+        <id column="prod_id" jdbcType="BIGINT" property="prodId"/>
+        <result column="prod_name" jdbcType="VARCHAR" property="prodName"/>
+        <result column="pic" jdbcType="VARCHAR" property="pic"/>
+    </resultMap>
+
+    <resultMap id="productBOAndLangMap" type="com.yami.shop.bean.bo.ProductBO">
+        <id column="prod_id" property="prodId"/>
+        <result column="prod_name" property="prodName"/>
+        <result column="brief" property="brief"/>
+        <result column="price" property="price"/>
+        <result column="ori_price" property="oriPrice"/>
+        <result column="score_price" property="scorePrice"/>
+        <result column="pic" property="pic"/>
+        <result column="imgs" property="imgs"/>
+        <result column="prod_type" property="prodType"/>
+        <result column="pre_sell_status" property="preSellStatus"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="status" property="status"/>
+        <result column="total_stocks" property="totalStocks"/>
+        <result column="actual_sold_num" property="actualSoldNum"/>
+        <result column="water_sold_num" property="waterSoldNum"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="putaway_time" property="putawayTime"/>
+        <result column="seq" property="seq"/>
+        <result column="is_top" property="isTop"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="shop_category_id" property="shopCategoryId"/>
+        <result column="delivery_mode" property="deliveryMode"/>
+        <result column="mold" property="mold"/>
+        <collection property="prodLangList" ofType="com.yami.shop.bean.bo.ProdLangBO">
+            <id column="lang" property="lang"/>
+            <result column="prod_name_lang" property="prodName"/>
+            <result column="brief_lang" property="brief"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="prodDtoAndLangMap" type="com.yami.shop.bean.app.dto.ProductDto">
+        <id column="prod_id" property="prodId"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="price" property="price"/>
+        <result column="content" property="content"/>
+        <result column="ori_price" property="oriPrice"/>
+        <result column="water_sold_num" property="waterSoldNum"/>
+        <result column="total_stocks" property="totalStocks"/>
+        <result column="sold_num" property="soldNum"/>
+        <result column="status" property="status"/>
+        <result column="video" property="video"/>
+        <result column="pic" property="pic"/>
+        <result column="imgs" property="imgs"/>
+        <result column="pre_sell_status" property="preSellStatus"/>
+        <result column="pre_sell_time" property="preSellTime"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="prod_type" property="prodType"/>
+        <result column="score_price" property="scorePrice"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="activity_price" property="activityPrice"/>
+        <result column="start_delivery_fee" property="startDeliveryFee"/>
+        <result column="virtual_remark" property="virtualRemark"/>
+        <result column="write_off_num" property="writeOffNum"/>
+        <result column="write_off_multiple_count" property="writeOffMultipleCount"/>
+        <result column="write_off_time" property="writeOffTime"/>
+        <result column="write_off_start" property="writeOffStart"/>
+        <result column="write_off_end" property="writeOffEnd"/>
+        <result column="is_refund" property="isRefund"/>
+        <result column="mold" property="mold"/>
+        <result column="shop_name" property="shopName"/>
+        <collection property="prodLangList" ofType="com.yami.shop.bean.app.dto.ProdLangDto">
+            <id column="lang" property="lang"/>
+            <result column="prod_name" property="prodName"/>
+            <result column="brief" property="brief"/>
+            <result column="content" property="content"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="prodWithLang" type="com.yami.shop.bean.app.vo.ProductVO">
+        <id property="prodId" column="prod_id"/>
+        <result property="prodName" column="prod_name"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="oriPrice" column="ori_price"/>
+        <result property="price" column="price"/>
+        <result property="brief" column="brief"/>
+        <result property="content" column="content"/>
+        <result property="imgs" column="imgs"/>
+        <result property="status" column="status"/>
+        <result property="scorePrice" column="score_price"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="soldNum" column="sold_num"/>
+        <result property="totalStocks" column="total_stocks"/>
+        <result property="pic" column="pic"/>
+        <result property="deliveryTemplateId" column="delivery_template_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="putawayTime" column="putaway_time"/>
+        <result property="version" column="version"/>
+        <result property="waterSoldNum" column="water_sold_num"/>
+        <result column="video" property="video"/>
+        <result column="delivery_amount" property="deliveryAmount"/>
+        <result column="pre_sell_status" property="preSellStatus"/>
+        <result column="pre_sell_time" property="preSellTime"/>
+        <result column="is_top" property="isTop"/>
+        <result column="seq" property="seq"/>
+        <result column="virtual_remark" property="virtualRemark"/>
+        <result column="write_off_num" property="writeOffNum"/>
+        <result column="write_off_multiple_count" property="writeOffMultipleCount"/>
+        <result column="write_off_time" property="writeOffTime"/>
+        <result column="write_off_start" property="writeOffStart"/>
+        <result column="write_off_end" property="writeOffEnd"/>
+        <result column="is_refund" property="isRefund"/>
+        <result column="mold" property="mold"/>
+        <result column="use_lang" property="useLang"/>
+        <collection property="prodLangVOList" ofType="com.yami.shop.bean.vo.ProdLangVO">
+            <id column="lang" property="lang"/>
+            <result column="prod_name_lang" property="prodName"/>
+            <result column="brief" property="brief"/>
+            <result column="content" property="content"/>
+        </collection>
+    </resultMap>
+
+    <sql id="productDtoWithNoContent_SQL">
+        p.`prod_id`,
+        p.`shop_id`,
+        p.`prod_name`,
+        p.`pic`,
+        p.`price`,
+        p.`ori_price`,
+        p.`brief`,
+        p.`imgs`,
+        p.`category_id`,
+        p.`total_stocks`,
+        p.status
+    </sql>
+
+    <sql id="prodWithNoContent_SQL">
+        p.prod_id,
+        p.pic,
+        pl.lang,
+        pl.prod_name,
+        pl.brief,
+        p.price,
+        p.shop_id,
+        p.status
+    </sql>
+
+    <resultMap id="prodAndSkuListMap" type="com.yami.shop.bean.dto.ProdAndSkuListsDto">
+        <result property="prodId" column="prod_id"/>
+        <result property="prodName" column="prod_name"/>
+        <collection property="skuDtoList" javaType="list" ofType="com.yami.shop.bean.app.dto.SkuDto">
+            <result property="skuId" column="sku_id"/>
+            <result property="price" column="price"/>
+            <result property="skuName" column="sku_name"/>
+        </collection>
+    </resultMap>
+    <select id="getProdAndSkuLists" resultMap="prodAndSkuListMap">
+        SELECT
+        p.`prod_id`,
+        p.`prod_name`,
+        s.`price`,
+        s.`sku_id`,
+        s.`sku_name`
+        FROM
+        tz_prod p
+        LEFT JOIN tz_sku s ON s.`prod_id` = p.`prod_id`
+        WHERE p.`prod_id` IN
+        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+            #{prodId}
+        </foreach>
+    </select>
+
+    <update id="updateProductToGroup">
+        UPDATE tz_prod p SET p.`activity_id` = #{groupActivityId},p.`prod_type`=1 WHERE p.`prod_id` = #{prodId} and p.`prod_type` = 0
+    </update>
+
+    <update id="updateToApply">
+        update tz_prod p set p.status = 3,p.update_time=now() where p.prod_id = #{prodId}
+    </update>
+
+    <update id="updateToShopOffline">
+        update tz_prod p set p.status = 0,p.update_time=now() where p.prod_id = #{prodId}
+    </update>
+
+    <update id="updateToOffline">
+        update tz_prod p set p.status = 2,p.is_top = 0,p.update_time=now() where p.prod_id = #{prodId}
+    </update>
+
+    <update id="offlineProdByShopIds">
+        UPDATE tz_prod p SET p.`status` = 0 WHERE p.`status` = 1 AND p.`shop_id` IN
+        <foreach collection="shopIds" item="shopId" open="(" close=")" separator=",">
+            #{shopId}
+        </foreach>
+    </update>
+
+    <select id="listProdsByProdParam" resultMap="productAndSkuListMap">
+        SELECT
+            p.prod_id, p.write_off_num, p.write_off_multiple_count, p.write_off_time, p.write_off_start, p.write_off_end,
+            p.category_id, p.is_refund, p.virtual_remark, p.delivery_mode, p.delivery_template_id,
+            p.mold, p.delivery_amount, p.use_lang lang, p.imgs, p.video, p.prod_type,
+            pl.lang as prod_lang, pl.prod_name, pl.brief, pl.content,
+            t.trans_name,
+            tpp.`prod_parameter_id`,
+            tppl.lang as prod_parameter_lang, tppl.parameter_key, tppl.parameter_value
+        FROM
+            tz_prod p
+            LEFT JOIN tz_prod_lang pl ON pl.`prod_id` = p.`prod_id`
+            LEFT JOIN tz_transport t ON t.`transport_id` = p.`delivery_template_id`
+            LEFT JOIN tz_prod_parameter tpp ON tpp.`prod_id` = p.`prod_id`
+            LEFT JOIN tz_prod_parameter_lang tppl ON tpp.`prod_parameter_id` = tppl.`prod_parameter_id`
+        WHERE
+            p.prod_id IN
+                <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                    #{prodId}
+                </foreach>
+    </select>
+
+    <select id="pageProducts" resultType="com.yami.shop.bean.model.Product">
+        SELECT
+            prod_name,prod_id,score_price,shop_category_id,pic,video,content,activity_id,delivery_mode,price,
+            shop_id,brief,imgs,putaway_time,update_time,prod_type,
+            VERSION,ori_price,create_time,brand_id,delivery_template_id,category_id,STATUS
+        FROM
+            tz_prod p
+        <where>
+            shop_id = #{product.shopId} and  STATUS = 1
+            <if test="product.prodName != null">
+                AND p.prod_name LIKE concat('%',#{product.prodName},'%')
+            </if>
+            <if test="product.categoryId != null">
+                AND p.category_id = #{product.categoryId}
+            </if>
+        </where>
+        ORDER BY putaway_time DESC
+    </select>
+    <sql id="prodByParam">
+        SELECT pd.prod_id,pd.price,pd.pic AS prodUrl,pd.status,sd.shop_name
+        FROM `tz_prod` pd
+        LEFT JOIN tz_prod_extension pe on pe.prod_id = pd.prod_id
+        LEFT JOIN tz_shop_detail sd on sd.shop_id = pd.shop_id
+        <where>
+            <!--pd.prod_id IN (SELECT DISTINCT(tempoi.prod_id) FROM `tz_order_item` tempoi) -->
+            <if test="param.shopId != null and param.shopId != ''">
+                AND pd.shop_id = #{param.shopId}
+            </if>
+            <if test="param.prodName != null and param.prodName != ''">
+                and trim(replace(pd.prod_name,' ','')) like trim(replace(concat('%',#{param.prodName},'%'),' ',''))
+            </if>
+            <if test="param.status != null">
+                <if test="param.status == 0">
+                    AND pd.status > -1
+                </if>
+                <if test="param.status == 1">
+                    AND pd.status = 1
+                </if>
+                <if test="param.status == 2">
+                    AND pd.status = 0
+                </if>
+                <if test="param.status == 3">
+<!--                    AND (pd.status = 1 AND pd.prod_id IN (SELECT prod_id FROM tz_prod_extension WHERE sold_num &gt; 0 AND actual_stock = 0))-->
+                </if>
+            </if>
+
+            <if test="prodIds != null ">
+                and pd.prod_id IN
+                <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                    #{prodId}
+                </foreach>
+            </if>
+
+        </where>
+        ORDER BY pd.create_time DESC
+    </sql>
+    <select id="pageProdByParam" resultType="com.yami.shop.bean.param.ProdEffectRespParam">
+        <include refid="prodByParam">
+        </include>
+    </select>
+    <select id="listProdByParam" resultType="com.yami.shop.bean.param.ProdEffectRespParam">
+        <include refid="prodByParam">
+        </include>
+    </select>
+    <select id="countPayNum" resultType="java.lang.Long">
+        SELECT SUM(oi.prod_count) FROM `tz_order_item` oi
+        LEFT JOIN `tz_order` o ON o.order_number = oi.order_number
+        <where>
+            oi.prod_id = #{prodId} AND o.is_payed = 1
+            <if test="param.shopId != null and param.shopId != ''">
+                AND oi.shop_id = #{param.shopId}
+            </if>
+            <if test="param.startTime != null">
+              AND  (oi.rec_time <![CDATA[ >= ]]> #{param.startTime} AND oi.rec_time <![CDATA[ <= ]]> #{param.endTime})
+            </if>
+        </where>
+    </select>
+    <select id="pageByLang" resultType="com.yami.shop.bean.model.Product">
+        SELECT p.*,s.shop_name
+        FROM tz_prod p
+        <if test="product.prodName != null and product.prodName != ''">
+            left JOIN tz_prod_lang l ON l.`prod_id` = p.`prod_id`
+        </if>
+        LEFT JOIN tz_shop_detail s ON p.shop_id = s.shop_id
+        WHERE  p.status <![CDATA[<>]]>  -1
+        <if test="product.shopId != null">
+            and p.`shop_id` =#{product.shopId}
+        </if>
+        <if test="product.categoryId != null">
+            and p.category_id = #{product.categoryId}
+        </if>
+          <if test="product.isTop != null">
+            and p.is_top = #{product.isTop}
+        </if>
+        <if test="product.shopName != null">
+            and trim(replace(s.shop_name,' ','')) like trim(replace(concat('%',#{product.shopName},'%'),' ',''))
+        </if>
+        <if test="product.prodName != null and product.prodName != ''">
+            and trim(replace(l.prod_name,' ','')) like trim(replace(concat('%',#{product.prodName},'%'),' ',''))
+        </if>
+        <if test="product.prodType == null">
+            and (p.prod_type <![CDATA[<>]]> 3 or p.prod_type is null)
+        </if>
+        <if test="product.prodType != null">
+            and p.prod_type =#{product.prodType}
+        </if>
+        <if test="product.status != null">
+            and p.status = #{product.status}
+        </if>
+        <if test="product.isActive != null">
+            and p.prod_type != 5
+        </if>
+        <if test="product.deliveryMode != null and product.deliveryMode != '' or product.deliveryMode == 0">
+            <if test="product.deliveryMode == 0">
+                and p.delivery_mode->'$.hasUserPickUp' = true
+            </if>
+            <if test="product.deliveryMode == 1">
+                and p.delivery_mode->'$.hasShopDelivery' = true
+            </if>
+            <if test="product.deliveryMode == 2">
+                and p.delivery_mode->'$.hasCityDelivery' = true
+            </if>
+        </if>
+        GROUP BY p.prod_id
+        order by
+        <choose>
+            <when test="product.sortParam == 1 and product.sortType == 1">
+                seq ASC,
+            </when>
+            <when test="product.sortParam == 1 and product.sortType == 2">
+                seq DESC,
+            </when>
+        </choose>
+                 p.putaway_time desc
+    </select>
+    <select id="listProdByIdsAndType" resultType="com.yami.shop.bean.model.Product">
+        SELECT p.*,s.shop_name  FROM tz_prod p
+        <if test="product.prodName != null and product.prodName != ''">
+            left JOIN tz_prod_lang l ON l.`prod_id` = p.`prod_id`
+        </if>
+        LEFT JOIN tz_shop_detail s ON p.shop_id = s.shop_id
+        WHERE  p.status <![CDATA[<>]]>  -1
+        <if test="product.status != null">
+            and p.`status` =#{product.status}
+        </if>
+        <if test="product.shopId != null">
+            and p.`shop_id` =#{product.shopId}
+        </if>
+        <if test="product.prodIds != null">
+            and p.prod_id in (
+            <foreach collection="product.prodIds" item="prodId" separator=",">
+              #{prodId}
+            </foreach>
+            )
+        </if>
+        <if test="product.categoryId != null">
+            and p.category_id = #{product.categoryId}
+        </if>
+        <if test="product.prodName != null and product.prodName != ''">
+            and l.prod_name like concat('%',#{product.prodName},'%')
+        </if>
+        <if test="product.prodType == null">
+            and (p.prod_type <![CDATA[<>]]> 3 or p.prod_type is null)
+        </if>
+        <if test="product.prodType != null">
+            and p.prod_type =#{product.prodType}
+        </if>
+        order by p.putaway_time desc
+    </select>
+
+    <select id="selectByIdAndLang" resultType="com.yami.shop.bean.model.Product">
+        SELECT p.*,sd.shop_name
+        FROM tz_prod p
+        left join tz_shop_detail sd on sd.shop_id = p.shop_id
+        WHERE p.prod_id = #{prodId}
+    </select>
+
+    <update id="offlineProdByCategoryId">
+        UPDATE
+          tz_prod
+        SET
+          `status` = 0,
+          `prod_type` = 0
+        WHERE
+            `status` = 1
+            AND `category_id` IN
+                <foreach collection="categoryIds" item="categoryId" open="(" separator="," close=")">
+                    #{categoryId}
+                </foreach>
+    </update>
+
+    <update id="updatePreSale">
+        <foreach collection="products" item="product" separator=";">
+            update tz_prod p set p.pre_sell_status = 0,p.pre_sell_time=null where p.prod_id = #{product.prodId}
+        </foreach>
+    </update>
+    <select id="getProductListBySpuIds" resultMap="BaseResultMap">
+        select prod_id, status, pic, price, prod_name, score_price from tz_prod where prod_id in
+        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+            #{prodId}
+        </foreach>
+    </select>
+    <select id="canDistributionProdPage" resultType="com.yami.shop.bean.model.Product">
+        SELECT
+            p.prod_id, p.score_price, p.pic, p.video, p.activity_id, p.delivery_mode, p.price,
+            p.shop_id, p.imgs, p.putaway_time, p.update_time, p.prod_type, p.version, p.ori_price,
+            p.create_time, p.brand_id, p.delivery_template_id, p.category_id, p.status
+        FROM
+            tz_prod p
+            <if test="product.prodName != null and product.prodName != ''">
+                LEFT JOIN tz_prod_lang pl on p.prod_id = pl.prod_id
+            </if>
+        <where>
+            shop_id = #{product.shopId}
+            AND STATUS = 1
+            AND prod_type != 3
+            <if test="product.prodName != null and product.prodName != ''">
+                AND pl.prod_name LIKE CONCAT('%', #{product.prodName}, '%')
+            </if>
+            <if test="product.categoryId != null">
+                AND p.category_id = #{product.categoryId}
+            </if>
+            <if test="product.isActive != null">
+                AND p.prod_type != 5
+            </if>
+        </where>
+        ORDER BY
+            p.putaway_time DESC
+    </select>
+
+    <update id="offlineProdByCategoryIdAndShopId">
+        UPDATE
+            tz_prod
+        SET
+            `status` = #{status}
+        WHERE
+            shop_id = #{shopId}
+            AND
+            category_id
+                in(
+                <foreach collection="cids" item="categoryId" separator=",">
+                    #{categoryId}
+                </foreach>
+                )
+    </update>
+    <update id="changeStatusByProdIds">
+        UPDATE
+            tz_prod
+        SET
+            `status` = #{status}
+        WHERE
+            prod_id IN
+            <foreach collection="pIds" item="prodId" open="(" close=")" separator=",">
+                #{prodId}
+            </foreach>
+    </update>
+
+    <select id="getProductBO" resultMap="productBOAndLangMap">
+        SELECT p.prod_id,p.shop_id,p.ori_price,p.price,p.score_price,p.brief,p.pic,p.imgs,p.status,p.shop_category_id,p.category_id,
+               p.delivery_mode,p.prod_type,p.mold,p.activity_id,p.brand_id,p.is_top,p.seq,p.pre_sell_status,p.pre_sell_time,
+               UNIX_TIMESTAMP(p.create_time) create_time, UNIX_TIMESTAMP(p.update_time) update_time,
+               UNIX_TIMESTAMP(p.putaway_time) putaway_time,pl.lang,pl.prod_name as prod_name_lang,pl.brief as brief_lang, pl.content as content_lang,
+               pe.water_sold_num
+        FROM tz_prod p
+        LEFT JOIN tz_prod_lang pl ON pl.prod_id = p.prod_id
+        LEFT JOIN tz_prod_extension pe ON pe.prod_id = p.prod_id
+        WHERE p.prod_id IN
+        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+            #{prodId}
+        </foreach>
+    </select>
+
+    <select id="listProdId" resultType="java.lang.Long">
+        select prod_id from tz_prod
+        where `status` between 0 and 3
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+    </select>
+    <select id="listIdByBrandId" resultType="java.lang.Long">
+        select prod_id from tz_prod where brand_id = #{brandId}
+    </select>
+    <select id="listIdByShopIds" resultType="java.lang.Long">
+        select prod_id from tz_prod
+        where shop_id in
+        <foreach collection="shopIds" item="shopId" open="(" close=")" separator=",">
+            #{shopId}
+        </foreach>
+    </select>
+
+    <select id="prodSkuPage" resultMap="productAndSkuMap">
+        SELECT p.prod_id, p.pic, p.status, s.sku_id,s.party_code,s.pic,s.price FROM
+        (
+            SELECT tp.prod_id,tp.status,tp.pic FROM tz_prod tp
+            WHERE tp.shop_id = #{product.shopId} AND tp.prod_id IN (SELECT DISTINCT prod_id FROM tz_sku WHERE party_code IS NOT NULL AND party_code != '' AND is_delete = 0)
+            <if test="product.status != null">
+                AND tp.status = #{product.status}
+            </if>
+            <if test="product.status == null">
+                AND tp.status != -1
+            </if>
+            <if test="product.categoryId != null ">
+                AND tp.category_id = #{product.categoryId}
+            </if>
+            <if test="product.preSellStatus != null ">
+                AND tp.pre_sell_status = #{product.preSellStatus}
+            </if>
+            <if test="product.prodIds != null">
+                AND tp.prod_id IN
+                <foreach collection="product.prodIds" item="prodId" open="(" close=")" separator=",">
+                    #{prodId}
+                </foreach>
+            </if>
+            <if test="product.partyCode != null">
+                AND tp.prod_id IN (select prod_id from tz_sku where party_code like CONCAT('%', #{product.partyCode}, '%'))
+            </if>
+            <if test="product.mold != null">
+                AND tp.mold = #{product.mold}
+            </if>
+            <if test="product.notMold != null">
+                AND tp.mold <![CDATA[<>]]> #{product.notMold}
+            </if>
+            <if test="product.prodName != null and product.prodName != ''">
+                AND tp.prod_id in (select prod_id from tz_prod_lang where prod_name like CONCAT('%', #{product.prodName}, '%'))
+            </if>
+            <if test="product.isActive != null and product.isActive == 1">
+                AND tp.prod_type != 5
+            </if>
+            <if test="product.notProdTypes != null and product.notProdTypes.size() > 0">
+                AND tp.prod_type NOT IN
+                    <foreach collection="product.notProdTypes" item="prodType" open="(" separator="," close=")">
+                        #{prodType}
+                    </foreach>
+            </if>
+            ORDER BY tp.prod_id DESC
+            LIMIT #{page.begin}, #{page.size}
+        ) p
+        LEFT JOIN tz_sku s ON s.prod_id = p.prod_id
+        WHERE s.party_code IS NOT NULL AND s.party_code != '' AND s.is_delete = 0
+        <if test="product.skuStatus != null">
+            AND s.status = #{product.skuStatus}
+        </if>
+    </select>
+
+    <select id="countProdSkuList" resultType="long">
+        SELECT COUNT(*) FROM(
+        SELECT tp.prod_id,tp.status,tp.pic FROM tz_prod tp
+        WHERE tp.shop_id = #{product.shopId} AND tp.prod_id IN (SELECT DISTINCT prod_id FROM tz_sku WHERE party_code IS NOT NULL AND party_code != '' AND is_delete = 0)
+        <if test="product.status != null">
+            AND tp.status = #{product.status}
+        </if>
+        <if test="product.status == null">
+            AND tp.status != -1
+        </if>
+        <if test="product.categoryId != null ">
+            AND tp.category_id = #{product.categoryId}
+        </if>
+        <if test="product.preSellStatus != null ">
+            AND tp.pre_sell_status = #{product.preSellStatus}
+        </if>
+        <if test="product.prodIds != null">
+            AND tp.prod_id IN
+            <foreach collection="product.prodIds" item="prodId" open="(" close=")" separator=",">
+                #{prodId}
+            </foreach>
+        </if>
+        <if test="product.partyCode != null">
+            AND tp.prod_id IN (select prod_id from tz_sku where party_code like CONCAT('%', #{product.partyCode}, '%'))
+        </if>
+        <if test="product.mold != null">
+            AND tp.mold = #{product.mold}
+        </if>
+        <if test="product.notMold != null">
+            AND tp.mold <![CDATA[<>]]> #{product.notMold}
+        </if>
+        <if test="product.prodName != null and product.prodName != ''">
+            AND tp.prod_id in (select prod_id from tz_prod_lang where prod_name like CONCAT('%', #{product.prodName}, '%'))
+        </if>
+        <if test="product.isActive != null and product.isActive == 1">
+            AND tp.prod_type != 5
+        </if>
+        ORDER BY tp.prod_id DESC
+        ) t
+    </select>
+
+    <select id="prodAndSkuInfo" resultMap="productAndSkuMap">
+        SELECT
+            p.*, s.sku_id, s.party_code, s.sku_name, s.is_delete
+        FROM
+            tz_prod p
+            LEFT JOIN tz_sku s ON s.prod_id = p.prod_id
+        WHERE
+            s.party_code IS NOT NULL
+            AND s.party_code != ''
+            <if test="prodIds != null and prodIds.size() > 0">
+                AND p.prod_id IN
+                    <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                        #{prodId}
+                    </foreach>
+            </if>
+            <if test="skuIds != null and skuIds.size() > 0">
+                AND s.sku_id IN
+                    <foreach collection="skuIds" item="skuId" open="(" close=")" separator=",">
+                        #{skuId}
+                    </foreach>
+            </if>
+    </select>
+
+    <select id="listProdAndSku" resultMap="productAndSkuMap">
+        SELECT p.*,s.sku_id,s.price,s.pic s_pic
+        FROM
+        (
+        SELECT tp.prod_id,tp.status,tp.pic,tp.pre_sell_status
+        FROM tz_prod tp
+        WHERE tp.prod_id IN
+        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+            #{prodId}
+        </foreach>
+        ) p
+        JOIN  tz_sku s ON s.prod_id = p.prod_id
+        WHERE s.is_delete = 0 AND s.status = 1
+    </select>
+
+    <select id="verifySpuExist" resultType="java.lang.Long">
+        select prod_id from tz_prod where prod_id in
+        <foreach collection="prodIds" item="prodId" separator="," open="(" close=")">
+            #{prodId}
+        </foreach>
+    </select>
+
+    <select id="listNewProdByTime" resultType="com.yami.shop.bean.param.ProdAnalysisDataParam">
+        SELECT
+            DATE_FORMAT(create_time,'%Y-%m-%d') AS current_day,
+            count(prod_id) AS new_prod
+        FROM
+            tz_prod
+        WHERE
+            `status` != -1
+            <if test="param.startTime != null">
+                AND create_time &gt;= #{param.startTime}
+            </if>
+            <if test="param.endTime != null">
+                AND create_time &lt;= #{param.endTime}
+            </if>
+            <if test="param.shopId != null">
+                AND shop_id = #{param.shopId}
+            </if>
+        GROUP BY current_day
+    </select>
+    <select id="getProdEffectByParam" resultType="com.yami.shop.bean.param.ProdEffectRespParam">
+        SELECT pd.prod_id,pd.price,pd.pic AS prodUrl
+        FROM `tz_prod` pd
+        LEFT JOIN tz_prod_extension pe on pe.prod_id = pd.prod_id
+        <if test="param.prodName != null and param.prodName != ''">
+            left JOIN tz_prod_lang pl ON pl.`prod_id` = pd.`prod_id`
+        </if>
+        <where>
+            <!--pd.prod_id IN (SELECT DISTINCT(tempoi.prod_id) FROM `tz_order_item` tempoi) -->
+            <if test="param.shopId != null and param.shopId != ''">
+                AND pd.shop_id = #{param.shopId}
+            </if>
+            <if test="param.prodName != null and param.prodName != ''">
+                and trim(replace(pl.prod_name,' ','')) like trim(replace(concat('%',#{param.prodName},'%'),' ',''))
+            </if>
+            <if test="param.status != null">
+                <if test="param.status == 0">
+                    AND pd.status > -1
+                </if>
+                <if test="param.status == 1">
+                    AND pd.status = 1
+                </if>
+                <if test="param.status == 2">
+                    AND pd.status = 0
+                </if>
+                <if test="param.status == 3">
+<!--                    AND (pd.status = 1 AND pd.prod_id IN (SELECT prod_id FROM tz_prod_extension WHERE sold_num &gt; 0 AND actual_stock = 0))-->
+                </if>
+            </if>
+            <if test="param.startTime != null and param.endTime != null">
+                AND
+                (
+                pd.update_time <![CDATA[ >= ]]> #{param.startTime}
+                <if test="prodIds != null ">
+                    OR pd.prod_id IN
+                    <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                        #{prodId}
+                    </foreach>
+                </if>
+                )
+            </if>
+        </where>
+        ORDER BY pd.create_time DESC
+    </select>
+    <select id="getProdDeliveryTemplateIdByProdIds" resultType="com.yami.shop.bean.model.Product">
+        select prod_id, delivery_template_id,delivery_amount from tz_prod
+        where prod_id in
+        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+            #{prodId}
+        </foreach>
+    </select>
+    <select id="getProductNum" resultType="java.lang.Integer">
+        select  count(ts.sku_id) from tz_prod tp
+        left join  tz_sku ts on  ts.prod_id = tp.prod_id
+        where tp.shop_id = #{shopId} and tp.`status` <![CDATA[<>]]> #{status} and ts.is_delete = 0
+    </select>
+    <update id="bathUpdateProductType">
+        update tz_prod set prod_type = #{prodType}
+        <if test="prodType == 0">
+            ,activity_id = null
+        </if>
+        where prod_id in
+        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+            #{prodId}
+        </foreach>
+    </update>
+
+    <select id="listEsProdSoldAndStock" resultType="com.yami.shop.bean.bo.ProductBO">
+        SELECT p.prod_id,pe.water_sold_num
+        FROM tz_prod p
+        left JOIN tz_prod_extension pe ON pe.`prod_id` = p.`prod_id`
+        WHERE p.prod_id IN
+        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+            #{prodId}
+        </foreach>
+    </select>
+    <select id="listSimple" resultType="com.yami.shop.bean.bo.ProductBO">
+        SELECT p.prod_id
+        FROM tz_prod p
+        <if test="product.prodName != null and product.prodName != ''">
+            join tz_prod_lang pl ON pl.`prod_id` = p.`prod_id` AND pl.prod_name LIKE concat('%',#{product.prodName},'%')
+        </if>
+        <where>
+            <if test="product.status != null">
+                p.status = #{product.status}
+            </if>
+            <if test="product.prodIds != null">
+                and p.prod_id in (
+                <foreach collection="product.prodIds" item="prodId" separator=",">
+                    #{prodId}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="listProdWithLang" resultMap="prodWithLang">
+        SELECT
+            p.*,
+            pl.prod_name prod_name_lang,
+            pl.*
+        FROM
+            tz_prod p
+            LEFT JOIN tz_prod_lang pl ON p.prod_id = pl.prod_id
+        <where>
+            <if test="productDto.prodIds != null and productDto.prodIds.size() > 0">
+                p.prod_id IN
+                    <foreach collection="productDto.prodIds" item="prodId" open="(" separator="," close=")">
+                        #{prodId}
+                    </foreach>
+            </if>
+            <if test="productDto.notProdTypes != null and productDto.notProdTypes.size() > 0">
+                AND p.prod_type NOT IN
+                    <foreach collection="productDto.notProdTypes" item="prodType" open="(" separator="," close=")">
+                        #{prodType}
+                    </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="collectionProds" resultType="com.yami.shop.bean.app.dto.ProductDto">
+        SELECT
+            p.prod_id,
+            p.pic,
+            p.prod_name,
+            p.price,
+            p.brief,
+            sd.`shop_name`
+        FROM tz_prod p
+        LEFT JOIN tz_shop_detail sd
+        ON p.shop_id = sd.shop_id
+        WHERE p.`prod_id` IN
+        (SELECT uc.`prod_id` FROM tz_user_collection uc
+        WHERE uc.user_id = #{userId})
+    </select>
+
+    <!-- 字段映射(将Date类型转成Long) -->
+    <resultMap id="productSearchVO" type="com.yami.shop.bean.vo.search.ProductSearchVO">
+        <result property="createTime" column="create_time" typeHandler="com.yami.shop.common.handler.LongToDateTypeHandler"/>
+        <result property="updateTime" column="update_time" typeHandler="com.yami.shop.common.handler.LongToDateTypeHandler"/>
+        <result property="activityStartTime" column="activity_start_time" typeHandler="com.yami.shop.common.handler.LongToDateTypeHandler"/>
+    </resultMap>
+
+    <select id="pageProduct" resultMap="productSearchVO">
+        SELECT
+        p.*,
+        pe.sold_num actual_sold_num,
+        pe.water_sold_num,
+        pe.comm_num comment_num
+        <if test="param.prodType != 3">
+            ,sd.shop_name,
+            sd.type shop_type,
+            sd.shop_logo shop_img,
+            c1.category_id primary_category_id,
+            c2.category_id secondary_category_id
+        </if>
+        FROM
+        `tz_prod` p
+        LEFT JOIN tz_prod_extension pe ON p.prod_id = pe.prod_id
+        <if test="param.prodType != 3">
+            LEFT JOIN tz_shop_detail sd ON p.shop_id = sd.shop_id
+            LEFT JOIN tz_category c3 ON p.category_id = c3.category_id
+            LEFT JOIN tz_category c2 ON c3.parent_id = c2.category_id
+            LEFT JOIN tz_category c1 ON c2.parent_id = c1.category_id
+        </if>
+        <if test="param.keyword != null and param.keyword != ''">
+            LEFT JOIN tz_prod_lang pl ON p.prod_id = pl.prod_id AND pl.lang = #{param.lang}
+            LEFT JOIN tz_prod_lang dpl ON p.prod_id = dpl.prod_id AND dpl.lang = #{param.defaultLang}
+        </if>
+        <if test="param.categoryId != null">
+            AND p.shop_category_id = #{param.categoryId}
+        </if>
+        GROUP BY
+        p.prod_id
+    </select>
+</mapper>

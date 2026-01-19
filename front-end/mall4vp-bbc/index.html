@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <script id="qqMap" charset="utf-8"></script>
+    <title></title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script> this.globalThis || (this.globalThis = this) </script>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      console.log('mall4j.v240506')
+      const webConfigData = JSON.parse(localStorage.getItem('cbecB2cWebConfigData'))
+      if (webConfigData) {
+        document.title = webConfigData.bsTitleContent || ''
+
+        let facicon = document.querySelector('link[rel="icon"]')
+        if (facicon !== null) {
+          facicon.href = webConfigData.bsTitleImg
+        } else {
+          facicon = document.createElement('link')
+          facicon.rel = 'icon'
+          facicon.href = webConfigData.bsTitleImg
+          document.head.appendChild(facicon)
+        }
+      }
+
+      if (!Array.prototype.flatMap) {
+        Object.defineProperty(Array.prototype,'flatMap',{
+          value:function (callback) {
+            return this.reduce(function (result, item) {
+              const mapped = callback(item);
+              return result.concat(mapped);
+            }, [])
+          },
+          enumerable:false,
+        })
+      }
+    </script>
+  </body>
+</html>
