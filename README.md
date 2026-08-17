@@ -46,6 +46,10 @@ Mall4j 主线项目已升级到 Spring Boot 4 和 Vue3，适合新项目评估�
 - 跨境版本价格与功能对比：[https://www.mall4j.com/cbec-price/](https://www.mall4j.com/cbec-price/)
 - 客户案例：[https://www.mall4j.com/case/](https://www.mall4j.com/case/)
 
+## 商业授权支持
+
+![商务二维码](screenshot/商务二维码.png)
+
 ## 开源版与企业版本
 
 | 对比项 | 开源版 | 企业版本 |
